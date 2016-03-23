@@ -1,5 +1,5 @@
 <resources>
     <string name="app_name">I Remember You</string>
     <string name="action_settings">Settings</string>
-    <string name="gcm_defaultSenderId">DEFAULT_GCM_SENDER_ID</string>
+    <!--string name="gcm_defaultSenderId">DEFAULT_GCM_SENDER_ID</string-->
 </resources>

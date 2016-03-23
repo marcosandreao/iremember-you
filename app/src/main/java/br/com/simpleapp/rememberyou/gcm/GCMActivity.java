@@ -28,6 +28,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import br.com.simpleapp.rememberyou.R;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
@@ -47,7 +48,9 @@ public class GCMActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        /* TODO
         mRegistrationProgressBar = (ProgressBar) findViewById(R.id.registrationProgressBar);
+         */
         mRegistrationBroadcastReceiver = new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
@@ -57,14 +60,15 @@ public class GCMActivity extends AppCompatActivity {
                 boolean sentToken = sharedPreferences
                         .getBoolean(QuickstartPreferences.SENT_TOKEN_TO_SERVER, false);
                 if (sentToken) {
-                    mInformationTextView.setText(getString(R.string.gcm_send_message));
+                //    mInformationTextView.setText(getString(R.string.gcm_send_message)); //TODO
                 } else {
-                    mInformationTextView.setText(getString(R.string.token_error_message));
+                //    mInformationTextView.setText(getString(R.string.token_error_message)); //TODO
                 }
             }
         };
-        mInformationTextView = (TextView) findViewById(R.id.informationTextView);
-
+        /*
+        mInformationTextView = (TextView) findViewById(R.id.informationTextView); //TODO
+        */
         // Registering BroadcastReceiver
         registerReceiver();
 
