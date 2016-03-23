@@ -1,0 +1,43 @@
+{
+  "project_info": {
+    "project_id": "remembered-you",
+    "project_number": "926247080959",
+    "name": "remembered-you"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:926247080959:android:a26e97538e45f0dd",
+        "client_id": "android:br.com.simpleapp.rememberyou",
+        "client_type": 1,
+        "android_client_info": {
+          "package_name": "br.com.simpleapp.rememberyou",
+          "certificate_hash": []
+        }
+      },
+      "oauth_client": [],
+      "api_key": [],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "cloud_messaging_service": {
+          "status": 2,
+          "apns_config": []
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "google_signin_service": {
+          "status": 1
+        },
+        "ads_service": {
+          "status": 1
+        }
+      }
+    }
+  ],
+  "client_info": [],
+  "ARTIFACT_VERSION": "1"
+}
