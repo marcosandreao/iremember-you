@@ -46,11 +46,9 @@ public class GCMActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_gcm);
 
-        /* TODO
         mRegistrationProgressBar = (ProgressBar) findViewById(R.id.registrationProgressBar);
-         */
         mRegistrationBroadcastReceiver = new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
@@ -60,15 +58,15 @@ public class GCMActivity extends AppCompatActivity {
                 boolean sentToken = sharedPreferences
                         .getBoolean(QuickstartPreferences.SENT_TOKEN_TO_SERVER, false);
                 if (sentToken) {
-                //    mInformationTextView.setText(getString(R.string.gcm_send_message)); //TODO
+                    mInformationTextView.setText("gcm_send_message");
                 } else {
-                //    mInformationTextView.setText(getString(R.string.token_error_message)); //TODO
+                    mInformationTextView.setText("token_error_message");
                 }
             }
         };
-        /*
+
         mInformationTextView = (TextView) findViewById(R.id.informationTextView); //TODO
-        */
+
         // Registering BroadcastReceiver
         registerReceiver();
 
