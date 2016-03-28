@@ -1,7 +1,9 @@
 package br.com.simpleapp.rememberyou;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
@@ -11,6 +13,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import br.com.simpleapp.rememberyou.gcm.GCMActivity;
+import br.com.simpleapp.rememberyou.gcm.QuickstartPreferences;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -30,7 +33,14 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        this.startActivity(new Intent(this, GCMActivity.class));
+        this.registerGCMIfNeed();
+    }
+
+    private void registerGCMIfNeed(){
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+        if ( !sharedPreferences.getBoolean(QuickstartPreferences.SENT_TOKEN_TO_SERVER, false) ){
+            this.startActivity(new Intent(this, GCMActivity.class));
+        }
     }
 
     @Override
