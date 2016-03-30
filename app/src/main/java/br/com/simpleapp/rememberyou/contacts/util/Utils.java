@@ -20,8 +20,8 @@ import android.annotation.TargetApi;
 import android.os.Build;
 import android.os.StrictMode;
 
-import com.example.android.contactslist.ui.ContactDetailActivity;
-import com.example.android.contactslist.ui.ContactsListActivity;
+import br.com.simpleapp.rememberyou.contacts.ui.ContactDetailActivity;
+import br.com.simpleapp.rememberyou.contacts.ui.ContactsListActivity;
 
 /**
  * This class contains static utility methods.

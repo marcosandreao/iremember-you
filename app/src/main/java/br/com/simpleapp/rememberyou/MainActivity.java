@@ -12,6 +12,7 @@ import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import br.com.simpleapp.rememberyou.contacts.ui.ContactsListActivity;
 import br.com.simpleapp.rememberyou.gcm.GCMActivity;
 import br.com.simpleapp.rememberyou.gcm.QuickstartPreferences;
 
@@ -39,8 +40,10 @@ public class MainActivity extends AppCompatActivity {
     private void registerGCMIfNeed(){
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
         if ( !sharedPreferences.getBoolean(QuickstartPreferences.SENT_TOKEN_TO_SERVER, false) ){
-            this.startActivity(new Intent(this, GCMActivity.class));
+            //this.startActivity(new Intent(this, GCMActivity.class));
+
         }
+        this.startActivity(new Intent(this, ContactsListActivity.class));
     }
 
     @Override

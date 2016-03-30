@@ -50,8 +50,8 @@
                       android:paddingLeft="@dimen/padding"
                       android:paddingRight="@dimen/padding"
                       android:paddingTop="@dimen/padding"
-                      android:visibility="gone"
-                      style="@style/contactNameTitle"/>
+                      android:visibility="gone" />
+                      <!--style="@style/contactNameTitle"/-->
 
             <ScrollView
                     android:layout_width="match_parent"
