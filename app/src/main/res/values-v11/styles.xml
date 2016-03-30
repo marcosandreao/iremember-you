@@ -21,8 +21,6 @@
 
 <resources>
 
-    <style name="AppTheme" parent="@android:style/Theme.Holo.Light"/>
-
     <style name="listViewActivatedStyle">
         <item name="android:background">?android:attr/activatedBackgroundIndicator</item>
     </style>
