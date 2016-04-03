@@ -4,7 +4,6 @@
     <modules>
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
       <module fileurl="file://$PROJECT_DIR$/iremember-you.iml" filepath="$PROJECT_DIR$/iremember-you.iml" />
-      <module fileurl="file://$PROJECT_DIR$/irememberyout-backend/irememberyout-backend.iml" filepath="$PROJECT_DIR$/irememberyout-backend/irememberyout-backend.iml" />
     </modules>
   </component>
 </project>

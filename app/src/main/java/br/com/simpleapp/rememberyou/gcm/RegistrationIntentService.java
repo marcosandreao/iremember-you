@@ -26,15 +26,10 @@ import android.util.Log;
 import com.google.android.gms.gcm.GcmPubSub;
 import com.google.android.gms.gcm.GoogleCloudMessaging;
 import com.google.android.gms.iid.InstanceID;
-import com.google.api.client.extensions.android.http.AndroidHttp;
-import com.google.api.client.extensions.android.json.AndroidJsonFactory;
-import com.google.api.client.googleapis.services.AbstractGoogleClientRequest;
-import com.google.api.client.googleapis.services.GoogleClientRequestInitializer;
 
 import java.io.IOException;
 
 import br.com.simpleapp.rememberyou.R;
-import br.com.simpleapp.rememberyou.registration.Registration;
 
 public class RegistrationIntentService extends IntentService {
 
@@ -93,7 +88,7 @@ public class RegistrationIntentService extends IntentService {
      * @param token The new token.
      */
     private void sendRegistrationToServer(String token) throws IOException {
-        Registration.Builder builder = new Registration.Builder(AndroidHttp.newCompatibleTransport(),
+        /*Registration.Builder builder = new Registration.Builder(AndroidHttp.newCompatibleTransport(),
                 new AndroidJsonFactory(), null)
                 // Need setRootUrl and setGoogleClientRequestInitializer only for local testing,
                 // otherwise they can be skipped
@@ -106,7 +101,7 @@ public class RegistrationIntentService extends IntentService {
                     }
                 });
         Registration regService = builder.build();
-        regService.register(token).execute();
+        regService.register(token).execute();*/
     }
 
     /**

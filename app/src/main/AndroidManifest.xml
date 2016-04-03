@@ -101,6 +101,12 @@
             android:name=".gcm.RegistrationIntentService"
             android:exported="false" >
         </service>
+
+        <activity
+            android:name=".auth.SignInActivity"
+            android:label="Login"
+            android:theme="@style/AppTheme.NoActionBar">
+        </activity>
     </application>
 
 </manifest>

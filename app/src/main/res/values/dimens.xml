@@ -6,4 +6,6 @@
 
     <dimen name="padding">16dp</dimen>
     <dimen name="listview_item_padding">16dp</dimen>
+
+    <dimen name="g_top_margin">100dp</dimen>
 </resources>

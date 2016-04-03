@@ -22,4 +22,23 @@
         <item name="android:textStyle">bold</item>
     </style>
 
+    <style name="AppTheme.MyDarkButton" parent="ThemeOverlay.AppCompat.Dark">
+        <item name="colorButtonNormal">@color/blue_grey_500</item>
+        <item name="android:textColor">@android:color/white</item>
+    </style>
+
+    <style name="addressHeader" parent="@android:style/TextAppearance.Small">
+        <item name="android:textAllCaps">true</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textColor">@color/holo_blue</item>
+    </style>
+
+    <style name="addressButton" parent="@android:style/Widget.Holo.Button.Borderless"/>
+
+    <style name="listViewActivatedStyle">
+        <item name="android:background">?android:attr/activatedBackgroundIndicator</item>
+    </style>
+
+    <style name="quickContactBadgeStyle"/>
+
 </resources>
