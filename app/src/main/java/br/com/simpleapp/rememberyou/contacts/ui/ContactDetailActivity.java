@@ -50,7 +50,7 @@ public class ContactDetailActivity extends FragmentActivity {
             // For OS versions honeycomb and higher use action bar
             if (Utils.hasHoneycomb()) {
                 // Enables action bar "up" navigation
-                getActionBar().setDisplayHomeAsUpEnabled(true);
+               // getActionBar().setDisplayHomeAsUpEnabled(true);
             }
 
             // Fetch the data Uri from the intent provided to this activity
