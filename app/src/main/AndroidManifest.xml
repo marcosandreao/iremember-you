@@ -59,7 +59,7 @@
                 android:resource="@xml/searchable_contacts" />
         </activity>
         <activity
-            android:name="contacts.ui.ContactDetailActivity"
+            android:name=".contacts.ui.ContactDetailActivity"
             android:label="@string/activity_contact_detail"
             android:parentActivityName=".contacts.ui.ContactsListActivity">
             <!-- Define hierarchical parent of this activity, both via the system

@@ -16,6 +16,7 @@
 
 package br.com.simpleapp.rememberyou.gcm;
 
+import android.accounts.AccountManager;
 import android.app.IntentService;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -26,10 +27,17 @@ import android.util.Log;
 import com.google.android.gms.gcm.GcmPubSub;
 import com.google.android.gms.gcm.GoogleCloudMessaging;
 import com.google.android.gms.iid.InstanceID;
+import com.squareup.okhttp.ResponseBody;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.IOException;
 
 import br.com.simpleapp.rememberyou.R;
+import br.com.simpleapp.rememberyou.api.IRememberYou;
+import br.com.simpleapp.rememberyou.utils.Constants;
+import retrofit.Retrofit;
 
 public class RegistrationIntentService extends IntentService {
 
@@ -58,7 +66,7 @@ public class RegistrationIntentService extends IntentService {
             Log.i(TAG, "GCM Registration Token: " + token);
 
             // TODO: Implement this method to send any registration to your app's servers.
-            sendRegistrationToServer(token);
+            sendRegistrationToServer(token, intent.getStringExtra(AccountManager.KEY_ACCOUNT_NAME));
 
             // Subscribe to topic channels
             subscribeTopics(token);
@@ -85,23 +93,20 @@ public class RegistrationIntentService extends IntentService {
      * Modify this method to associate the user's GCM registration token with any server-side account
      * maintained by your application.
      *
-     * @param token The new token.
+     * @param token  The new token.
+     * @param account User account
      */
-    private void sendRegistrationToServer(String token) throws IOException {
-        /*Registration.Builder builder = new Registration.Builder(AndroidHttp.newCompatibleTransport(),
-                new AndroidJsonFactory(), null)
-                // Need setRootUrl and setGoogleClientRequestInitializer only for local testing,
-                // otherwise they can be skipped
-                .setRootUrl("https://remembered-you.appspot.com/_ah/api/")
-                .setGoogleClientRequestInitializer(new GoogleClientRequestInitializer() {
-                    @Override
-                    public void initialize(AbstractGoogleClientRequest<?> abstractGoogleClientRequest)
-                            throws IOException {
-                        abstractGoogleClientRequest.setDisableGZipContent(true);
-                    }
-                });
-        Registration regService = builder.build();
-        regService.register(token).execute();*/
+    private void sendRegistrationToServer(String token, String account) throws IOException {
+
+         final Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl( Constants.URL_SERVER)
+                .build();
+
+        IRememberYou service = retrofit.create(IRememberYou.class);
+        retrofit.Response<ResponseBody> response = service.registerDevice("Marcos", account, token).execute();
+        if ( !response.isSuccess() ) {
+            throw  new IOException(response.errorBody().string());
+        }
     }
 
     /**

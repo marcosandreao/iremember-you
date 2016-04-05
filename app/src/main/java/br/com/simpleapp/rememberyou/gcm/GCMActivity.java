@@ -16,6 +16,7 @@
 
 package br.com.simpleapp.rememberyou.gcm;
 
+import android.accounts.AccountManager;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -30,6 +31,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import br.com.simpleapp.rememberyou.R;
 
+import com.google.android.gms.common.AccountPicker;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
 
@@ -42,6 +44,8 @@ public class GCMActivity extends AppCompatActivity {
     private ProgressBar mRegistrationProgressBar;
     private TextView mInformationTextView;
     private boolean isReceiverRegistered;
+
+    private static final int REQUEST_CHOOSE_ACCOUNT = 1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -71,10 +75,20 @@ public class GCMActivity extends AppCompatActivity {
         registerReceiver();
 
         if (checkPlayServices()) {
-            // Start IntentService to register this application with GCM.
-            Intent intent = new Intent(this, RegistrationIntentService.class);
-            startService(intent);
+            this.pickerAccount();
         }
+    }
+
+    private void pickerAccount() {
+        final Intent intent = AccountPicker.newChooseAccountIntent(null, null, new String[]{"com.google"},
+                false, null, null, null, null);
+        startActivityForResult(intent, REQUEST_CHOOSE_ACCOUNT);
+    }
+
+    private void registerDevice(String accountName) {
+        Intent intent = new Intent(this, RegistrationIntentService.class);
+        intent.putExtra(AccountManager.KEY_ACCOUNT_NAME, accountName);
+        startService(intent);
     }
 
     @Override
@@ -116,6 +130,16 @@ public class GCMActivity extends AppCompatActivity {
             return false;
         }
         return true;
+    }
+
+    protected void onActivityResult(final int requestCode, final int resultCode,
+                                    final Intent data) {
+        if (requestCode == REQUEST_CHOOSE_ACCOUNT && resultCode == RESULT_OK) {
+            String accountName = data.getStringExtra(AccountManager.KEY_ACCOUNT_NAME);
+            this.registerDevice(accountName);
+        } else if ( requestCode == REQUEST_CHOOSE_ACCOUNT ) {
+            this.pickerAccount();
+        }
     }
 
 }

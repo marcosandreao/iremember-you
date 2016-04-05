@@ -12,12 +12,16 @@ import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import com.google.android.gms.common.AccountPicker;
+
 import br.com.simpleapp.rememberyou.auth.SignInActivity;
 import br.com.simpleapp.rememberyou.contacts.ui.ContactsListActivity;
 import br.com.simpleapp.rememberyou.gcm.GCMActivity;
 import br.com.simpleapp.rememberyou.gcm.QuickstartPreferences;
 
 public class MainActivity extends AppCompatActivity {
+
+    private static final int REQUEST_CHOOSE_ACCOUNT = 1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,8 +35,9 @@ public class MainActivity extends AppCompatActivity {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+                //Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
+                //      .setAction("Action", null).show();
+                startActivityForResult(new Intent(MainActivity.this, ContactsListActivity.class), REQUEST_CHOOSE_ACCOUNT);
             }
         });
 
@@ -42,11 +47,13 @@ public class MainActivity extends AppCompatActivity {
     private void registerGCMIfNeed(){
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
         if ( !sharedPreferences.getBoolean(QuickstartPreferences.SENT_TOKEN_TO_SERVER, false) ){
-            //this.startActivity(new Intent(this, GCMActivity.class));
-
+            this.startActivity(new Intent(this, GCMActivity.class));
+            //final Intent intent = AccountPicker.newChooseAccountIntent(null, null, new String[]{"com.google"},
+//                    false, null, null, null, null);
+  //          startActivityForResult(intent, REQUEST_CHOOSE_ACCOUNT);
         }
         //this.startActivity(new Intent(this, ContactsListActivity.class));
-        this.startActivity(new Intent(this, SignInActivity.class));
+        //this.startActivity(new Intent(this, SignInActivity.class));
     }
 
     @Override

@@ -122,6 +122,7 @@ public class SignInActivity extends AppCompatActivity implements
     // [START handleSignInResult]
     private void handleSignInResult(GoogleSignInResult result) {
         Log.d(TAG, "handleSignInResult:" + result.isSuccess());
+        Log.d(TAG, "handleSignInResult:" + result.getStatus() );
         if (result.isSuccess()) {
             // Signed in successfully, show authenticated UI.
             GoogleSignInAccount acct = result.getSignInAccount();
