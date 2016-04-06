@@ -16,10 +16,12 @@
 
 package br.com.simpleapp.rememberyou.contacts.ui;
 
+import android.accounts.AccountManager;
 import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
 import android.content.ContentResolver;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.content.res.AssetFileDescriptor;
 import android.database.Cursor;
@@ -27,6 +29,8 @@ import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
+import android.provider.ContactsContract;
 import android.provider.ContactsContract.CommonDataKinds.StructuredPostal;
 import android.provider.ContactsContract.Contacts;
 import android.provider.ContactsContract.Contacts.Photo;
@@ -49,13 +53,21 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.squareup.okhttp.ResponseBody;
+
 import java.io.FileNotFoundException;
 import java.io.IOException;
 
 import br.com.simpleapp.rememberyou.BuildConfig;
 import br.com.simpleapp.rememberyou.R;
+import br.com.simpleapp.rememberyou.api.IRememberYou;
 import br.com.simpleapp.rememberyou.contacts.util.ImageLoader;
 import br.com.simpleapp.rememberyou.contacts.util.Utils;
+import br.com.simpleapp.rememberyou.gcm.QuickstartPreferences;
+import br.com.simpleapp.rememberyou.utils.Constants;
+import retrofit.Callback;
+import retrofit.Response;
+import retrofit.Retrofit;
 
 /**
  * This fragment displays details of a specific contact from the contacts provider. It shows the
@@ -96,6 +108,7 @@ public class ContactDetailFragment extends Fragment implements
     private TextView mEmptyView;
     private TextView mContactName;
     private MenuItem mEditContactMenuItem;
+    private String emailAddress;
 
     /**
      * Factory method to generate a new instance of the fragment given a contact Uri. A factory
@@ -169,6 +182,7 @@ public class ContactDetailFragment extends Fragment implements
             // multiple times.
             getLoaderManager().restartLoader(ContactDetailQuery.QUERY_ID, null, this);
             getLoaderManager().restartLoader(ContactAddressQuery.QUERY_ID, null, this);
+            getLoaderManager().restartLoader(ContactEmailQuery.QUERY_ID, null, this);
         } else {
             // If contactLookupUri is null, then the method was called when no contact was selected
             // in the contacts list. This should only happen in a two-pane layout when the user
@@ -245,6 +259,31 @@ public class ContactDetailFragment extends Fragment implements
             mContactName = (TextView) detailView.findViewById(R.id.contact_name);
             mContactName.setVisibility(View.VISIBLE);
         }
+
+        detailView.findViewById(R.id.btSent).setOnClickListener(new View.OnClickListener(){
+
+            @Override
+            public void onClick(View v) {
+                final Retrofit retrofit = new Retrofit.Builder()
+                        .baseUrl( Constants.URL_SERVER)
+                        .build();
+
+                IRememberYou service = retrofit.create(IRememberYou.class);
+                SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
+                service.message(sharedPreferences.getString(QuickstartPreferences.ACCOUNT, "marcosandreao@gmail.com"), emailAddress)
+                        .enqueue(new Callback<ResponseBody>() {
+                            @Override
+                            public void onResponse(Response<ResponseBody> response, Retrofit retrofit) {
+                                Log.d("REST","response success " + response.message());
+                            }
+
+                            @Override
+                            public void onFailure(Throwable t) {
+                                Log.d("REST", "fail " +  t.getMessage());
+                            }
+                        });
+            }
+        });
 
         return detailView;
     }
@@ -332,6 +371,14 @@ public class ContactDetailFragment extends Fragment implements
                         ContactAddressQuery.PROJECTION,
                         ContactAddressQuery.SELECTION,
                         null, null);
+
+            case ContactEmailQuery.QUERY_ID:
+                final Uri uri2 = Uri.withAppendedPath(mContactUri, Contacts.Data.CONTENT_DIRECTORY);
+                // This query loads contact email details.
+                return new CursorLoader(getActivity(), uri2,
+                        ContactEmailQuery.PROJECTION,
+                        ContactEmailQuery.SELECTION,
+                        null, null);
         }
         return null;
     }
@@ -345,6 +392,9 @@ public class ContactDetailFragment extends Fragment implements
         if (mContactUri == null) {
             return;
         }
+        final LinearLayout.LayoutParams layoutParams =
+                new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
+                        ViewGroup.LayoutParams.WRAP_CONTENT);
 
         switch (loader.getId()) {
             case ContactDetailQuery.QUERY_ID:
@@ -374,9 +424,7 @@ public class ContactDetailFragment extends Fragment implements
 
                 // Each LinearLayout has the same LayoutParams so this can
                 // be created once and used for each address.
-                final LinearLayout.LayoutParams layoutParams =
-                        new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
-                                ViewGroup.LayoutParams.WRAP_CONTENT);
+
 
                 // Clears out the details layout first in case the details
                 // layout has addresses from a previous data load still
@@ -396,6 +444,30 @@ public class ContactDetailFragment extends Fragment implements
                     } while (data.moveToNext());
                 } else {
                     // If nothing found, adds an empty address layout
+                   // mDetailsLayout.addView(buildEmptyAddressLayout(), layoutParams);
+                }
+                break;
+            case ContactEmailQuery.QUERY_ID:
+                mDetailsLayout.removeAllViews();
+                if (data.moveToFirst()) {
+                    do {
+                        // Builds the address layout
+                        Log.d("DATA", String.format("type %d labe %s address %s",
+                                data.getInt(ContactEmailQuery.TYPE),
+                                data.getString(ContactEmailQuery.LABEL),
+                                data.getString(ContactEmailQuery.ADDRESS)));
+
+                        LinearLayout layout2 = buildAddressLayout(
+                                data.getInt(ContactAddressQuery.TYPE),
+                                data.getString(ContactAddressQuery.LABEL),
+                                data.getString(ContactAddressQuery.ADDRESS));
+                        // Adds the new address layout to the details layout
+                        mDetailsLayout.addView(layout2, layoutParams);
+
+                        this.emailAddress = data.getString(ContactEmailQuery.ADDRESS);
+
+                    } while (data.moveToNext());
+                } else {
                     mDetailsLayout.addView(buildEmptyAddressLayout(), layoutParams);
                 }
                 break;
@@ -684,4 +756,38 @@ public class ContactDetailFragment extends Fragment implements
         final static int TYPE = 2;
         final static int LABEL = 3;
     }
+    public interface ContactEmailQuery {
+        // A unique query ID to distinguish queries being run by the
+        // LoaderManager.
+        final static int QUERY_ID = 3;
+
+        // The query projection (columns to fetch from the provider)
+        static final String[] PROJECTION =
+                {
+                        ContactsContract.CommonDataKinds.Email._ID,
+                        ContactsContract.CommonDataKinds.Email.ADDRESS,
+                        ContactsContract.CommonDataKinds.Email.TYPE,
+                        ContactsContract.CommonDataKinds.Email.LABEL
+                };
+
+        // The query selection criteria. In this case matching against the
+        // StructuredPostal content mime type.
+      //  static final String SELECTION =
+    //            Data.LOOKUP_KEY + " = ?" +
+     //                   " AND " +
+     //                   Data.MIMETYPE + " = " +
+      //                  "'" + ContactsContract.CommonDataKinds.Email.CONTENT_ITEM_TYPE + "'";
+
+        final static String SELECTION =
+                Data.MIMETYPE + "='" + ContactsContract.CommonDataKinds.Email.CONTENT_ITEM_TYPE + "'";
+        // Defines the array to hold the search criteria
+        String[] mSelectionArgs = { "" };
+
+        // The query column numbers which map to each value in the projection
+        final static int ID = 0;
+        final static int ADDRESS = 1;
+        final static int TYPE = 2;
+        final static int LABEL = 3;
+    }
+
 }

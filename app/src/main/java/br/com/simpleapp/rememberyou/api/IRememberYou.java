@@ -15,4 +15,8 @@ public interface IRememberYou {
     @FormUrlEncoded
     @POST("device")
     Call<ResponseBody> registerDevice(@Field("name") String name, @Field("email")  String email, @Field("device_id")  String device_id);
+
+    @FormUrlEncoded
+    @POST("message")
+    Call<ResponseBody> message(@Field("from") String from, @Field("to")  String to);
 }

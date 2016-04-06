@@ -68,6 +68,9 @@ public class RegistrationIntentService extends IntentService {
             // TODO: Implement this method to send any registration to your app's servers.
             sendRegistrationToServer(token, intent.getStringExtra(AccountManager.KEY_ACCOUNT_NAME));
 
+            Log.i(TAG, "GCM Registration account: " +  intent.getStringExtra(AccountManager.KEY_ACCOUNT_NAME));
+            sharedPreferences.edit().putString(QuickstartPreferences.ACCOUNT, intent.getStringExtra(AccountManager.KEY_ACCOUNT_NAME)).apply();
+
             // Subscribe to topic channels
             subscribeTopics(token);
 
@@ -107,6 +110,7 @@ public class RegistrationIntentService extends IntentService {
         if ( !response.isSuccess() ) {
             throw  new IOException(response.errorBody().string());
         }
+
     }
 
     /**
