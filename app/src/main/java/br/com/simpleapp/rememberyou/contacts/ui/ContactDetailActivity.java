@@ -23,15 +23,17 @@ import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.app.NavUtils;
+import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
 
 import br.com.simpleapp.rememberyou.BuildConfig;
+import br.com.simpleapp.rememberyou.R;
 import br.com.simpleapp.rememberyou.contacts.util.Utils;
 
 /**
  * This class defines a simple FragmentActivity as the parent of {@link ContactDetailFragment}.
  */
-public class ContactDetailActivity extends FragmentActivity {
+public class ContactDetailActivity extends AppCompatActivity {
     // Defines a tag for identifying the single fragment that this activity holds
     private static final String TAG = "ContactDetailActivity";
 
@@ -43,6 +45,8 @@ public class ContactDetailActivity extends FragmentActivity {
             Utils.enableStrictMode();
         }
         super.onCreate(savedInstanceState);
+
+       // this.setContentView(R.layout.activity_contatsdetail);
 
         // This activity expects to receive an intent that contains the uri of a contact
         if (getIntent() != null) {

@@ -35,10 +35,13 @@ import android.provider.ContactsContract.CommonDataKinds.StructuredPostal;
 import android.provider.ContactsContract.Contacts;
 import android.provider.ContactsContract.Contacts.Photo;
 import android.provider.ContactsContract.Data;
+import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
+import android.support.v7.app.ActionBar;
+import android.support.v7.widget.Toolbar;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -91,12 +94,6 @@ public class ContactDetailFragment extends Fragment implements
     // Defines a tag for identifying log entries
     private static final String TAG = "ContactDetailFragment";
 
-    // The geo Uri scheme prefix, used with Intent.ACTION_VIEW to form a geographical address
-    // intent that will trigger available apps to handle viewing a location (such as Maps)
-    private static final String GEO_URI_SCHEME_PREFIX = "geo:0,0?q=";
-
-    // Whether or not this fragment is showing in a two pane layout
-    private boolean mIsTwoPaneLayout;
 
     private Uri mContactUri; // Stores the contact Uri for this fragment instance
     private ImageLoader mImageLoader; // Handles loading the contact image in a background thread
@@ -104,11 +101,11 @@ public class ContactDetailFragment extends Fragment implements
     // Used to store references to key views, layouts and menu items as these need to be updated
     // in multiple methods throughout this class.
     private ImageView mImageView;
-    private LinearLayout mDetailsLayout;
     private TextView mEmptyView;
     private TextView mContactName;
     private MenuItem mEditContactMenuItem;
     private String emailAddress;
+    private TextView mContactEmail;
 
     /**
      * Factory method to generate a new instance of the fragment given a contact Uri. A factory
@@ -181,7 +178,6 @@ public class ContactDetailFragment extends Fragment implements
             // restartLoader() is used instead of initLoader() as this method may be called
             // multiple times.
             getLoaderManager().restartLoader(ContactDetailQuery.QUERY_ID, null, this);
-            getLoaderManager().restartLoader(ContactAddressQuery.QUERY_ID, null, this);
             getLoaderManager().restartLoader(ContactEmailQuery.QUERY_ID, null, this);
         } else {
             // If contactLookupUri is null, then the method was called when no contact was selected
@@ -192,7 +188,6 @@ public class ContactDetailFragment extends Fragment implements
             // items that are visible.
             mImageView.setVisibility(View.GONE);
             mEmptyView.setVisibility(View.VISIBLE);
-            mDetailsLayout.removeAllViews();
             if (mContactName != null) {
                 mContactName.setText("");
             }
@@ -210,8 +205,6 @@ public class ContactDetailFragment extends Fragment implements
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        // Check if this fragment is part of a two pane set up or a single pane
-        mIsTwoPaneLayout = getResources().getBoolean(R.bool.has_two_panes);
 
         // Let this fragment contribute menu items
         setHasOptionsMenu(true);
@@ -248,42 +241,14 @@ public class ContactDetailFragment extends Fragment implements
         final View detailView =
                 inflater.inflate(R.layout.contact_detail_fragment, container, false);
 
+        ContactDetailActivity activity =  (ContactDetailActivity) this.getActivity();
+        activity.setSupportActionBar((Toolbar) detailView.findViewById(R.id.toolbar));
+        activity.getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         // Gets handles to view objects in the layout
         mImageView = (ImageView) detailView.findViewById(R.id.contact_image);
-        mDetailsLayout = (LinearLayout) detailView.findViewById(R.id.contact_details_layout);
         mEmptyView = (TextView) detailView.findViewById(android.R.id.empty);
-
-        if (mIsTwoPaneLayout) {
-            // If this is a two pane view, the following code changes the visibility of the contact
-            // name in details. For a one-pane view, the contact name is displayed as a title.
-            mContactName = (TextView) detailView.findViewById(R.id.contact_name);
-            mContactName.setVisibility(View.VISIBLE);
-        }
-
-        detailView.findViewById(R.id.btSent).setOnClickListener(new View.OnClickListener(){
-
-            @Override
-            public void onClick(View v) {
-                final Retrofit retrofit = new Retrofit.Builder()
-                        .baseUrl( Constants.URL_SERVER)
-                        .build();
-
-                IRememberYou service = retrofit.create(IRememberYou.class);
-                SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
-                service.message(sharedPreferences.getString(QuickstartPreferences.ACCOUNT, "marcosandreao@gmail.com"), emailAddress)
-                        .enqueue(new Callback<ResponseBody>() {
-                            @Override
-                            public void onResponse(Response<ResponseBody> response, Retrofit retrofit) {
-                                Log.d("REST","response success " + response.message());
-                            }
-
-                            @Override
-                            public void onFailure(Throwable t) {
-                                Log.d("REST", "fail " +  t.getMessage());
-                            }
-                        });
-            }
-        });
+        mContactEmail = (TextView) detailView.findViewById(R.id.contact_email);
+        mContactName = (TextView) detailView.findViewById(R.id.contact_name);
 
         return detailView;
     }
@@ -322,18 +287,12 @@ public class ContactDetailFragment extends Fragment implements
                 // Standard system edit contact intent
                 Intent intent = new Intent(Intent.ACTION_EDIT, mContactUri);
 
-                // Because of an issue in Android 4.0 (API level 14), clicking Done or Back in the
-                // People app doesn't return the user to your app; instead, it displays the People
-                // app's contact list. A workaround, introduced in Android 4.0.3 (API level 15) is
-                // to set a special flag in the extended data for the Intent you send to the People
-                // app. The issue is does not appear in versions prior to Android 4.0. You can use
-                // the flag with any version of the People app; if the workaround isn't needed,
-                // the flag is ignored.
                 intent.putExtra("finishActivityOnSaveCompleted", true);
 
                 // Start the edit activity
                 startActivity(intent);
                 return true;
+
         }
         return super.onOptionsItemSelected(item);
     }
@@ -363,15 +322,6 @@ public class ContactDetailFragment extends Fragment implements
                 return new CursorLoader(getActivity(), mContactUri,
                         ContactDetailQuery.PROJECTION,
                         null, null, null);
-            case ContactAddressQuery.QUERY_ID:
-                // This query loads contact address details, see
-                // ContactAddressQuery for more information.
-                final Uri uri = Uri.withAppendedPath(mContactUri, Contacts.Data.CONTENT_DIRECTORY);
-                return new CursorLoader(getActivity(), uri,
-                        ContactAddressQuery.PROJECTION,
-                        ContactAddressQuery.SELECTION,
-                        null, null);
-
             case ContactEmailQuery.QUERY_ID:
                 final Uri uri2 = Uri.withAppendedPath(mContactUri, Contacts.Data.CONTENT_DIRECTORY);
                 // This query loads contact email details.
@@ -400,75 +350,28 @@ public class ContactDetailFragment extends Fragment implements
             case ContactDetailQuery.QUERY_ID:
                 // Moves to the first row in the Cursor
                 if (data.moveToFirst()) {
-                    // For the contact details query, fetches the contact display name.
-                    // ContactDetailQuery.DISPLAY_NAME maps to the appropriate display
-                    // name field based on OS version.
                     final String contactName = data.getString(ContactDetailQuery.DISPLAY_NAME);
-                    if (mIsTwoPaneLayout && mContactName != null) {
-                        // In the two pane layout, there is a dedicated TextView
-                        // that holds the contact name.
+
+                    if ( contactName != null ) {
                         mContactName.setText(contactName);
-                    } else {
-                        // In the single pane layout, sets the activity title
-                        // to the contact name. On HC+ this will be set as
-                        // the ActionBar title text.
                         getActivity().setTitle(contactName);
+                        ContactDetailActivity activity =  (ContactDetailActivity) this.getActivity();
+                        CollapsingToolbarLayout collapsingToolbar =
+                                (CollapsingToolbarLayout) this.getView().findViewById(R.id.collapsing_toolbar);
+                        collapsingToolbar.setTitle(contactName);
+                        activity.getSupportActionBar().setSubtitle("subtitle");
                     }
+
                 }
                 break;
-            case ContactAddressQuery.QUERY_ID:
-                // This query loads the contact address details. More than
-                // one contact address is possible, so move each one to a
-                // LinearLayout in a Scrollview so multiple addresses can
-                // be scrolled by the user.
 
-                // Each LinearLayout has the same LayoutParams so this can
-                // be created once and used for each address.
-
-
-                // Clears out the details layout first in case the details
-                // layout has addresses from a previous data load still
-                // added as children.
-                mDetailsLayout.removeAllViews();
-
-                // Loops through all the rows in the Cursor
-                if (data.moveToFirst()) {
-                    do {
-                        // Builds the address layout
-                        final LinearLayout layout = buildAddressLayout(
-                                data.getInt(ContactAddressQuery.TYPE),
-                                data.getString(ContactAddressQuery.LABEL),
-                                data.getString(ContactAddressQuery.ADDRESS));
-                        // Adds the new address layout to the details layout
-                        mDetailsLayout.addView(layout, layoutParams);
-                    } while (data.moveToNext());
-                } else {
-                    // If nothing found, adds an empty address layout
-                   // mDetailsLayout.addView(buildEmptyAddressLayout(), layoutParams);
-                }
-                break;
             case ContactEmailQuery.QUERY_ID:
-                mDetailsLayout.removeAllViews();
                 if (data.moveToFirst()) {
                     do {
-                        // Builds the address layout
-                        Log.d("DATA", String.format("type %d labe %s address %s",
-                                data.getInt(ContactEmailQuery.TYPE),
-                                data.getString(ContactEmailQuery.LABEL),
-                                data.getString(ContactEmailQuery.ADDRESS)));
-
-                        LinearLayout layout2 = buildAddressLayout(
-                                data.getInt(ContactAddressQuery.TYPE),
-                                data.getString(ContactAddressQuery.LABEL),
-                                data.getString(ContactAddressQuery.ADDRESS));
-                        // Adds the new address layout to the details layout
-                        mDetailsLayout.addView(layout2, layoutParams);
-
+                        mContactEmail.setText(data.getString(ContactEmailQuery.ADDRESS));
                         this.emailAddress = data.getString(ContactEmailQuery.ADDRESS);
-
+                        break;
                     } while (data.moveToNext());
-                } else {
-                    mDetailsLayout.addView(buildEmptyAddressLayout(), layoutParams);
                 }
                 break;
         }
@@ -480,104 +383,6 @@ public class ContactDetailFragment extends Fragment implements
         // bound to anything (like an adapter).
     }
 
-    /**
-     * Builds an empty address layout that just shows that no addresses
-     * were found for this contact.
-     *
-     * @return A LinearLayout to add to the contact details layout
-     */
-    private LinearLayout buildEmptyAddressLayout() {
-        return buildAddressLayout(0, null, null);
-    }
-
-    /**
-     * Builds an address LinearLayout based on address information from the Contacts Provider.
-     * Each address for the contact gets its own LinearLayout object; for example, if the contact
-     * has three postal addresses, then 3 LinearLayouts are generated.
-     *
-     * @param addressType From
-     * {@link android.provider.ContactsContract.CommonDataKinds.StructuredPostal#TYPE}
-     * @param addressTypeLabel From
-     * {@link android.provider.ContactsContract.CommonDataKinds.StructuredPostal#LABEL}
-     * @param address From
-     * {@link android.provider.ContactsContract.CommonDataKinds.StructuredPostal#FORMATTED_ADDRESS}
-     * @return A LinearLayout to add to the contact details layout,
-     *         populated with the provided address details.
-     */
-    private LinearLayout buildAddressLayout(int addressType, String addressTypeLabel,
-            final String address) {
-
-        // Inflates the address layout
-        final LinearLayout addressLayout =
-                (LinearLayout) LayoutInflater.from(getActivity()).inflate(
-                        R.layout.contact_detail_item, mDetailsLayout, false);
-
-        // Gets handles to the view objects in the layout
-        final TextView headerTextView =
-                (TextView) addressLayout.findViewById(R.id.contact_detail_header);
-        final TextView addressTextView =
-                (TextView) addressLayout.findViewById(R.id.contact_detail_item);
-        final ImageButton viewAddressButton =
-                (ImageButton) addressLayout.findViewById(R.id.button_view_address);
-
-        // If there's no addresses for the contact, shows the empty view and message, and hides the
-        // header and button.
-        if (addressTypeLabel == null && addressType == 0) {
-            headerTextView.setVisibility(View.GONE);
-            viewAddressButton.setVisibility(View.GONE);
-            addressTextView.setText(R.string.no_address);
-        } else {
-            // Gets postal address label type
-            CharSequence label =
-                    StructuredPostal.getTypeLabel(getResources(), addressType, addressTypeLabel);
-
-            // Sets TextView objects in the layout
-            headerTextView.setText(label);
-            addressTextView.setText(address);
-
-            // Defines an onClickListener object for the address button
-            viewAddressButton.setOnClickListener(new View.OnClickListener() {
-                // Defines what to do when users click the address button
-                @Override
-                public void onClick(View view) {
-
-                    final Intent viewIntent =
-                            new Intent(Intent.ACTION_VIEW, constructGeoUri(address));
-
-                    // A PackageManager instance is needed to verify that there's a default app
-                    // that handles ACTION_VIEW and a geo Uri.
-                    final PackageManager packageManager = getActivity().getPackageManager();
-
-                    // Checks for an activity that can handle this intent. Preferred in this
-                    // case over Intent.createChooser() as it will still let the user choose
-                    // a default (or use a previously set default) for geo Uris.
-                    if (packageManager.resolveActivity(
-                            viewIntent, PackageManager.MATCH_DEFAULT_ONLY) != null) {
-                        startActivity(viewIntent);
-                    } else {
-                        // If no default is found, displays a message that no activity can handle
-                        // the view button.
-                        Toast.makeText(getActivity(),
-                                R.string.no_intent_found, Toast.LENGTH_SHORT).show();
-                    }
-                }
-            });
-
-        }
-        return addressLayout;
-    }
-
-    /**
-     * Constructs a geo scheme Uri from a postal address.
-     *
-     * @param postalAddress A postal address.
-     * @return the geo:// Uri for the postal address.
-     */
-    private Uri constructGeoUri(String postalAddress) {
-        // Concatenates the geo:// prefix to the postal address. The postal address must be
-        // converted to Uri format and encoded for special characters.
-        return Uri.parse(GEO_URI_SCHEME_PREFIX + Uri.encode(postalAddress));
-    }
 
     /**
      * Fetches the width or height of the screen in pixels, whichever is larger. This is used to
@@ -729,33 +534,7 @@ public class ContactDetailFragment extends Fragment implements
         final static int DISPLAY_NAME = 1;
     }
 
-    /**
-     * This interface defines constants used by address retrieval queries.
-     */
-    public interface ContactAddressQuery {
-        // A unique query ID to distinguish queries being run by the
-        // LoaderManager.
-        final static int QUERY_ID = 2;
 
-        // The query projection (columns to fetch from the provider)
-        final static String[] PROJECTION = {
-                StructuredPostal._ID,
-                StructuredPostal.FORMATTED_ADDRESS,
-                StructuredPostal.TYPE,
-                StructuredPostal.LABEL,
-        };
-
-        // The query selection criteria. In this case matching against the
-        // StructuredPostal content mime type.
-        final static String SELECTION =
-                Data.MIMETYPE + "='" + StructuredPostal.CONTENT_ITEM_TYPE + "'";
-
-        // The query column numbers which map to each value in the projection
-        final static int ID = 0;
-        final static int ADDRESS = 1;
-        final static int TYPE = 2;
-        final static int LABEL = 3;
-    }
     public interface ContactEmailQuery {
         // A unique query ID to distinguish queries being run by the
         // LoaderManager.
@@ -769,14 +548,6 @@ public class ContactDetailFragment extends Fragment implements
                         ContactsContract.CommonDataKinds.Email.TYPE,
                         ContactsContract.CommonDataKinds.Email.LABEL
                 };
-
-        // The query selection criteria. In this case matching against the
-        // StructuredPostal content mime type.
-      //  static final String SELECTION =
-    //            Data.LOOKUP_KEY + " = ?" +
-     //                   " AND " +
-     //                   Data.MIMETYPE + " = " +
-      //                  "'" + ContactsContract.CommonDataKinds.Email.CONTENT_ITEM_TYPE + "'";
 
         final static String SELECTION =
                 Data.MIMETYPE + "='" + ContactsContract.CommonDataKinds.Email.CONTENT_ITEM_TYPE + "'";

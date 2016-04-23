@@ -27,8 +27,11 @@ import android.preference.PreferenceManager;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
+
 import br.com.simpleapp.rememberyou.R;
 
 import com.google.android.gms.common.AccountPicker;
@@ -47,6 +50,9 @@ public class GCMActivity extends AppCompatActivity {
 
     private static final int REQUEST_CHOOSE_ACCOUNT = 1;
 
+    private boolean registerIsRunning = true;
+    private View btStart;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -61,11 +67,7 @@ public class GCMActivity extends AppCompatActivity {
                         PreferenceManager.getDefaultSharedPreferences(context);
                 boolean sentToken = sharedPreferences
                         .getBoolean(QuickstartPreferences.SENT_TOKEN_TO_SERVER, false);
-                if (sentToken) {
-                    mInformationTextView.setText("gcm_send_message");
-                } else {
-                    mInformationTextView.setText("token_error_message");
-                }
+                registerFinish(sentToken);
             }
         };
 
@@ -76,6 +78,26 @@ public class GCMActivity extends AppCompatActivity {
 
         if (checkPlayServices()) {
             this.pickerAccount();
+        }
+
+        this.btStart = this.findViewById(R.id.btStart);
+        this.btStart.setVisibility(View.GONE);
+        this.btStart.setOnClickListener(new View.OnClickListener(){
+
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
+    }
+
+    private void registerFinish(boolean sentToken){
+        if (sentToken) {
+            this.registerIsRunning = true;
+            this.mInformationTextView.setText("Seu registro foi efetuado com sucesso!");
+            this.btStart.setVisibility(View.VISIBLE);
+        } else {
+            this.mInformationTextView.setText("Problema durante o registro, você precisa estar connectado com a internet.");
         }
     }
 
@@ -142,4 +164,12 @@ public class GCMActivity extends AppCompatActivity {
         }
     }
 
+    @Override
+    public void onBackPressed() {
+        if ( this.registerIsRunning ) {
+            Toast.makeText(this, "Essa operação não pode ser cancelada, aguarde mais um pouco...", Toast.LENGTH_LONG).show();
+        } else {
+            super.onBackPressed();
+        }
+    }
 }

@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
-    tools:context="br.com.simpleapp.rememberyou.MainActivity">
+    tools:context="br.com.simpleapp.rememberyou.contacts.ui.ContactDetailActivity">
 
     <android.support.design.widget.AppBarLayout
         android:layout_width="match_parent"
@@ -25,9 +25,8 @@
         android:paddingTop="@dimen/activity_vertical_margin"
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
-    <fragment
-        android:name="br.com.simpleapp.rememberyou.contacts.ui.ContactsListFragment"
-        android:id="@+id/contact_list"
+    <FrameLayout
+        android:id="@android:id/content"
         android:layout_height="match_parent"
         android:layout_width="match_parent"/>
     </RelativeLayout>

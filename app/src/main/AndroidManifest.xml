@@ -26,11 +26,12 @@
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:name="android.support.multidex.MultiDexApplication"
-        android:theme="@style/AppTheme" >
+        android:theme="@style/Theme.Main" >
         <activity
             android:name=".MainActivity"
             android:label="@string/app_name"
-            android:theme="@style/AppTheme.NoActionBar" >
+            android:screenOrientation="sensorPortrait"
+            android:theme="@style/Theme.Main" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -40,12 +41,13 @@
         <activity
             android:name=".gcm.GCMActivity"
             android:label="@string/app_name"
-            android:theme="@style/AppTheme.NoActionBar" >
+            android:theme="@style/Theme.Main" >
         </activity>
 
         <activity
             android:name=".contacts.ui.ContactsListActivity"
             android:label="@string/activity_contacts_list"
+            android:screenOrientation="sensorPortrait"
             android:windowSoftInputMode="adjustResize">
             <!-- Add intent-filter for search intent action and specify searchable configuration
                  via meta-data tag. This allows this activity to receive search intents via the
@@ -61,6 +63,7 @@
         <activity
             android:name=".contacts.ui.ContactDetailActivity"
             android:label="@string/activity_contact_detail"
+            android:screenOrientation="sensorPortrait"
             android:parentActivityName=".contacts.ui.ContactsListActivity">
             <!-- Define hierarchical parent of this activity, both via the system
                  parentActivityName attribute (added in API Level 16) and via meta-data annotation.
@@ -104,8 +107,9 @@
 
         <activity
             android:name=".auth.SignInActivity"
+            android:screenOrientation="sensorPortrait"
             android:label="Login"
-            android:theme="@style/AppTheme.NoActionBar">
+            android:theme="@style/Theme.Main">
         </activity>
     </application>
 

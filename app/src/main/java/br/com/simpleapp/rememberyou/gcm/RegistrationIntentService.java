@@ -106,10 +106,10 @@ public class RegistrationIntentService extends IntentService {
                 .build();
 
         IRememberYou service = retrofit.create(IRememberYou.class);
-        retrofit.Response<ResponseBody> response = service.registerDevice("Marcos", account, token).execute();
-        if ( !response.isSuccess() ) {
-            throw  new IOException(response.errorBody().string());
-        }
+        //retrofit.Response<ResponseBody> response = service.registerDevice("Marcos", account, token).execute();
+        //if ( !response.isSuccess() ) {
+         //   throw  new IOException(response.errorBody().string());
+        //}
 
     }
 
