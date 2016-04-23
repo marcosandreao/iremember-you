@@ -42,7 +42,7 @@ public class ContactDetailActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         if (BuildConfig.DEBUG) {
             // Enable strict mode checks when in debug modes
-            Utils.enableStrictMode();
+          //  Utils.enableStrictMode();
         }
         super.onCreate(savedInstanceState);
 

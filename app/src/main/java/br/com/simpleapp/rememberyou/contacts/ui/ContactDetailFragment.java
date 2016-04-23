@@ -16,31 +16,26 @@
 
 package br.com.simpleapp.rememberyou.contacts.ui;
 
-import android.accounts.AccountManager;
 import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
 import android.content.ContentResolver;
 import android.content.Intent;
-import android.content.SharedPreferences;
-import android.content.pm.PackageManager;
 import android.content.res.AssetFileDescriptor;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.provider.ContactsContract;
-import android.provider.ContactsContract.CommonDataKinds.StructuredPostal;
 import android.provider.ContactsContract.Contacts;
 import android.provider.ContactsContract.Contacts.Photo;
 import android.provider.ContactsContract.Data;
 import android.support.design.widget.CollapsingToolbarLayout;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
-import android.support.v7.app.ActionBar;
 import android.support.v7.widget.Toolbar;
 import android.util.DisplayMetrics;
 import android.util.Log;
@@ -49,28 +44,21 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
-
-import com.squareup.okhttp.ResponseBody;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
 
 import br.com.simpleapp.rememberyou.BuildConfig;
 import br.com.simpleapp.rememberyou.R;
-import br.com.simpleapp.rememberyou.api.IRememberYou;
 import br.com.simpleapp.rememberyou.contacts.util.ImageLoader;
 import br.com.simpleapp.rememberyou.contacts.util.Utils;
-import br.com.simpleapp.rememberyou.gcm.QuickstartPreferences;
-import br.com.simpleapp.rememberyou.utils.Constants;
-import retrofit.Callback;
-import retrofit.Response;
-import retrofit.Retrofit;
+import br.com.simpleapp.rememberyou.service.UserService;
 
 /**
  * This fragment displays details of a specific contact from the contacts provider. It shows the
@@ -107,6 +95,10 @@ public class ContactDetailFragment extends Fragment implements
     private String emailAddress;
     private TextView mContactEmail;
 
+    private UserService favoriteService = new UserService();
+    private String contactName;
+
+    private FloatingActionButton favoriteActionButton;
     /**
      * Factory method to generate a new instance of the fragment given a contact Uri. A factory
      * method is preferable to simply using the constructor as it handles creating the bundle and
@@ -250,6 +242,20 @@ public class ContactDetailFragment extends Fragment implements
         mContactEmail = (TextView) detailView.findViewById(R.id.contact_email);
         mContactName = (TextView) detailView.findViewById(R.id.contact_name);
 
+        this.favoriteActionButton = (FloatingActionButton) detailView.findViewById(R.id.fab);
+        this.favoriteActionButton.setOnClickListener(new OnClickListener(){
+
+            @Override
+            public void onClick(View v) {
+                if( emailAddress != null ) {
+                    favoriteService.setWithFavorie(contactName, emailAddress);
+                    setImageFavorite();
+                } else {
+                    Toast.makeText(ContactDetailFragment.this.getContext(), "Aguarde, carregando dados do contato.", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+
         return detailView;
     }
 
@@ -310,6 +316,7 @@ public class ContactDetailFragment extends Fragment implements
         // If contactUri is null the edit menu item should be hidden, otherwise
         // it is visible.
         mEditContactMenuItem.setVisible(mContactUri != null);
+
     }
 
     @Override
@@ -342,9 +349,6 @@ public class ContactDetailFragment extends Fragment implements
         if (mContactUri == null) {
             return;
         }
-        final LinearLayout.LayoutParams layoutParams =
-                new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
-                        ViewGroup.LayoutParams.WRAP_CONTENT);
 
         switch (loader.getId()) {
             case ContactDetailQuery.QUERY_ID:
@@ -353,13 +357,12 @@ public class ContactDetailFragment extends Fragment implements
                     final String contactName = data.getString(ContactDetailQuery.DISPLAY_NAME);
 
                     if ( contactName != null ) {
+                        this.contactName = contactName;
                         mContactName.setText(contactName);
                         getActivity().setTitle(contactName);
-                        ContactDetailActivity activity =  (ContactDetailActivity) this.getActivity();
                         CollapsingToolbarLayout collapsingToolbar =
                                 (CollapsingToolbarLayout) this.getView().findViewById(R.id.collapsing_toolbar);
                         collapsingToolbar.setTitle(contactName);
-                        activity.getSupportActionBar().setSubtitle("subtitle");
                     }
 
                 }
@@ -370,10 +373,21 @@ public class ContactDetailFragment extends Fragment implements
                     do {
                         mContactEmail.setText(data.getString(ContactEmailQuery.ADDRESS));
                         this.emailAddress = data.getString(ContactEmailQuery.ADDRESS);
+                        this.setImageFavorite();
+
                         break;
                     } while (data.moveToNext());
                 }
                 break;
+        }
+    }
+
+    private void setImageFavorite(){
+
+        if( this.emailAddress != null && this.favoriteService.isFavorie(this.emailAddress) ) {
+            this.favoriteActionButton.setImageResource(R.drawable.ic_star_white_18dp);
+        } else {
+            this.favoriteActionButton.setImageResource(R.drawable.ic_star_border_white_18dp);
         }
     }
 
