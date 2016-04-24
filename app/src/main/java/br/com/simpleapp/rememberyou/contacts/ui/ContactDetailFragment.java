@@ -361,9 +361,11 @@ public class ContactDetailFragment extends Fragment implements
                 // Start the edit activity
                 startActivity(intent);
                 return true;
+            default:
+                this.getActivity().onBackPressed();
+                return true;
 
         }
-        return super.onOptionsItemSelected(item);
     }
 
     @Override

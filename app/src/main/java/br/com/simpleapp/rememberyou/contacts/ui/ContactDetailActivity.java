@@ -76,20 +76,4 @@ public class ContactDetailActivity extends AppCompatActivity {
         }
     }
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case android.R.id.home:
-                // Tapping on top left ActionBar icon navigates "up" to hierarchical parent screen.
-                // The parent is defined in the AndroidManifest entry for this activity via the
-                // parentActivityName attribute (and via meta-data tag for OS versions before API
-                // Level 16). See the "Tasks and Back Stack" guide for more information:
-                // http://developer.android.com/guide/components/tasks-and-back-stack.html
-                NavUtils.navigateUpFromSameTask(this);
-                return true;
-        }
-        // Otherwise, pass the item to the super implementation for handling, as described in the
-        // documentation.
-        return super.onOptionsItemSelected(item);
-    }
 }
