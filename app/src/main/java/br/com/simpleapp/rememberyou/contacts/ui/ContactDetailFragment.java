@@ -30,6 +30,7 @@ import android.provider.ContactsContract;
 import android.provider.ContactsContract.Contacts;
 import android.provider.ContactsContract.Contacts.Photo;
 import android.provider.ContactsContract.Data;
+import android.support.annotation.Nullable;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
@@ -58,6 +59,7 @@ import br.com.simpleapp.rememberyou.BuildConfig;
 import br.com.simpleapp.rememberyou.R;
 import br.com.simpleapp.rememberyou.contacts.util.ImageLoader;
 import br.com.simpleapp.rememberyou.contacts.util.Utils;
+import br.com.simpleapp.rememberyou.entity.User;
 import br.com.simpleapp.rememberyou.service.UserService;
 import br.com.simpleapp.rememberyou.utils.Emotions;
 
@@ -263,6 +265,22 @@ public class ContactDetailFragment extends Fragment implements
         return detailView;
     }
 
+    @Override
+    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        this.fabsend.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                send();
+            }
+        });
+    }
+
+    private void send(){
+        this.favoriteService.prepareToSent(contactName, emailAddress, this.fabsend.getTag().toString());
+        this.getActivity().finish();
+    }
+
     private void setClicksEmotions(ViewGroup view){
         for ( int i = 0; i < view.getChildCount(); i++ ){
             ViewGroup group = (ViewGroup) view.getChildAt(i);
@@ -272,15 +290,20 @@ public class ContactDetailFragment extends Fragment implements
                     @Override
                     public void onClick(View v) {
                         String tag = v.getTag().toString();
-                        fabsend.setTag(tag);
-                        Log.d("tag", tag);
-                        fabsend.setImageResource(Emotions.getByKey(tag));
-                        markItem();
+                        mark(tag);
+
                     }
                 });
             }
 
         }
+    }
+
+    private void mark(String tag) {
+        fabsend.setTag(tag);
+        Log.d("tag", tag);
+        fabsend.setImageResource(Emotions.getByKey(tag));
+        markItem();
     }
 
     private void markItem(){
@@ -290,9 +313,9 @@ public class ContactDetailFragment extends Fragment implements
             for ( int j = 0; j < group.getChildCount(); j++ ){
                 View viewItem = group.getChildAt(j);
                 if ( viewItem.getTag().toString().equals(fabsend.getTag().toString()) ){
-                    viewItem.setAlpha(0.5F);
-                } else {
                     viewItem.setAlpha(1F);
+                } else {
+                    viewItem.setAlpha(0.5F);
                 }
             }
 
@@ -413,6 +436,12 @@ public class ContactDetailFragment extends Fragment implements
                     do {
                         mContactEmail.setText(data.getString(ContactEmailQuery.ADDRESS));
                         this.emailAddress = data.getString(ContactEmailQuery.ADDRESS);
+
+                        final User user = this.favoriteService.findByEmail(this.emailAddress);
+                        if ( user != null && user.getLastEmotion() != null && user.getLastEmotion().length() > 0 ) {
+                            mark(user.getLastEmotion());
+                        }
+
                         this.setImageFavorite();
 
                         break;

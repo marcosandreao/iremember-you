@@ -49,4 +49,23 @@ public class UserService {
         }
         return users.get(0);
     }
+
+    public void prepareToSent(String contactName, String emailAddress, String emotion) {
+        User user = this.findByEmail(emailAddress);
+        if ( user == null ) {
+            user = new User();
+            user.setEmail(emailAddress);
+            user.setName(contactName);
+            user.setLastEmotion(emotion);
+            session.getUserDao().insert(user);
+        } else {
+            user.setName(contactName);
+            user.setLastEmotion(emotion);
+            session.getUserDao().update(user);
+        }
+    }
+
+    public List<User> listFavorites() {
+        return this.session.getUserDao().queryBuilder().where(UserDao.Properties.Favorite.eq(true)).list();
+    }
 }

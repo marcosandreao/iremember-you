@@ -14,11 +14,13 @@ public class GreendaoGenarator {
     }
 
     private static void createUser(Schema schema) {
-        final Entity favorite = schema.addEntity("User");
-        favorite.addIdProperty();
-        favorite.addStringProperty("name");
-        favorite.addStringProperty("email").notNull();
-        favorite.addStringProperty("imgUrl");
-        favorite.addBooleanProperty("favorite");
+        final Entity user = schema.addEntity("User");
+        user.addIdProperty();
+        user.addStringProperty("name");
+        user.addStringProperty("email").notNull();
+        user.addStringProperty("imgUrl");
+        user.addBooleanProperty("favorite");
+        user.addStringProperty("lastEmotion");
+        user.addStringProperty("contactId");
     }
 }

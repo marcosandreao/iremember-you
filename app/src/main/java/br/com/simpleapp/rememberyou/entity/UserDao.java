@@ -28,6 +28,8 @@ public class UserDao extends AbstractDao<User, Long> {
         public final static Property Email = new Property(2, String.class, "email", false, "EMAIL");
         public final static Property ImgUrl = new Property(3, String.class, "imgUrl", false, "IMG_URL");
         public final static Property Favorite = new Property(4, Boolean.class, "favorite", false, "FAVORITE");
+        public final static Property LastEmotion = new Property(5, String.class, "lastEmotion", false, "LAST_EMOTION");
+        public final static Property ContactId = new Property(6, String.class, "contactId", false, "CONTACT_ID");
     };
 
 
@@ -47,7 +49,9 @@ public class UserDao extends AbstractDao<User, Long> {
                 "\"NAME\" TEXT," + // 1: name
                 "\"EMAIL\" TEXT NOT NULL ," + // 2: email
                 "\"IMG_URL\" TEXT," + // 3: imgUrl
-                "\"FAVORITE\" INTEGER);"); // 4: favorite
+                "\"FAVORITE\" INTEGER," + // 4: favorite
+                "\"LAST_EMOTION\" TEXT," + // 5: lastEmotion
+                "\"CONTACT_ID\" TEXT);"); // 6: contactId
     }
 
     /** Drops the underlying database table. */
@@ -81,6 +85,16 @@ public class UserDao extends AbstractDao<User, Long> {
         if (favorite != null) {
             stmt.bindLong(5, favorite ? 1L: 0L);
         }
+ 
+        String lastEmotion = entity.getLastEmotion();
+        if (lastEmotion != null) {
+            stmt.bindString(6, lastEmotion);
+        }
+ 
+        String contactId = entity.getContactId();
+        if (contactId != null) {
+            stmt.bindString(7, contactId);
+        }
     }
 
     /** @inheritdoc */
@@ -97,7 +111,9 @@ public class UserDao extends AbstractDao<User, Long> {
             cursor.isNull(offset + 1) ? null : cursor.getString(offset + 1), // name
             cursor.getString(offset + 2), // email
             cursor.isNull(offset + 3) ? null : cursor.getString(offset + 3), // imgUrl
-            cursor.isNull(offset + 4) ? null : cursor.getShort(offset + 4) != 0 // favorite
+            cursor.isNull(offset + 4) ? null : cursor.getShort(offset + 4) != 0, // favorite
+            cursor.isNull(offset + 5) ? null : cursor.getString(offset + 5), // lastEmotion
+            cursor.isNull(offset + 6) ? null : cursor.getString(offset + 6) // contactId
         );
         return entity;
     }
@@ -110,6 +126,8 @@ public class UserDao extends AbstractDao<User, Long> {
         entity.setEmail(cursor.getString(offset + 2));
         entity.setImgUrl(cursor.isNull(offset + 3) ? null : cursor.getString(offset + 3));
         entity.setFavorite(cursor.isNull(offset + 4) ? null : cursor.getShort(offset + 4) != 0);
+        entity.setLastEmotion(cursor.isNull(offset + 5) ? null : cursor.getString(offset + 5));
+        entity.setContactId(cursor.isNull(offset + 6) ? null : cursor.getString(offset + 6));
      }
     
     /** @inheritdoc */

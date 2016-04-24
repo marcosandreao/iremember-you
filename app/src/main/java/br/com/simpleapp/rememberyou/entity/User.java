@@ -12,6 +12,8 @@ public class User {
     private String email;
     private String imgUrl;
     private Boolean favorite;
+    private String lastEmotion;
+    private String contactId;
 
     public User() {
     }
@@ -20,12 +22,14 @@ public class User {
         this.id = id;
     }
 
-    public User(Long id, String name, String email, String imgUrl, Boolean favorite) {
+    public User(Long id, String name, String email, String imgUrl, Boolean favorite, String lastEmotion, String contactId) {
         this.id = id;
         this.name = name;
         this.email = email;
         this.imgUrl = imgUrl;
         this.favorite = favorite;
+        this.lastEmotion = lastEmotion;
+        this.contactId = contactId;
     }
 
     public Long getId() {
@@ -68,6 +72,22 @@ public class User {
 
     public void setFavorite(Boolean favorite) {
         this.favorite = favorite;
+    }
+
+    public String getLastEmotion() {
+        return lastEmotion;
+    }
+
+    public void setLastEmotion(String lastEmotion) {
+        this.lastEmotion = lastEmotion;
+    }
+
+    public String getContactId() {
+        return contactId;
+    }
+
+    public void setContactId(String contactId) {
+        this.contactId = contactId;
     }
 
 }

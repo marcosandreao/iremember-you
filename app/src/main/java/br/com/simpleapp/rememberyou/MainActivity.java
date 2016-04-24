@@ -16,10 +16,12 @@ import com.google.android.gms.common.AccountPicker;
 
 import br.com.simpleapp.rememberyou.auth.SignInActivity;
 import br.com.simpleapp.rememberyou.contacts.ui.ContactsListActivity;
+import br.com.simpleapp.rememberyou.entity.User;
 import br.com.simpleapp.rememberyou.gcm.GCMActivity;
 import br.com.simpleapp.rememberyou.gcm.QuickstartPreferences;
+import br.com.simpleapp.rememberyou.home.UserFavoriteFragment;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements UserFavoriteFragment.OnListFragmentInteractionListener {
 
     private static final int REQUEST_CHOOSE_ACCOUNT = 1;
 
@@ -41,6 +43,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        this.getSupportFragmentManager().beginTransaction().add(R.id.content, UserFavoriteFragment.newInstance(0)).commit();
         this.registerGCMIfNeed();
     }
 
@@ -76,5 +79,10 @@ public class MainActivity extends AppCompatActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onListFragmentInteraction(User item) {
+
     }
 }
