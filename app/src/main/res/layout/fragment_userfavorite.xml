@@ -1,28 +1,78 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:foreground="?android:attr/selectableItemBackground"
-    android:clickable="true">
 
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
+    <android.support.v7.widget.CardView
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:card_view="http://schemas.android.com/apk/res-auto"
+        android:foreground="?android:attr/selectableItemBackground"
+        android:clickable="true"
+        android:id="@+id/card_view"
+        android:layout_width="match_parent"
+        android:layout_height="110dp"
+        card_view:cardCornerRadius="4dp"
 
-            <TextView
-                android:id="@+id/id"
+        android:layout_margin="5dp">
+
+        <RelativeLayout
+            android:padding="10dp"
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+            <ImageView
+                android:id="@+id/ivPerfil"
+                android:layout_width="50dp"
+                android:tag="emotion_1f44d"
+                android:src="@drawable/ic_contact_picture_180_holo_light"
+                android:layout_height="wrap_content"/>
+
+            <LinearLayout
+                android:layout_toRightOf="@+id/ivPerfil"
+                android:layout_marginLeft="10dp"
+                android:orientation="vertical"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_margin="@dimen/text_margin"
-                android:textAppearance="?attr/textAppearanceListItem" />
+                android:gravity="center_vertical"
+                android:layout_height="match_parent">
+                <TextView
+                    android:visibility="visible"
+                    android:id="@+id/account_name"
+                    android:singleLine="true"
+                    android:lines="1"
+                    android:text="Fulano"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Title" />
+                <RelativeLayout
+                    android:id="@+id/right"
+                    android:layout_alignParentRight="true"
+                    android:orientation="horizontal"
+                    android:layout_width="wrap_content"
+                    android:gravity="center_vertical"
+                    android:layout_height="match_parent">
 
-            <TextView
-                android:id="@+id/content"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_margin="@dimen/text_margin"
-                android:textAppearance="?attr/textAppearanceListItem" />
-        </LinearLayout>
-</FrameLayout>
+                    <ImageView
+                        android:id="@+id/ivEmotionTarget"
+                        android:layout_width="30dp"
+                        android:tag="emotion_1f44d"
+                        android:layout_centerVertical="true"
+                        android:src="@drawable/emotion_1f44d"
+                        android:layout_height="30dp"/>
+
+                    <ImageButton
+                        android:layout_centerVertical="true"
+                        android:layout_alignParentRight="true"
+                        android:layout_gravity="right"
+                        android:id="@+id/btStart"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/ic_send_white_24dp"
+                        android:backgroundTint="@android:color/black"
+                        android:tint="@android:color/black"
+                        android:text="Iniciar a diversão"
+                        style="?android:attr/borderlessButtonStyle"
+                        />
+
+
+                </RelativeLayout>
+            </LinearLayout>
+        </RelativeLayout>
+    </android.support.v7.widget.CardView>
+

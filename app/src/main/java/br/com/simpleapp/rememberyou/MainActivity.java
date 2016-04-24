@@ -5,16 +5,12 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 
-import com.google.android.gms.common.AccountPicker;
-
-import br.com.simpleapp.rememberyou.auth.SignInActivity;
 import br.com.simpleapp.rememberyou.contacts.ui.ContactsListActivity;
 import br.com.simpleapp.rememberyou.entity.User;
 import br.com.simpleapp.rememberyou.gcm.GCMActivity;
@@ -31,18 +27,17 @@ public class MainActivity extends AppCompatActivity implements UserFavoriteFragm
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        this.getSupportActionBar().setDisplayHomeAsUpEnabled(false);
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                //      .setAction("Action", null).show();
                 startActivityForResult(new Intent(MainActivity.this, ContactsListActivity.class), REQUEST_CHOOSE_ACCOUNT);
             }
         });
 
-        this.getSupportFragmentManager().beginTransaction().add(R.id.content, UserFavoriteFragment.newInstance(0)).commit();
+        this.getSupportFragmentManager().beginTransaction().replace(R.id.content, UserFavoriteFragment.newInstance(0)).commit();
         this.registerGCMIfNeed();
     }
 
@@ -50,26 +45,17 @@ public class MainActivity extends AppCompatActivity implements UserFavoriteFragm
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
         if ( !sharedPreferences.getBoolean(QuickstartPreferences.SENT_TOKEN_TO_SERVER, false) ){
             this.startActivity(new Intent(this, GCMActivity.class));
-            //final Intent intent = AccountPicker.newChooseAccountIntent(null, null, new String[]{"com.google"},
-//                    false, null, null, null, null);
-  //          startActivityForResult(intent, REQUEST_CHOOSE_ACCOUNT);
         }
-        //this.startActivity(new Intent(this, ContactsListActivity.class));
-        //this.startActivity(new Intent(this, SignInActivity.class));
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_main, menu);
+       // getMenuInflater().inflate(R.menu.menu_main, menu);
         return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement

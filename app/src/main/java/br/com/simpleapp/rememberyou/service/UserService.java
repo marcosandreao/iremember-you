@@ -4,8 +4,6 @@ import java.util.List;
 
 import br.com.simpleapp.rememberyou.RememberYouApplication;
 import br.com.simpleapp.rememberyou.entity.DaoSession;
-import br.com.simpleapp.rememberyou.entity.Favorite;
-import br.com.simpleapp.rememberyou.entity.FavoriteDao;
 import br.com.simpleapp.rememberyou.entity.User;
 import br.com.simpleapp.rememberyou.entity.UserDao;
 
