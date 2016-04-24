@@ -20,6 +20,7 @@
 -->
 <android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:card_view="http://schemas.android.com/apk/res-auto"
     android:id="@+id/main_content"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -94,94 +95,148 @@
 
             </LinearLayout>
 
-            <LinearLayout
-                style="@style/Widget.CardContent"
+            <android.support.v7.widget.CardView
+
                 android:layout_width="match_parent"
-                android:orientation="vertical"
-                android:id="@+id/llEmotions"
-                android:layout_height="wrap_content">
+                android:layout_height="160dp"
+                card_view:cardCornerRadius="4dp"
 
+                android:layout_margin="5dp">
                 <LinearLayout
-                    android:weightSum="8"
-                    android:orientation="horizontal"
+                    style="@style/Widget.CardContent"
                     android:layout_width="match_parent"
-                    android:layout_height="50dp">
-                    <ImageView
-                        android:layout_weight="2"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:tag="emotion_1f44d"
-                        android:src="@drawable/emotion_1f44d"/>
+                    android:orientation="vertical"
+                    android:id="@+id/llEmotions"
+                    android:layout_height="wrap_content">
 
-                    <ImageView
-                        android:layout_weight="2"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:alpha="0.5"
-                        android:tag="emotion_1f60d"
-                        android:src="@drawable/emotion_1f60d"/>
+                    <LinearLayout
+                        android:weightSum="8"
+                        android:orientation="horizontal"
+                        android:layout_width="match_parent"
+                        android:layout_height="50dp">
+                        <ImageView
+                            android:layout_weight="2"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:tag="emotion_1f44d"
+                            android:src="@drawable/emotion_1f44d"/>
 
-                    <ImageView
-                        android:layout_weight="2"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:alpha="0.5"
-                        android:tag="emotion_1f494"
-                        android:src="@drawable/emotion_1f494"/>
+                        <ImageView
+                            android:layout_weight="2"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:alpha="0.5"
+                            android:tag="emotion_1f60d"
+                            android:src="@drawable/emotion_1f60d"/>
 
-                    <ImageView
-                        android:layout_weight="2"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:alpha="0.5"
-                        android:tag="emotion_1f600"
-                        android:src="@drawable/emotion_1f600"/>
+                        <ImageView
+                            android:layout_weight="2"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:alpha="0.5"
+                            android:tag="emotion_1f494"
+                            android:src="@drawable/emotion_1f494"/>
 
+                        <ImageView
+                            android:layout_weight="2"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:alpha="0.5"
+                            android:tag="emotion_1f600"
+                            android:src="@drawable/emotion_1f600"/>
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_marginTop="5dp"
+                        android:weightSum="4"
+                        android:orientation="horizontal"
+                        android:layout_width="match_parent"
+                        android:layout_height="50dp">
+                        <ImageView
+                            android:layout_weight="1"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:alpha="0.5"
+                            android:tag="emotion_2764"
+                            android:src="@drawable/emotion_2764"/>
+
+                        <ImageView
+                            android:layout_weight="1"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:alpha="0.5"
+                            android:tag="emotion_1f609"
+                            android:src="@drawable/emotion_1f609"/>
+
+                        <ImageView
+                            android:layout_weight="1"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:alpha="0.5"
+                            android:tag="emotion_1f614"
+                            android:src="@drawable/emotion_1f614"/>
+
+                        <ImageView
+                            android:layout_weight="1"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:alpha="0.5"
+                            android:tag="emotion_1f621"
+                            android:src="@drawable/emotion_1f621"/>
+
+                    </LinearLayout>
                 </LinearLayout>
 
-                <LinearLayout
-                    android:layout_marginTop="5dp"
-                    android:weightSum="4"
-                    android:orientation="horizontal"
+            </android.support.v7.widget.CardView>
+            <android.support.v7.widget.CardView
+
+                    android:id="@+id/card_view"
                     android:layout_width="match_parent"
-                    android:layout_height="50dp">
-                    <ImageView
-                        android:layout_weight="1"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:alpha="0.5"
-                        android:tag="emotion_2764"
-                        android:src="@drawable/emotion_2764"/>
+                    android:layout_height="110dp"
+                    card_view:cardCornerRadius="4dp"
 
-                    <ImageView
-                        android:layout_weight="1"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:alpha="0.5"
-                        android:tag="emotion_1f609"
-                        android:src="@drawable/emotion_1f609"/>
+                    android:layout_margin="5dp">
 
-                    <ImageView
-                        android:layout_weight="1"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:alpha="0.5"
-                        android:tag="emotion_1f614"
-                        android:src="@drawable/emotion_1f614"/>
+                    <LinearLayout
+                        android:padding="10dp"
+                        android:orientation="horizontal"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent">
+                        <ImageView
+                            android:id="@+id/ivEmotionTarget"
+                            android:layout_width="50dp"
+                            android:tag="emotion_1f44d"
+                            android:src="@drawable/emotion_1f44d"
+                            android:layout_height="wrap_content"/>
+                        <LinearLayout
+                            android:layout_marginLeft="15dp"
+                            android:layout_weight="1"
+                            android:orientation="vertical"
+                            android:layout_width="0dp"
+                            android:gravity="center_vertical"
+                            android:layout_height="match_parent">
 
-                    <ImageView
-                        android:layout_weight="1"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:alpha="0.5"
-                        android:tag="emotion_1f621"
-                        android:src="@drawable/emotion_1f621"/>
+                            <TextView
+                                android:visibility="visible"
+                                android:id="@+id/not_name"
+                                android:singleLine="true"
+                                android:lines="1"
+                                android:text="Fulano"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:textAppearance="@style/TextAppearance.AppCompat.Title" />
+                            <TextView
+                                android:text="Lembrou de você"
+                                android:id="@+id/not_msg"
+                                android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"/>
+                        </LinearLayout>
 
-                </LinearLayout>
 
-
-            </LinearLayout>
-
+                    </LinearLayout>
+                </android.support.v7.widget.CardView>
 
             <TextView android:id="@id/android:empty"
                 android:gravity="center"
@@ -191,7 +246,6 @@
                 android:fontFamily="sans-serif-light"
                 android:visibility="gone"
                 android:textAppearance="?android:attr/textAppearanceLarge"/>
-
         </LinearLayout>
 
     </android.support.v4.widget.NestedScrollView>
@@ -210,8 +264,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/fab_margin"
-        android:src="@drawable/emotion_1f44d"
-        android:tag="emotion_1f44d"
+        android:src="@drawable/ic_send_white_24dp"
         app:layout_anchor="@id/scrool"
         app:layout_anchorGravity="bottom|end" />
 

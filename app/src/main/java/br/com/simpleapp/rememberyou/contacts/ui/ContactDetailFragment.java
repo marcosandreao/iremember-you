@@ -103,6 +103,7 @@ public class ContactDetailFragment extends Fragment implements
 
     private FloatingActionButton favoriteActionButton;
     private FloatingActionButton fabsend;
+    private ImageView ivEmotionTarget;
 
     /**
      * Factory method to generate a new instance of the fragment given a contact Uri. A factory
@@ -246,7 +247,7 @@ public class ContactDetailFragment extends Fragment implements
         mEmptyView = (TextView) detailView.findViewById(android.R.id.empty);
         mContactEmail = (TextView) detailView.findViewById(R.id.contact_email);
         mContactName = (TextView) detailView.findViewById(R.id.contact_name);
-
+        this.ivEmotionTarget = (ImageView) detailView.findViewById(R.id.ivEmotionTarget);
         this.favoriteActionButton = (FloatingActionButton) detailView.findViewById(R.id.fab);
         this.fabsend = (FloatingActionButton) detailView.findViewById(R.id.fabsend);
         this.favoriteActionButton.setOnClickListener(new OnClickListener(){
@@ -277,7 +278,7 @@ public class ContactDetailFragment extends Fragment implements
     }
 
     private void send(){
-        this.favoriteService.prepareToSent(contactName, emailAddress, this.fabsend.getTag().toString());
+        this.favoriteService.prepareToSent(contactName, emailAddress, this.ivEmotionTarget.getTag().toString());
         this.getActivity().finish();
     }
 
@@ -300,9 +301,9 @@ public class ContactDetailFragment extends Fragment implements
     }
 
     private void mark(String tag) {
-        fabsend.setTag(tag);
+        ivEmotionTarget.setTag(tag);
         Log.d("tag", tag);
-        fabsend.setImageResource(Emotions.getByKey(tag));
+        ivEmotionTarget.setImageResource(Emotions.getByKey(tag));
         markItem();
     }
 
@@ -312,7 +313,7 @@ public class ContactDetailFragment extends Fragment implements
             ViewGroup group = (ViewGroup) view.getChildAt(i);
             for ( int j = 0; j < group.getChildCount(); j++ ){
                 View viewItem = group.getChildAt(j);
-                if ( viewItem.getTag().toString().equals(fabsend.getTag().toString()) ){
+                if ( viewItem.getTag().toString().equals(ivEmotionTarget.getTag().toString()) ){
                     viewItem.setAlpha(1F);
                 } else {
                     viewItem.setAlpha(0.5F);
