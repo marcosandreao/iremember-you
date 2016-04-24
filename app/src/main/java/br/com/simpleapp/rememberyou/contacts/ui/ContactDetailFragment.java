@@ -59,6 +59,7 @@ import br.com.simpleapp.rememberyou.R;
 import br.com.simpleapp.rememberyou.contacts.util.ImageLoader;
 import br.com.simpleapp.rememberyou.contacts.util.Utils;
 import br.com.simpleapp.rememberyou.service.UserService;
+import br.com.simpleapp.rememberyou.utils.Emotions;
 
 /**
  * This fragment displays details of a specific contact from the contacts provider. It shows the
@@ -99,6 +100,8 @@ public class ContactDetailFragment extends Fragment implements
     private String contactName;
 
     private FloatingActionButton favoriteActionButton;
+    private FloatingActionButton fabsend;
+
     /**
      * Factory method to generate a new instance of the fragment given a contact Uri. A factory
      * method is preferable to simply using the constructor as it handles creating the bundle and
@@ -243,6 +246,7 @@ public class ContactDetailFragment extends Fragment implements
         mContactName = (TextView) detailView.findViewById(R.id.contact_name);
 
         this.favoriteActionButton = (FloatingActionButton) detailView.findViewById(R.id.fab);
+        this.fabsend = (FloatingActionButton) detailView.findViewById(R.id.fabsend);
         this.favoriteActionButton.setOnClickListener(new OnClickListener(){
 
             @Override
@@ -255,8 +259,44 @@ public class ContactDetailFragment extends Fragment implements
                 }
             }
         });
-
+        setClicksEmotions( (ViewGroup) detailView.findViewById(R.id.llEmotions));
         return detailView;
+    }
+
+    private void setClicksEmotions(ViewGroup view){
+        for ( int i = 0; i < view.getChildCount(); i++ ){
+            ViewGroup group = (ViewGroup) view.getChildAt(i);
+            for ( int j = 0; j < group.getChildCount(); j++ ){
+                View viewItem = group.getChildAt(j);
+                viewItem.setOnClickListener(new OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        String tag = v.getTag().toString();
+                        fabsend.setTag(tag);
+                        Log.d("tag", tag);
+                        fabsend.setImageResource(Emotions.getByKey(tag));
+                        markItem();
+                    }
+                });
+            }
+
+        }
+    }
+
+    private void markItem(){
+        ViewGroup view = (ViewGroup) getView().findViewById(R.id.llEmotions);
+        for ( int i = 0; i < view.getChildCount(); i++ ){
+            ViewGroup group = (ViewGroup) view.getChildAt(i);
+            for ( int j = 0; j < group.getChildCount(); j++ ){
+                View viewItem = group.getChildAt(j);
+                if ( viewItem.getTag().toString().equals(fabsend.getTag().toString()) ){
+                    viewItem.setAlpha(0.5F);
+                } else {
+                    viewItem.setAlpha(1F);
+                }
+            }
+
+        }
     }
 
     @Override
