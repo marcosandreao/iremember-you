@@ -23,6 +23,8 @@ public class MainActivity extends AppCompatActivity implements UserFavoriteFragm
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        this.registerGCMIfNeed();
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -38,13 +40,14 @@ public class MainActivity extends AppCompatActivity implements UserFavoriteFragm
         });
 
         this.getSupportFragmentManager().beginTransaction().replace(R.id.content, UserFavoriteFragment.newInstance(0)).commit();
-        this.registerGCMIfNeed();
+
     }
 
     private void registerGCMIfNeed(){
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
         if ( !sharedPreferences.getBoolean(QuickstartPreferences.SENT_TOKEN_TO_SERVER, false) ){
-            this.startActivity(new Intent(this, GCMActivity.class));
+            this.startActivity(new Intent(this, WizardActivity.class));
+            this.finish();
         }
     }
 

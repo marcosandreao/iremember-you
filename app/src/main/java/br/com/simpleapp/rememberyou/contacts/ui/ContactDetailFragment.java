@@ -20,12 +20,14 @@ import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
 import android.content.ContentResolver;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.res.AssetFileDescriptor;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.provider.ContactsContract;
 import android.provider.ContactsContract.Contacts;
 import android.provider.ContactsContract.Contacts.Photo;
@@ -60,6 +62,7 @@ import br.com.simpleapp.rememberyou.R;
 import br.com.simpleapp.rememberyou.contacts.util.ImageLoader;
 import br.com.simpleapp.rememberyou.contacts.util.Utils;
 import br.com.simpleapp.rememberyou.entity.User;
+import br.com.simpleapp.rememberyou.gcm.QuickstartPreferences;
 import br.com.simpleapp.rememberyou.service.UserService;
 import br.com.simpleapp.rememberyou.utils.Emotions;
 
@@ -258,7 +261,7 @@ public class ContactDetailFragment extends Fragment implements
                     favoriteService.setWithFavorie(contactName, emailAddress);
                     setImageFavorite();
                 } else {
-                    Toast.makeText(ContactDetailFragment.this.getContext(), "Aguarde, carregando dados do contato.", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(ContactDetailFragment.this.getContext(), R.string.loading_contacts, Toast.LENGTH_SHORT).show();
                 }
             }
         });
@@ -269,12 +272,19 @@ public class ContactDetailFragment extends Fragment implements
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+
+        final SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this.getActivity());
+
+        ((TextView) view.findViewById(R.id.not_name)).setText(sharedPreferences.getString(QuickstartPreferences.NICK_NAME, ""));
+
         this.fabsend.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
                 send();
             }
         });
+
+
     }
 
     private void send(){

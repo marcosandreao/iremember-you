@@ -227,7 +227,7 @@
                                 android:layout_height="wrap_content"
                                 android:textAppearance="@style/TextAppearance.AppCompat.Title" />
                             <TextView
-                                android:text="Lembrou de você"
+                                android:text="@string/txt_notification"
                                 android:id="@+id/not_msg"
                                 android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
                                 android:layout_width="match_parent"

@@ -1,8 +1,7 @@
 <resources>
-    <string name="app_name">I Remember You</string>
+    <string name="app_name">Lembrei de você</string>
     <string name="action_settings">Settings</string>
     <!--string name="gcm_defaultSenderId">DEFAULT_GCM_SENDER_ID</string-->
-
 
 
     <string name="activity_contacts_list">Contacts List</string>
@@ -56,4 +55,11 @@
     <!-- Button labels -->
     <string name="sign_out">Sign Out</string>
     <string name="disconnect">Disconnect</string>
+    <string name="aguarde_registrando_dispositivo">Aguarde, Registrando dispositivo...</string>
+    <string name="register_success">Seu registro foi efetuado com sucesso! agora você já pode lembrar e ser lembrado.</string>
+    <string name="register_error">Problema durante o registro, você precisa estar connectado com a internet.</string>
+    <string name="toque_aqui_para_iniciar_app">Toque aqui para iniciar App</string>
+    <string name="name_required">Nome é muito importante a partir dele que seus lembrados te reconheceram.</string>
+    <string name="loading_contacts">Aguarde, carregando dados do contato.</string>
+    <string name="txt_notification">Lembrou de você</string>
 </resources>
