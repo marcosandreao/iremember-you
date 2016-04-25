@@ -54,17 +54,24 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.squareup.okhttp.ResponseBody;
+
 import java.io.FileNotFoundException;
 import java.io.IOException;
 
 import br.com.simpleapp.rememberyou.BuildConfig;
 import br.com.simpleapp.rememberyou.R;
+import br.com.simpleapp.rememberyou.api.IRememberYou;
 import br.com.simpleapp.rememberyou.contacts.util.ImageLoader;
 import br.com.simpleapp.rememberyou.contacts.util.Utils;
 import br.com.simpleapp.rememberyou.entity.User;
 import br.com.simpleapp.rememberyou.gcm.QuickstartPreferences;
 import br.com.simpleapp.rememberyou.service.UserService;
+import br.com.simpleapp.rememberyou.utils.Constants;
 import br.com.simpleapp.rememberyou.utils.Emotions;
+import retrofit.Callback;
+import retrofit.Response;
+import retrofit.Retrofit;
 
 /**
  * This fragment displays details of a specific contact from the contacts provider. It shows the
@@ -288,7 +295,28 @@ public class ContactDetailFragment extends Fragment implements
     }
 
     private void send(){
+        final SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this.getActivity());
+
         this.favoriteService.prepareToSent(contactName, emailAddress, this.ivEmotionTarget.getTag().toString());
+
+        final Retrofit retrofit = new Retrofit.Builder().baseUrl( Constants.URL_SERVER).build();
+
+        final IRememberYou service = retrofit.create(IRememberYou.class);
+        String from = sharedPreferences.getString(QuickstartPreferences.ACCOUNT, "");
+        service.message(from, emailAddress, getString(R.string.txt_notification), this.ivEmotionTarget.getTag().toString()).enqueue(new Callback<ResponseBody>() {
+            @Override
+            public void onResponse(Response<ResponseBody> response, Retrofit retrofit) {
+                if ( !response.isSuccess() ) {
+
+                }
+                Log.d("", response.raw().toString());
+            }
+
+            @Override
+            public void onFailure(Throwable t) {
+
+            }
+        });
         this.getActivity().finish();
     }
 

@@ -43,7 +43,7 @@ public class WizardActivity extends AppCompatActivity implements IWizardListener
     public void gotoStepTwo(String account, String name) {
 
         final Bundle mBundle = new Bundle();
-        mBundle.putString("account", account);
+        mBundle.putString(AccountManager.KEY_ACCOUNT_NAME, account);
         mBundle.putString("name", name);
 
         final StepTwoFragment fragment = new StepTwoFragment();
@@ -190,8 +190,6 @@ public class WizardActivity extends AppCompatActivity implements IWizardListener
         public void onActivityCreated(@Nullable Bundle savedInstanceState) {
             super.onActivityCreated(savedInstanceState);
 
-            this.account = getArguments().getString("account");
-            this.name = getArguments().getString("name");
 
         }
 
@@ -207,6 +205,12 @@ public class WizardActivity extends AppCompatActivity implements IWizardListener
             super.onViewCreated(view, savedInstanceState);
             this.mRegistrationProgressBar = (ProgressBar) view.findViewById(R.id.registrationProgressBar);
             this.mInformationTextView = (TextView) view.findViewById(R.id.informationTextView);
+
+            this.account = getArguments().getString(AccountManager.KEY_ACCOUNT_NAME);
+            this.name = getArguments().getString("name");
+
+            final SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this.getActivity());
+            sharedPreferences.edit().putString(QuickstartPreferences.NICK_NAME, this.name).apply();
 
             this.registerReceiver();
 
@@ -229,10 +233,6 @@ public class WizardActivity extends AppCompatActivity implements IWizardListener
         private void registerFinish(boolean sendToken){
             this.mListener.lockBackButton(false);
             if (sendToken) {
-
-                final SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this.getActivity());
-                sharedPreferences.edit().putString(QuickstartPreferences.NICK_NAME, this.name).apply();
-
                 this.mRegistrationProgressBar.setVisibility(View.GONE);
                 this.mInformationTextView.setText(R.string.register_success);
                 this.btStart.setVisibility(View.VISIBLE);

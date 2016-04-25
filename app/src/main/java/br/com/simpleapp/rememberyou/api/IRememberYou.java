@@ -18,5 +18,5 @@ public interface IRememberYou {
 
     @FormUrlEncoded
     @POST("message")
-    Call<ResponseBody> message(@Field("from") String from, @Field("to")  String to);
+    Call<ResponseBody> message(@Field("from") String from, @Field("to")  String to, @Field("txt")  String txt, @Field("emotion")  String emotion);
 }

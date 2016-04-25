@@ -66,7 +66,7 @@ public class RegistrationIntentService extends IntentService {
             Log.i(TAG, "GCM Registration Token: " + token);
 
             // TODO: Implement this method to send any registration to your app's servers.
-            sendRegistrationToServer(token, intent.getStringExtra(AccountManager.KEY_ACCOUNT_NAME));
+            sendRegistrationToServer(token, intent.getStringExtra(AccountManager.KEY_ACCOUNT_NAME), sharedPreferences.getString(QuickstartPreferences.NICK_NAME, ""));
 
             Log.i(TAG, "GCM Registration account: " +  intent.getStringExtra(AccountManager.KEY_ACCOUNT_NAME));
             sharedPreferences.edit().putString(QuickstartPreferences.ACCOUNT, intent.getStringExtra(AccountManager.KEY_ACCOUNT_NAME)).apply();
@@ -99,17 +99,17 @@ public class RegistrationIntentService extends IntentService {
      * @param token  The new token.
      * @param account User account
      */
-    private void sendRegistrationToServer(String token, String account) throws IOException {
+    private void sendRegistrationToServer(String token, String account, String name) throws IOException {
 
          final Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl( Constants.URL_SERVER)
                 .build();
 
         IRememberYou service = retrofit.create(IRememberYou.class);
-        //retrofit.Response<ResponseBody> response = service.registerDevice("Marcos", account, token).execute();
-        //if ( !response.isSuccess() ) {
-         //   throw  new IOException(response.errorBody().string());
-        //}
+        retrofit.Response<ResponseBody> response = service.registerDevice(name, account, token).execute();
+        if ( !response.isSuccess() ) {
+            throw  new IOException(response.errorBody().string());
+        }
 
     }
 
@@ -117,6 +117,7 @@ public class RegistrationIntentService extends IntentService {
      * Subscribe to any GCM topics of interest, as defined by the TOPICS constant.
      *
      * @param token GCM token
+     * @param string
      * @throws IOException if unable to reach the GCM PubSub service
      */
     // [START subscribe_topics]
