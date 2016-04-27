@@ -64,4 +64,6 @@
     <string name="txt_notification">Lembrou de você</string>
     <string name="send_from_notification">Enviar</string>
     <string name="notification_send_remember_of">Lembrar de:</string>
+    <string name="fixar_como_notifica_o">Fixar Como notificação</string>
+    <string name="remove_from_notification">Remover da notificação</string>
 </resources>

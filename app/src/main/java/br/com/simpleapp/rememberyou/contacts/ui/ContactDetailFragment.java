@@ -18,7 +18,9 @@ package br.com.simpleapp.rememberyou.contacts.ui;
 
 import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
+import android.app.NotificationManager;
 import android.content.ContentResolver;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.AssetFileDescriptor;
@@ -373,11 +375,23 @@ public class ContactDetailFragment extends Fragment implements
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
+            case R.id.menu_unpin:
+
+                User user = this.favoriteService.findByEmail(this.emailAddress);
+                if (user != null ){
+                    NotificationUtil.removeNotification(this.getContext(), user.getId());
+                }
+                this.getActivity().invalidateOptionsMenu();
+                return true;
             case R.id.menu_pin:
+
                 long id = this.favoriteService.prepareToSent(contactName, emailAddress, this.ivEmotionTarget.getTag().toString());
 
                 NotificationUtil.pinNotification(this.getActivity(), (int) id,  emailAddress,
                         contactName, this.ivEmotionTarget.getTag().toString());
+
+
+                this.getActivity().invalidateOptionsMenu();
                 return true;
             default:
                 this.getActivity().onBackPressed();
@@ -389,17 +403,27 @@ public class ContactDetailFragment extends Fragment implements
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
-
-        // Inflates the options menu for this fragment
         inflater.inflate(R.menu.contact_detail_menu, menu);
+    }
 
-        // Gets a handle to the "find" menu item
-        //mEditContactMenuItem = menu.findItem(R.id.menu_edit_contact);
+    @Override
+    public void onPrepareOptionsMenu(Menu menu) {
+        super.onPrepareOptionsMenu(menu);
 
-        // If contactUri is null the edit menu item should be hidden, otherwise
-        // it is visible.
-        //mEditContactMenuItem.setVisible(mContactUri != null);
+        MenuItem itemUnpin = menu.findItem(R.id.menu_unpin);
+        MenuItem itemPin = menu.findItem(R.id.menu_pin);
+        if ( this.emailAddress != null && !"".equals(this.emailAddress) ) {
+            User user = this.favoriteService.findByEmail(this.emailAddress);
+            if (user != null && NotificationUtil.hasNotificationPinned(this.getActivity(), user.getId()) ){
+                itemUnpin.setVisible(true);
+            } else {
+                itemUnpin.setVisible(false);
+            }
+        } else {
+            itemUnpin.setVisible(false);
+        }
 
+        itemPin.setVisible(!itemUnpin.isVisible());
     }
 
     @Override
@@ -463,6 +487,7 @@ public class ContactDetailFragment extends Fragment implements
                         }
 
                         this.setImageFavorite();
+                        this.getActivity().invalidateOptionsMenu();
 
                         break;
                     } while (data.moveToNext());
