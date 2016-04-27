@@ -5,6 +5,7 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.BitmapFactory;
 import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.Bundle;
@@ -15,6 +16,7 @@ import com.google.android.gms.gcm.GcmListenerService;
 
 import br.com.simpleapp.rememberyou.MainActivity;
 import br.com.simpleapp.rememberyou.R;
+import br.com.simpleapp.rememberyou.utils.Emotions;
 
 /**
  * Created by socram on 22/03/16.
@@ -33,9 +35,13 @@ public class MyGcmListenerService  extends GcmListenerService {
     // [START receive_message]
     @Override
     public void onMessageReceived(String from, Bundle data) {
-        String message = data.getString("message");
+        String name = data.getString("name");
+        String message = data.getString("msg");
+        String emotion = data.getString("emotion");
         Log.d(TAG, "From: " + from);
+        Log.d(TAG, "name: " + name);
         Log.d(TAG, "Message: " + message);
+        Log.d(TAG, "emotion: " + emotion);
 
         if (from.startsWith("/topics/")) {
             // message received from some topic.
@@ -55,7 +61,7 @@ public class MyGcmListenerService  extends GcmListenerService {
          * In some cases it may be useful to show a notification indicating to the user
          * that a message was received.
          */
-        sendNotification(message);
+        sendNotification(name, message, emotion);
         // [END_EXCLUDE]
     }
     // [END receive_message]
@@ -65,18 +71,18 @@ public class MyGcmListenerService  extends GcmListenerService {
      *
      * @param message GCM message received.
      */
-    private void sendNotification(String message) {
+    private void sendNotification(String name, String message, String emotion) {
 
         Intent intent = new Intent(this, MainActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0 /* Request code */, intent,
+        PendingIntent pendingIntent = PendingIntent.getActivity(this, (int) System.currentTimeMillis(), intent,
                 PendingIntent.FLAG_ONE_SHOT);
 
         Uri defaultSoundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
         NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(this)
-                //.setSmallIcon(R.drawable.ic_stat_ic_notification)
-                .setSmallIcon(R.drawable.common_google_signin_btn_icon_dark)//TODO
-                .setContentTitle("GCM Message")
+                .setSmallIcon(R.drawable.ic_emotion_1f44d)
+                .setLargeIcon(BitmapFactory.decodeResource(getResources(), Emotions.getByKey(emotion)))//TODO
+                .setContentTitle(name)
                 .setContentText(message)
                 .setAutoCancel(true)
                 .setSound(defaultSoundUri)

@@ -66,9 +66,11 @@ import br.com.simpleapp.rememberyou.contacts.util.ImageLoader;
 import br.com.simpleapp.rememberyou.contacts.util.Utils;
 import br.com.simpleapp.rememberyou.entity.User;
 import br.com.simpleapp.rememberyou.gcm.QuickstartPreferences;
+import br.com.simpleapp.rememberyou.service.SendRemember;
 import br.com.simpleapp.rememberyou.service.UserService;
 import br.com.simpleapp.rememberyou.utils.Constants;
 import br.com.simpleapp.rememberyou.utils.Emotions;
+import br.com.simpleapp.rememberyou.utils.NotificationUtil;
 import retrofit.Callback;
 import retrofit.Response;
 import retrofit.Retrofit;
@@ -295,29 +297,10 @@ public class ContactDetailFragment extends Fragment implements
     }
 
     private void send(){
-        final SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this.getActivity());
 
         this.favoriteService.prepareToSent(contactName, emailAddress, this.ivEmotionTarget.getTag().toString());
 
-        final Retrofit retrofit = new Retrofit.Builder().baseUrl( Constants.URL_SERVER).build();
-
-        final IRememberYou service = retrofit.create(IRememberYou.class);
-        String from = sharedPreferences.getString(QuickstartPreferences.ACCOUNT, "");
-        service.message(from, emailAddress, getString(R.string.txt_notification), this.ivEmotionTarget.getTag().toString()).enqueue(new Callback<ResponseBody>() {
-            @Override
-            public void onResponse(Response<ResponseBody> response, Retrofit retrofit) {
-                if ( !response.isSuccess() ) {
-
-                }
-                Log.d("", response.raw().toString());
-            }
-
-            @Override
-            public void onFailure(Throwable t) {
-
-            }
-        });
-        this.getActivity().finish();
+        SendRemember.startActionSend(this.getContext(), this.emailAddress, this.ivEmotionTarget.getTag().toString());
     }
 
     private void setClicksEmotions(ViewGroup view){
@@ -390,15 +373,11 @@ public class ContactDetailFragment extends Fragment implements
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-            // When "edit" menu option selected
-            case R.id.menu_edit_contact:
-                // Standard system edit contact intent
-                Intent intent = new Intent(Intent.ACTION_EDIT, mContactUri);
+            case R.id.menu_pin:
+                long id = this.favoriteService.prepareToSent(contactName, emailAddress, this.ivEmotionTarget.getTag().toString());
 
-                intent.putExtra("finishActivityOnSaveCompleted", true);
-
-                // Start the edit activity
-                startActivity(intent);
+                NotificationUtil.pinNotification(this.getActivity(), (int) id,  emailAddress,
+                        contactName, this.ivEmotionTarget.getTag().toString());
                 return true;
             default:
                 this.getActivity().onBackPressed();
@@ -415,11 +394,11 @@ public class ContactDetailFragment extends Fragment implements
         inflater.inflate(R.menu.contact_detail_menu, menu);
 
         // Gets a handle to the "find" menu item
-        mEditContactMenuItem = menu.findItem(R.id.menu_edit_contact);
+        //mEditContactMenuItem = menu.findItem(R.id.menu_edit_contact);
 
         // If contactUri is null the edit menu item should be hidden, otherwise
         // it is visible.
-        mEditContactMenuItem.setVisible(mContactUri != null);
+        //mEditContactMenuItem.setVisible(mContactUri != null);
 
     }
 

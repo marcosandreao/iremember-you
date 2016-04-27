@@ -42,7 +42,7 @@
         <activity
             android:name=".gcm.GCMActivity"
             android:label="@string/app_name"
-            android:theme="@style/Theme.Main"></activity>
+            android:theme="@style/Theme.Main" />
         <activity
             android:name=".contacts.ui.ContactsListActivity"
             android:label="Lista de contatos"
@@ -109,21 +109,30 @@
         </service>
         <service
             android:name=".gcm.RegistrationIntentService"
-            android:exported="false"></service>
+            android:exported="false" />
 
         <activity
             android:name=".auth.SignInActivity"
             android:label="Login"
             android:screenOrientation="sensorPortrait"
-            android:theme="@style/Theme.Main"></activity>
+            android:theme="@style/Theme.Main" />
 
         <meta-data
             android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version" />
 
-        <activity android:name=".WizardActivity"  android:theme="@style/Theme.Main" android:screenOrientation="sensorPortrait">
+        <activity
+            android:name=".WizardActivity"
+            android:screenOrientation="sensorPortrait"
+            android:theme="@style/Theme.Main" />
 
-        </activity>
+        <service
+            android:name=".service.SendMessageReceiver"
+            android:enabled="true"
+            android:exported="false" />
+        <service
+            android:name=".service.SendRemember"
+            android:exported="false"></service>
     </application>
 
 </manifest>

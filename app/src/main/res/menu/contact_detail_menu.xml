@@ -18,9 +18,9 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
-            android:id="@+id/menu_edit_contact"
+            android:id="@+id/menu_pin"
             android:title="@string/menu_edit_contact"
-            android:icon="@drawable/ic_action_edit"
+            android:icon="@drawable/ic_adb_black_24dp"
             android:showAsAction="ifRoom"/>
 
 </menu>

@@ -48,19 +48,19 @@ public class UserService {
         return users.get(0);
     }
 
-    public void prepareToSent(String contactName, String emailAddress, String emotion) {
+    public long prepareToSent(String contactName, String emailAddress, String emotion) {
         User user = this.findByEmail(emailAddress);
         if ( user == null ) {
             user = new User();
             user.setEmail(emailAddress);
             user.setName(contactName);
             user.setLastEmotion(emotion);
-            session.getUserDao().insert(user);
-        } else {
-            user.setName(contactName);
-            user.setLastEmotion(emotion);
-            session.getUserDao().update(user);
+            return session.getUserDao().insert(user);
         }
+        user.setName(contactName);
+        user.setLastEmotion(emotion);
+        session.getUserDao().update(user);
+        return user.getId();
     }
 
     public List<User> listFavorites() {
