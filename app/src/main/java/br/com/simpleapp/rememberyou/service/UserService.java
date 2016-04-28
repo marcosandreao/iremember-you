@@ -25,15 +25,17 @@ public class UserService {
         return !users.isEmpty();
     }
 
-    public void setWithFavorie(String contactName, String emailAddress) {
+    public void setWithFavorie(String contactId, String contactName, String emailAddress) {
         User user = this.findByEmail(emailAddress);
         if ( user == null ) {
             user = new User();
             user.setEmail(emailAddress);
             user.setName(contactName);
             user.setFavorite(true);
+            user.setContactId(contactId);
             session.getUserDao().insert(user);
         } else {
+            user.setContactId(contactId);
             user.setFavorite( user.getFavorite() == null? true : !user.getFavorite() );
             session.getUserDao().update(user);
         }
@@ -48,15 +50,17 @@ public class UserService {
         return users.get(0);
     }
 
-    public long prepareToSent(String contactName, String emailAddress, String emotion) {
+    public long prepareToSent(String contactId, String contactName, String emailAddress, String emotion) {
         User user = this.findByEmail(emailAddress);
         if ( user == null ) {
             user = new User();
             user.setEmail(emailAddress);
             user.setName(contactName);
             user.setLastEmotion(emotion);
+            user.setContactId(contactId);
             return session.getUserDao().insert(user);
         }
+        user.setContactId(contactId);
         user.setName(contactName);
         user.setLastEmotion(emotion);
         session.getUserDao().update(user);

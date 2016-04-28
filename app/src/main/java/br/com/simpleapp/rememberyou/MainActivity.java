@@ -2,15 +2,18 @@ package br.com.simpleapp.rememberyou;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.Uri;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
+import br.com.simpleapp.rememberyou.contacts.ui.ContactDetailActivity;
 import br.com.simpleapp.rememberyou.contacts.ui.ContactsListActivity;
 import br.com.simpleapp.rememberyou.entity.User;
 import br.com.simpleapp.rememberyou.gcm.GCMActivity;
@@ -71,6 +74,9 @@ public class MainActivity extends AppCompatActivity implements UserFavoriteFragm
 
     @Override
     public void onListFragmentInteraction(User item) {
-
+        Uri contactUri = Uri.parse(item.getContactId());
+        Intent intent = new Intent(this, ContactDetailActivity.class);
+        intent.setData(contactUri);
+        startActivity(intent);
     }
 }

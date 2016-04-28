@@ -20,6 +20,7 @@ import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
 import android.app.NotificationManager;
 import android.content.ContentResolver;
+import android.content.ContentUris;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -118,6 +119,7 @@ public class ContactDetailFragment extends Fragment implements
     private FloatingActionButton favoriteActionButton;
     private FloatingActionButton fabsend;
     private ImageView ivEmotionTarget;
+    private String contactId;
 
     /**
      * Factory method to generate a new instance of the fragment given a contact Uri. A factory
@@ -158,6 +160,9 @@ public class ContactDetailFragment extends Fragment implements
      */
     public void setContact(Uri contactLookupUri) {
 
+        this.contactId = contactLookupUri.toString();
+
+
         // In version 3.0 and later, stores the provided contact lookup Uri in a class field. This
         // Uri is then used at various points in this class to map to the provided contact.
         if (Utils.hasHoneycomb()) {
@@ -171,6 +176,7 @@ public class ContactDetailFragment extends Fragment implements
             mContactUri = Contacts.lookupContact(getActivity().getContentResolver(),
                     contactLookupUri);
         }
+
 
         // If the Uri contains data, load the contact's image and load contact details.
         if (contactLookupUri != null) {
@@ -186,6 +192,8 @@ public class ContactDetailFragment extends Fragment implements
                 mEditContactMenuItem.setVisible(true);
             }
 
+
+            Log.d("ID", "id do contato " + this.contactId);
             // Starts two queries to to retrieve contact information from the Contacts Provider.
             // restartLoader() is used instead of initLoader() as this method may be called
             // multiple times.
@@ -269,7 +277,7 @@ public class ContactDetailFragment extends Fragment implements
             @Override
             public void onClick(View v) {
                 if( emailAddress != null ) {
-                    favoriteService.setWithFavorie(contactName, emailAddress);
+                    favoriteService.setWithFavorie(contactId, contactName, emailAddress);
                     setImageFavorite();
                 } else {
                     Toast.makeText(ContactDetailFragment.this.getContext(), R.string.loading_contacts, Toast.LENGTH_SHORT).show();
@@ -300,7 +308,7 @@ public class ContactDetailFragment extends Fragment implements
 
     private void send(){
 
-        this.favoriteService.prepareToSent(contactName, emailAddress, this.ivEmotionTarget.getTag().toString());
+        this.favoriteService.prepareToSent(this.contactId, this.contactName, this.emailAddress, this.ivEmotionTarget.getTag().toString());
 
         SendRemember.startActionSend(this.getContext(), this.emailAddress, this.ivEmotionTarget.getTag().toString());
     }
@@ -385,7 +393,7 @@ public class ContactDetailFragment extends Fragment implements
                 return true;
             case R.id.menu_pin:
 
-                long id = this.favoriteService.prepareToSent(contactName, emailAddress, this.ivEmotionTarget.getTag().toString());
+                long id = this.favoriteService.prepareToSent(this.contactId, this.contactName, emailAddress, this.ivEmotionTarget.getTag().toString());
 
                 NotificationUtil.pinNotification(this.getActivity(), (int) id,  emailAddress,
                         contactName, this.ivEmotionTarget.getTag().toString(), this);
