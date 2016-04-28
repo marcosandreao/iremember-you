@@ -91,7 +91,7 @@ import retrofit.Retrofit;
  * Uri for the contact you want to display.
  */
 public class ContactDetailFragment extends Fragment implements
-        LoaderManager.LoaderCallbacks<Cursor> {
+        LoaderManager.LoaderCallbacks<Cursor>, NotificationUtil.IPinnedNotificationListener {
 
     public static final String EXTRA_CONTACT_URI =
             "com.example.android.contactslist.ui.EXTRA_CONTACT_URI";
@@ -388,7 +388,7 @@ public class ContactDetailFragment extends Fragment implements
                 long id = this.favoriteService.prepareToSent(contactName, emailAddress, this.ivEmotionTarget.getTag().toString());
 
                 NotificationUtil.pinNotification(this.getActivity(), (int) id,  emailAddress,
-                        contactName, this.ivEmotionTarget.getTag().toString());
+                        contactName, this.ivEmotionTarget.getTag().toString(), this);
 
 
                 this.getActivity().invalidateOptionsMenu();
@@ -640,6 +640,13 @@ public class ContactDetailFragment extends Fragment implements
 
         // If none of the case selectors match, returns null.
         return null;
+    }
+
+    @Override
+    public void onFinish() {
+        if ( this.isAdded() && this.isVisible() ) {
+            this.getActivity().invalidateOptionsMenu();
+        }
     }
 
     /**

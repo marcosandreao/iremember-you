@@ -21,7 +21,7 @@ import br.com.simpleapp.rememberyou.service.SendMessageReceiver;
  */
 public class NotificationUtil {
 
-    public static void pinNotification(final Context ctx,final int id, final String email, final String name, final String emotion) {
+    public static void pinNotification(final Context ctx,final int id, final String email, final String name, final String emotion, final IPinnedNotificationListener listenerPinned) {
 
         new DecodeResourseToBitmap(ctx, new IDecodeResourseToBitmap(){
 
@@ -47,6 +47,7 @@ public class NotificationUtil {
                         .setSmallIcon(R.drawable.ic_emotion_1f44d)
                         .setLargeIcon(BitmapFactory.decodeResource(ctx.getResources(), Emotions.getByKey(emotion)))
                         .setContentTitle(ctx.getString(R.string.notification_send_remember_of))
+                        .setOngoing(true)
                         .setContentText(name)
                         .setAutoCancel(false)
                         .setSound(defaultSoundUri)
@@ -57,6 +58,8 @@ public class NotificationUtil {
                 final NotificationManager notificationManager = (NotificationManager) ctx.getSystemService(Context.NOTIFICATION_SERVICE);
 
                 notificationManager.notify(id, notificationBuilder.build());
+
+                listenerPinned.onFinish();
             }
         }).execute(emotion);
 
@@ -64,13 +67,13 @@ public class NotificationUtil {
 
     public static boolean hasNotificationPinned(Context ctx, long id){
         final Intent notificationIntent = new Intent(ctx, SendMessageReceiver.class);
-        final PendingIntent test = PendingIntent.getService(ctx, (int) id, notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+        final PendingIntent test = PendingIntent.getService(ctx, (int) id, notificationIntent, PendingIntent.FLAG_NO_CREATE);
         return test != null;
     }
 
     public static void removeNotification(Context context, long id) {
         final Intent notificationIntent = new Intent(context, SendMessageReceiver.class);
-        final PendingIntent test = PendingIntent.getService(context, (int) id, notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+        final PendingIntent test = PendingIntent.getService(context, (int) id, notificationIntent, PendingIntent.FLAG_NO_CREATE);
         if ( test != null ) {
             test.cancel();
         }
@@ -102,5 +105,9 @@ public class NotificationUtil {
 
     public static interface IDecodeResourseToBitmap {
         void onFinish(Bitmap mBitmap);
+    }
+
+    public static interface IPinnedNotificationListener {
+        void onFinish();
     }
 }
