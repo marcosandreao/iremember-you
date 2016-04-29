@@ -20,7 +20,12 @@ public class SendMessageReceiver extends Service {
 
         Log.d("RECEIVER", "SendMessageReceiver onstartComand");
 
-        SendRemember.startActionSend(this.getBaseContext(), intent.getStringExtra(BUNDLE_EMAIL), intent.getStringExtra(BUNDLE_EMOTION));
+        try {
+            SendRemember.startActionSend(this.getBaseContext(), intent.getStringExtra(BUNDLE_EMAIL), intent.getStringExtra(BUNDLE_EMOTION));
+        } catch (Exception e ) {
+            e.printStackTrace();
+            Log.e("RECEIVER", e.getMessage());
+        }
 
         Log.d("RECEIVER", "onstartComand");
 

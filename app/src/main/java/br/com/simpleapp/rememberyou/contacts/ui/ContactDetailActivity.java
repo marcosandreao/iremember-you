@@ -17,6 +17,7 @@
 package br.com.simpleapp.rememberyou.contacts.ui;
 
 import android.annotation.TargetApi;
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -27,8 +28,10 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
 
 import br.com.simpleapp.rememberyou.BuildConfig;
+import br.com.simpleapp.rememberyou.MainActivity;
 import br.com.simpleapp.rememberyou.R;
 import br.com.simpleapp.rememberyou.contacts.util.Utils;
+import br.com.simpleapp.rememberyou.service.SendMessageReceiver;
 
 /**
  * This class defines a simple FragmentActivity as the parent of {@link ContactDetailFragment}.
@@ -76,4 +79,19 @@ public class ContactDetailActivity extends AppCompatActivity {
         }
     }
 
+    @Override
+    public void onBackPressed() {
+
+        // a partir da notificação
+        if ( getIntent().hasExtra(SendMessageReceiver.BUNDLE_ID) ) {
+            Intent intent = new Intent(this, MainActivity.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP |
+                    Intent.FLAG_ACTIVITY_CLEAR_TASK |
+                    Intent.FLAG_ACTIVITY_NEW_TASK);
+            this.startActivity(intent);
+            this.finish();
+        } else {
+            super.onBackPressed();
+        }
+    }
 }

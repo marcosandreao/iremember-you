@@ -395,7 +395,7 @@ public class ContactDetailFragment extends Fragment implements
 
                 long id = this.favoriteService.prepareToSent(this.contactId, this.contactName, emailAddress, this.ivEmotionTarget.getTag().toString());
 
-                NotificationUtil.pinNotification(this.getActivity(), (int) id,  emailAddress,
+                NotificationUtil.pinNotification(this.getActivity(), this.contactId, (int) id,  emailAddress,
                         contactName, this.ivEmotionTarget.getTag().toString(), this);
 
 

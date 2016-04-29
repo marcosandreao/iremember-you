@@ -9,11 +9,10 @@ import android.graphics.BitmapFactory;
 import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.AsyncTask;
-import android.service.notification.StatusBarNotification;
 import android.support.v4.app.NotificationCompat;
 
-import br.com.simpleapp.rememberyou.MainActivity;
 import br.com.simpleapp.rememberyou.R;
+import br.com.simpleapp.rememberyou.contacts.ui.ContactDetailActivity;
 import br.com.simpleapp.rememberyou.service.SendMessageReceiver;
 
 /**
@@ -21,19 +20,20 @@ import br.com.simpleapp.rememberyou.service.SendMessageReceiver;
  */
 public class NotificationUtil {
 
-    public static void pinNotification(final Context ctx,final int id, final String email, final String name, final String emotion, final IPinnedNotificationListener listenerPinned) {
+    public static void pinNotification(final Context ctx, final String contactId, final int id, final String email, final String name, final String emotion, final IPinnedNotificationListener listenerPinned) {
 
         new DecodeResourseToBitmap(ctx, new IDecodeResourseToBitmap(){
 
             @Override
             public void onFinish(Bitmap mBitmap) {
-                final Intent intent = new Intent(ctx, MainActivity.class);
+                final Intent intent = new Intent(ctx, ContactDetailActivity.class);
+                intent.setData(Uri.parse(contactId));
                 intent.putExtra(SendMessageReceiver.BUNDLE_ID, id);
                 intent.putExtra(SendMessageReceiver.BUNDLE_EMAIL, email);
                 intent.putExtra(SendMessageReceiver.BUNDLE_EMOTION, emotion);
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 final PendingIntent pendingIntent = PendingIntent.getActivity(ctx, id, intent,
-                        PendingIntent.FLAG_ONE_SHOT);
+                        PendingIntent.FLAG_UPDATE_CURRENT);
 
                 final Intent intentAction = new Intent(ctx, SendMessageReceiver.class);
                 intentAction.putExtra(SendMessageReceiver.BUNDLE_ID, id);

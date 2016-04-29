@@ -7,7 +7,7 @@
         android:clickable="true"
         android:id="@+id/card_view"
         android:layout_width="match_parent"
-        android:layout_height="110dp"
+        android:layout_height="115dp"
         card_view:cardCornerRadius="4dp"
 
         android:layout_margin="5dp">
@@ -17,20 +17,31 @@
             android:orientation="horizontal"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
-            <ImageView
+            <QuickContactBadge
                 android:id="@+id/ivPerfil"
-                android:layout_width="50dp"
-                android:tag="emotion_1f44d"
-                android:src="@drawable/ic_contact_picture_180_holo_light"
-                android:layout_height="wrap_content"/>
+                android:layout_height="?android:attr/listPreferredItemHeight"
+                android:layout_width="?android:attr/listPreferredItemHeight"
+                android:scaleType="centerCrop"
+                style="@style/quickContactBadgeStyle"
+                android:src="@drawable/ic_contact_picture_holo_light"/>
 
             <LinearLayout
                 android:layout_toRightOf="@+id/ivPerfil"
                 android:layout_marginLeft="10dp"
                 android:orientation="vertical"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:gravity="center_vertical"
                 android:layout_height="match_parent">
+
+                <TextView
+                    android:visibility="visible"
+                    android:singleLine="true"
+                    android:lines="1"
+                    android:text="@string/notification_send_remember_of"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Title" />
+
                 <TextView
                     android:visibility="visible"
                     android:id="@+id/account_name"
@@ -39,39 +50,47 @@
                     android:text="Fulano"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textAppearance="@style/TextAppearance.AppCompat.Title" />
-                <RelativeLayout
-                    android:id="@+id/right"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Subhead" />
+                <View
+                    android:background="@android:color/darker_gray"
+                    android:layout_width="match_parent"
+                    android:layout_marginBottom="2dp"
+                    android:layout_marginTop="2dp"
+                    android:layout_height="1dp"/>
+                <LinearLayout
                     android:layout_alignParentRight="true"
+                    android:layout_gravity="right"
+                    android:id="@+id/btStart"
+                    android:background="?android:attr/selectableItemBackground"
                     android:orientation="horizontal"
+                    android:padding="2dp"
+                    android:paddingRight="7dp"
+                    android:paddingBottom="7dp"
                     android:layout_width="wrap_content"
-                    android:gravity="center_vertical"
                     android:layout_height="match_parent">
 
+                    <TextView
+                        android:layout_centerVertical="true"
+                        android:layout_alignParentRight="true"
+                        android:gravity="center_vertical"
+                        android:layout_gravity="center_vertical"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:tint="@android:color/black"
+                        android:text="@string/send_from_notification"
+                        android:layout_marginRight="2dp"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Small"
+                        />
                     <ImageView
+
                         android:id="@+id/ivEmotionTarget"
                         android:layout_width="30dp"
                         android:tag="emotion_1f44d"
-                        android:layout_centerVertical="true"
+
                         android:src="@drawable/emotion_1f44d"
-                        android:layout_height="30dp"/>
+                        android:layout_height="40dp"/>
 
-                    <ImageButton
-                        android:layout_centerVertical="true"
-                        android:layout_alignParentRight="true"
-                        android:layout_gravity="right"
-                        android:id="@+id/btStart"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:src="@drawable/ic_send_white_24dp"
-                        android:backgroundTint="@android:color/black"
-                        android:tint="@android:color/black"
-                        android:text="Iniciar a diversão"
-                        style="?android:attr/borderlessButtonStyle"
-                        />
-
-
-                </RelativeLayout>
+                </LinearLayout>
             </LinearLayout>
         </RelativeLayout>
     </android.support.v7.widget.CardView>

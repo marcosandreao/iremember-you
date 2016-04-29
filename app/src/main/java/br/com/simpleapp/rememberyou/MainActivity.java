@@ -16,9 +16,9 @@ import android.view.View;
 import br.com.simpleapp.rememberyou.contacts.ui.ContactDetailActivity;
 import br.com.simpleapp.rememberyou.contacts.ui.ContactsListActivity;
 import br.com.simpleapp.rememberyou.entity.User;
-import br.com.simpleapp.rememberyou.gcm.GCMActivity;
 import br.com.simpleapp.rememberyou.gcm.QuickstartPreferences;
 import br.com.simpleapp.rememberyou.home.UserFavoriteFragment;
+import br.com.simpleapp.rememberyou.service.SendRemember;
 
 public class MainActivity extends AppCompatActivity implements UserFavoriteFragment.OnListFragmentInteractionListener {
 
@@ -77,6 +77,17 @@ public class MainActivity extends AppCompatActivity implements UserFavoriteFragm
         Uri contactUri = Uri.parse(item.getContactId());
         Intent intent = new Intent(this, ContactDetailActivity.class);
         intent.setData(contactUri);
-        startActivity(intent);
+        startActivityForResult(intent, REQUEST_CHOOSE_ACCOUNT);
     }
+
+    @Override
+    public void onSendInteraction(User mItem) {
+        try {
+            SendRemember.startActionSend(this.getBaseContext(), mItem.getEmail(), mItem.getLastEmotion());
+        } catch (Exception e ) {
+            e.printStackTrace();
+            Log.e("onSendInteraction", e.getMessage());
+        }
+    }
+
 }
