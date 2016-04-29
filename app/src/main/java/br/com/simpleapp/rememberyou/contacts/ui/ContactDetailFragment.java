@@ -19,10 +19,12 @@ package br.com.simpleapp.rememberyou.contacts.ui;
 import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
 import android.app.NotificationManager;
+import android.content.BroadcastReceiver;
 import android.content.ContentResolver;
 import android.content.ContentUris;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.res.AssetFileDescriptor;
 import android.database.Cursor;
@@ -35,6 +37,7 @@ import android.provider.ContactsContract;
 import android.provider.ContactsContract.Contacts;
 import android.provider.ContactsContract.Contacts.Photo;
 import android.provider.ContactsContract.Data;
+import android.support.annotation.BoolRes;
 import android.support.annotation.Nullable;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.FloatingActionButton;
@@ -42,6 +45,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.widget.Toolbar;
 import android.util.DisplayMetrics;
 import android.util.Log;
@@ -120,6 +124,10 @@ public class ContactDetailFragment extends Fragment implements
     private FloatingActionButton fabsend;
     private ImageView ivEmotionTarget;
     private String contactId;
+
+    private View sendProgress;
+
+    private final IntentFilter filter = new IntentFilter("callback.send.from.DETAIL");
 
     /**
      * Factory method to generate a new instance of the fragment given a contact Uri. A factory
@@ -269,6 +277,8 @@ public class ContactDetailFragment extends Fragment implements
         mEmptyView = (TextView) detailView.findViewById(android.R.id.empty);
         mContactEmail = (TextView) detailView.findViewById(R.id.contact_email);
         mContactName = (TextView) detailView.findViewById(R.id.contact_name);
+        this.sendProgress = detailView.findViewById(R.id.send_loading);
+        this.sendProgress.setVisibility(View.INVISIBLE);
         this.ivEmotionTarget = (ImageView) detailView.findViewById(R.id.ivEmotionTarget);
         this.favoriteActionButton = (FloatingActionButton) detailView.findViewById(R.id.fab);
         this.fabsend = (FloatingActionButton) detailView.findViewById(R.id.fabsend);
@@ -303,14 +313,28 @@ public class ContactDetailFragment extends Fragment implements
             }
         });
 
+        LocalBroadcastManager.getInstance(this.getActivity()).registerReceiver(this.receiverSend, this.filter);
 
+
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        LocalBroadcastManager.getInstance(this.getActivity()).unregisterReceiver(this.receiverSend);
     }
 
     private void send(){
 
+        if ( fabsend.getTag() != null && fabsend.getTag() instanceof Boolean) {
+            this.getActivity().onBackPressed();
+            return;
+        }
         this.favoriteService.prepareToSent(this.contactId, this.contactName, this.emailAddress, this.ivEmotionTarget.getTag().toString());
 
-        SendRemember.startActionSend(this.getContext(), this.emailAddress, this.ivEmotionTarget.getTag().toString());
+        SendRemember.startActionSend(this.getContext(), this.emailAddress, this.ivEmotionTarget.getTag().toString(), this.filter.getAction(0));
+
+        this.sendProgress.setVisibility(View.VISIBLE);
     }
 
     private void setClicksEmotions(ViewGroup view){
@@ -657,6 +681,8 @@ public class ContactDetailFragment extends Fragment implements
         }
     }
 
+
+
     /**
      * This interface defines constants used by contact retrieval queries.
      */
@@ -703,5 +729,28 @@ public class ContactDetailFragment extends Fragment implements
         final static int TYPE = 2;
         final static int LABEL = 3;
     }
+
+    public BroadcastReceiver receiverSend = new BroadcastReceiver() {
+
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            int state = intent.getIntExtra(SendRemember.EXTRA_STATE, -1);
+            switch (state){
+                case SendRemember.STATE_DONE_ERROR:
+                    sendProgress.setVisibility(View.INVISIBLE);
+                    fabsend.setImageResource(R.drawable.ic_cloud_off_white_24dp);
+                    fabsend.setTag(Boolean.FALSE);
+                    break;
+                case SendRemember.STATE_DONE_SUCCESS:
+                    sendProgress.setVisibility(View.INVISIBLE);
+                    fabsend.setImageResource(R.drawable.ic_cloud_done_white_24dp);
+                    fabsend.setTag(Boolean.TRUE);
+                    break;
+                case SendRemember.STATE_START:
+                    sendProgress.setVisibility(View.VISIBLE);
+                    break;
+            }
+        }
+    };
 
 }

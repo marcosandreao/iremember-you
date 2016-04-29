@@ -10,6 +10,8 @@ public class GreendaoGenarator {
 
         GreendaoGenarator.createUser(schema);
 
+        GreendaoGenarator.createHistory(schema);
+
         new DaoGenerator().generateAll(schema, "app/src/main/java/");
     }
 
@@ -22,5 +24,14 @@ public class GreendaoGenarator {
         user.addBooleanProperty("favorite");
         user.addStringProperty("lastEmotion");
         user.addStringProperty("contactId");
+    }
+
+    private static void createHistory(Schema schema) {
+        final Entity user = schema.addEntity("History");
+        user.addIdProperty();
+        user.addStringProperty("name");
+        user.addStringProperty("email").notNull();
+        user.addStringProperty("emotion");
+        user.addDateProperty("dateTime");
     }
 }

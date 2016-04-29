@@ -103,7 +103,7 @@
                         android:id="@+id/cb_notification"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="Fixar como notificação?"/>
+                        android:text="@string/fixar_como_notifica_o"/>
 
                 </LinearLayout>
 
@@ -274,14 +274,29 @@
         app:layout_anchor="@id/appbar"
         app:layout_anchorGravity="bottom|end" />
 
-    <android.support.design.widget.FloatingActionButton
-        android:id="@+id/fabsend"
+    <com.dmitrymalkovich.android.ProgressFloatingActionButton
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_margin="@dimen/fab_margin"
-        android:src="@drawable/ic_send_white_24dp"
+        android:layout_margin="@dimen/fab_margin_with_progress"
         app:layout_anchor="@id/scrool"
-        app:layout_anchorGravity="bottom|end" />
+        app:layout_anchorGravity="bottom|end"
+        android:clickable="true">
+
+        <android.support.design.widget.FloatingActionButton
+            android:id="@+id/fabsend"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_send_white_24dp"
+            />
+
+        <ProgressBar
+            android:id="@+id/send_loading"
+            style="@style/Widget.AppCompat.ProgressBar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+    </com.dmitrymalkovich.android.ProgressFloatingActionButton>
+
 
 
 </android.support.design.widget.CoordinatorLayout>
