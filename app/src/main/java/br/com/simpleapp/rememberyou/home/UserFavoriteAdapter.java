@@ -16,7 +16,6 @@ import java.util.List;
 
 import br.com.simpleapp.rememberyou.R;
 import br.com.simpleapp.rememberyou.entity.User;
-import br.com.simpleapp.rememberyou.home.UserFavoriteFragment.OnListFragmentInteractionListener;
 import br.com.simpleapp.rememberyou.utils.Emotions;
 
 public class UserFavoriteAdapter extends RecyclerView.Adapter<UserFavoriteAdapter.ViewHolder> {
@@ -118,5 +117,11 @@ public class UserFavoriteAdapter extends RecyclerView.Adapter<UserFavoriteAdapte
 
     }
 
+    public static interface OnListFragmentInteractionListener {
+
+        void onListFragmentInteraction(User item);
+
+        void onSendInteraction(User mItem);
+    }
 
 }

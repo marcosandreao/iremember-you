@@ -17,10 +17,11 @@ import br.com.simpleapp.rememberyou.contacts.ui.ContactDetailActivity;
 import br.com.simpleapp.rememberyou.contacts.ui.ContactsListActivity;
 import br.com.simpleapp.rememberyou.entity.User;
 import br.com.simpleapp.rememberyou.gcm.QuickstartPreferences;
+import br.com.simpleapp.rememberyou.home.UserFavoriteAdapter;
 import br.com.simpleapp.rememberyou.home.UserFavoriteFragment;
 import br.com.simpleapp.rememberyou.service.SendRemember;
 
-public class MainActivity extends AppCompatActivity implements UserFavoriteFragment.OnListFragmentInteractionListener {
+public class MainActivity extends AppCompatActivity implements UserFavoriteAdapter.OnListFragmentInteractionListener {
 
     private static final int REQUEST_CHOOSE_ACCOUNT = 1;
 

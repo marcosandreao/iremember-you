@@ -1,6 +1,7 @@
 package br.com.simpleapp.rememberyou.service;
 
 import java.util.Date;
+import java.util.List;
 
 import br.com.simpleapp.rememberyou.RememberYouApplication;
 import br.com.simpleapp.rememberyou.entity.DaoSession;
@@ -24,5 +25,9 @@ public class HistoryService {
         history.setName(name);
         history.setEmotion(emotion);
         this.session.getHistoryDao().insert(history);
+    }
+
+    public List<History> list() {
+        return this.session.getHistoryDao().queryBuilder().list();
     }
 }

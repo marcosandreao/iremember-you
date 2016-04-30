@@ -66,4 +66,9 @@
     <string name="notification_send_remember_of">Lembrar de:</string>
     <string name="fixar_como_notifica_o">Fixar Como notificação</string>
     <string name="remove_from_notification">Remover da notificação</string>
+    <string name="title_activity_home">HomeActivity</string>
+
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="history_fragment_title">Lista lembretes recebidos</string>
 </resources>
