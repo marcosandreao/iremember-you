@@ -46,12 +46,17 @@ public class HistoryRecyclerViewAdapter extends RecyclerView.Adapter<HistoryRecy
             final Map<String, Integer> emotions = ((HistoryDTO) holder.mItem).countEmotions;
 
             Object[] keys = emotions.keySet().toArray();
+            ImageView iv = null;
+            TextView tv = null;
             for ( int i = 0; i < keys.length; i++){
                 String key = keys[i].toString();
                 int count = emotions.get(key);
-                View target = holder.vGroupEmotions.getChildAt(i);
-                Picasso.with(target.getContext()).load(Emotions.getByKey(key))
-                        .tag(target.getContext()).into((ImageView) target);
+                ViewGroup target = (ViewGroup) holder.vGroupEmotions.getChildAt(i);
+                iv = (ImageView) target.getChildAt(0);
+                tv = (TextView) target.getChildAt(1);
+                tv.setText(String.valueOf(count));
+                Picasso.with(iv.getContext()).load(Emotions.getByKey(key))
+                        .tag(iv.getContext()).into(iv);
             }
         } else {
             holder.vUngrouped.setVisibility(View.VISIBLE);
