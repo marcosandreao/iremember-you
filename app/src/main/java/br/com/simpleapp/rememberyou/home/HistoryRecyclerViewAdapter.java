@@ -11,9 +11,11 @@ import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import br.com.simpleapp.rememberyou.R;
 import br.com.simpleapp.rememberyou.entity.History;
+import br.com.simpleapp.rememberyou.home.dto.HistoryDTO;
 import br.com.simpleapp.rememberyou.utils.Emotions;
 
 public class HistoryRecyclerViewAdapter extends RecyclerView.Adapter<HistoryRecyclerViewAdapter.ViewHolder> {
@@ -35,12 +37,34 @@ public class HistoryRecyclerViewAdapter extends RecyclerView.Adapter<HistoryRecy
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
         holder.mItem = mValues.get(position);
-        holder.mNameView.setText(mValues.get(position).getName());
-        holder.mEmailView.setText(mValues.get(position).getEmail());
-        holder.mDatetimeView.setText(mValues.get(position).getDateTime().toString());
 
-        Picasso.with(holder.mEmotionView.getContext()).load(Emotions.getByKey(holder.mItem.getEmotion()))
-                .tag(holder.mEmotionView.getContext()).into(holder.mEmotionView);
+        if ( holder.mItem instanceof HistoryDTO ) {
+            holder.vUngrouped.setVisibility(View.GONE);
+            holder.vGrouped.setVisibility(View.VISIBLE);
+            holder.mGroupNameView.setText(mValues.get(position).getName());
+            holder.mGroupEmailView.setText(mValues.get(position).getEmail());
+            final Map<String, Integer> emotions = ((HistoryDTO) holder.mItem).countEmotions;
+
+            Object[] keys = emotions.keySet().toArray();
+            for ( int i = 0; i < keys.length; i++){
+                String key = keys[i].toString();
+                int count = emotions.get(key);
+                View target = holder.vGroupEmotions.getChildAt(i);
+                Picasso.with(target.getContext()).load(Emotions.getByKey(key))
+                        .tag(target.getContext()).into((ImageView) target);
+            }
+        } else {
+            holder.vUngrouped.setVisibility(View.VISIBLE);
+            holder.vGrouped.setVisibility(View.GONE);
+            holder.mNameView.setText(mValues.get(position).getName());
+            holder.mEmailView.setText(mValues.get(position).getEmail());
+            holder.mDatetimeView.setText(mValues.get(position).getDateTime().toString());
+
+            Picasso.with(holder.mEmotionView.getContext()).load(Emotions.getByKey(holder.mItem.getEmotion()))
+                    .tag(holder.mEmotionView.getContext()).into(holder.mEmotionView);
+        }
+
+
 
         holder.mView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -59,7 +83,8 @@ public class HistoryRecyclerViewAdapter extends RecyclerView.Adapter<HistoryRecy
         return mValues.size();
     }
 
-    public void addAll(List<History> data) {
+    public void addAll(List<? extends History> data) {
+        this.mValues.clear();
         this.mValues.addAll(data);
     }
 
@@ -69,6 +94,14 @@ public class HistoryRecyclerViewAdapter extends RecyclerView.Adapter<HistoryRecy
         public final TextView mEmailView;
         public final TextView mDatetimeView;
         public final ImageView mEmotionView;
+        public final ViewGroup vUngrouped;
+
+        public final TextView mGroupNameView;
+        public final TextView mGroupEmailView;
+        public final ViewGroup vGrouped;
+        public final ViewGroup vGroupEmotions;
+
+
         public History mItem;
 
         public ViewHolder(View view) {
@@ -78,6 +111,12 @@ public class HistoryRecyclerViewAdapter extends RecyclerView.Adapter<HistoryRecy
             mEmailView = (TextView) view.findViewById(R.id.history_email);
             mDatetimeView = (TextView) view.findViewById(R.id.history_datetime);
             mEmotionView  = (ImageView) view.findViewById(R.id.iv_emotion);
+            vUngrouped = (ViewGroup) view.findViewById(R.id.ungrouped);
+
+            mGroupNameView = (TextView) view.findViewById(R.id.history_grouped_name);
+            mGroupEmailView = (TextView) view.findViewById(R.id.history_grouped_email);
+            vGrouped = (ViewGroup) view.findViewById(R.id.grouped);
+            vGroupEmotions = (ViewGroup) view.findViewById(R.id.emotions);
         }
 
     }

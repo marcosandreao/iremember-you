@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto" >
+
+    <item android:id="@+id/finter_spinner"
+        app:showAsAction="ifRoom"
+        android:actionLayout="@layout/include_history_filter_menu"
+        app:actionViewClass="android.support.v7.widget.AppCompatSpinner"
+        android:title="@string/filter" />
+</menu>
