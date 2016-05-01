@@ -43,8 +43,8 @@ public class HomeActivity extends AppCompatActivity
 
         final NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
-        navigationView.getMenu().findItem(R.id.nav_camera).setChecked(true);
-        this.setFragment(R.id.nav_camera);
+        navigationView.getMenu().findItem(R.id.nav_favorite).setChecked(true);
+        this.setFragment(R.id.nav_favorite);
     }
 
 
@@ -80,18 +80,10 @@ public class HomeActivity extends AppCompatActivity
 
 
     private void setFragment(int id ){
-        if (id == R.id.nav_camera) {
+        if (id == R.id.nav_favorite) {
             this.getSupportFragmentManager().beginTransaction().replace(R.id.content, UserFavoriteFragment.newInstance(0)).commit();
-        } else if (id == R.id.nav_gallery) {
+        } else if (id == R.id.nav_history) {
             this.getSupportFragmentManager().beginTransaction().replace(R.id.content, new HistoryFragment()).commit();
-        } else if (id == R.id.nav_slideshow) {
-
-        } else if (id == R.id.nav_manage) {
-
-        } else if (id == R.id.nav_share) {
-
-        } else if (id == R.id.nav_send) {
-
         }
     }
 }

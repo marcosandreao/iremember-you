@@ -72,6 +72,9 @@
     <string name="navigation_drawer_close">Close navigation drawer</string>
     <string name="history_fragment_title">Lista lembretes recebidos</string>
     <string name="filter">Filtro</string>
+    <string name="favorite">Favoritos</string>
+    <string name="history">Histórico</string>
+    <string name="settings">Configuração</string>
 
     <string-array name="history_filter_options" >
         <item>Todos</item>
