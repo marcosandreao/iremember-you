@@ -1,6 +1,7 @@
 package br.com.simpleapp.rememberyou.home;
 
 import android.support.v7.widget.RecyclerView;
+import android.text.format.DateUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -63,7 +64,10 @@ public class HistoryRecyclerViewAdapter extends RecyclerView.Adapter<HistoryRecy
             holder.vGrouped.setVisibility(View.GONE);
             holder.mNameView.setText(mValues.get(position).getName());
             holder.mEmailView.setText(mValues.get(position).getEmail());
-            holder.mDatetimeView.setText(mValues.get(position).getDateTime().toString());
+            CharSequence dt = DateUtils.getRelativeDateTimeString(holder.mDatetimeView.getContext(),
+                    mValues.get(position).getDateTime().getTime(), System.currentTimeMillis(), 0, 0);
+            holder.mDatetimeView.setText(dt);
+
 
             Picasso.with(holder.mEmotionView.getContext()).load(Emotions.getByKey(holder.mItem.getEmotion()))
                     .tag(holder.mEmotionView.getContext()).into(holder.mEmotionView);
@@ -79,8 +83,6 @@ public class HistoryRecyclerViewAdapter extends RecyclerView.Adapter<HistoryRecy
                 }
             }
         });
-
-        //holder.mDatetimeView.setText(prettyTime.format(new Date(secondsAgo)));
     }
 
     @Override

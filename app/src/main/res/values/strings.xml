@@ -75,6 +75,6 @@
 
     <string-array name="history_filter_options" >
         <item>Todos</item>
-        <item>Agrupados</item>
+        <item>Agrupado</item>
     </string-array>
 </resources>

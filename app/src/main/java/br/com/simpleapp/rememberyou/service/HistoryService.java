@@ -52,7 +52,6 @@ public class HistoryService {
             do {
                 final String email = mCursorGroup.getString(mCursorGroup.getColumnIndex(HistoryDao.Properties.Email.columnName));
                 final String name = mCursorGroup.getString(mCursorGroup.getColumnIndex(HistoryDao.Properties.Name.columnName));
-                final String dateTime = mCursorGroup.getString(mCursorGroup.getColumnIndex(HistoryDao.Properties.DateTime.columnName));
 
                 dto = new HistoryDTO();
                 dto.setName(name);
