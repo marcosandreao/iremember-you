@@ -134,7 +134,10 @@
             android:name=".service.SendRemember"
             android:exported="false" />
 
-
+        <activity
+            android:name=".home.SettingsActivity"
+            android:label="@string/title_activity_settings" />
+        <activity android:name=".SettingsActivity"></activity>
     </application>
 
 </manifest>

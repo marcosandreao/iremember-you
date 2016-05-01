@@ -4,18 +4,13 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
-import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.TextView;
 
 import br.com.simpleapp.rememberyou.gcm.QuickstartPreferences;
 import br.com.simpleapp.rememberyou.home.HistoryFragment;
@@ -84,6 +79,8 @@ public class HomeActivity extends AppCompatActivity
             this.getSupportFragmentManager().beginTransaction().replace(R.id.content, UserFavoriteFragment.newInstance(0)).commit();
         } else if (id == R.id.nav_history) {
             this.getSupportFragmentManager().beginTransaction().replace(R.id.content, new HistoryFragment()).commit();
+        } else if (id == R.id.nav_settings) {
+            this.startActivity(new Intent(this, SettingsActivity.class));
         }
     }
 }
