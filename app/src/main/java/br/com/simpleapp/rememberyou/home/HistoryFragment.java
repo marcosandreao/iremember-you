@@ -32,7 +32,7 @@ public class HistoryFragment extends Fragment implements HistoryRecyclerViewAdap
     private HistoryRecyclerViewAdapter adapter;
 
     private static final int FILTER_ALL = 0;
-    private static final int FILTER_GROUPED = 1;
+
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
      * fragment (e.g. upon screen orientation changes).

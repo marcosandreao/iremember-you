@@ -1,6 +1,9 @@
 package br.com.simpleapp.rememberyou;
 
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.view.View;
@@ -12,7 +15,9 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.TextView;
 
+import br.com.simpleapp.rememberyou.gcm.QuickstartPreferences;
 import br.com.simpleapp.rememberyou.home.HistoryFragment;
 import br.com.simpleapp.rememberyou.home.UserFavoriteFragment;
 
@@ -21,7 +26,11 @@ public class HomeActivity extends AppCompatActivity
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
+        this.registerGCMIfNeed();
+
         super.onCreate(savedInstanceState);
+
         this.setContentView(R.layout.activity_home);
         final Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         this.setSupportActionBar(toolbar);
@@ -36,6 +45,16 @@ public class HomeActivity extends AppCompatActivity
         navigationView.setNavigationItemSelectedListener(this);
         navigationView.getMenu().findItem(R.id.nav_camera).setChecked(true);
         this.setFragment(R.id.nav_camera);
+    }
+
+
+
+    private void registerGCMIfNeed(){
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+        if ( !sharedPreferences.getBoolean(QuickstartPreferences.SENT_TOKEN_TO_SERVER, false) ){
+            this.startActivity(new Intent(this, WizardActivity.class));
+            this.finish();
+        }
     }
 
     @Override
