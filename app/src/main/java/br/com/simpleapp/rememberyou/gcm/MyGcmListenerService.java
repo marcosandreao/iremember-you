@@ -5,11 +5,15 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.BitmapFactory;
+import android.media.Ringtone;
 import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v4.app.NotificationCompat;
+import android.text.TextUtils;
 import android.util.Log;
 
 import com.google.android.gms.gcm.GcmListenerService;
@@ -75,14 +79,24 @@ public class MyGcmListenerService  extends GcmListenerService {
         final PendingIntent pendingIntent = PendingIntent.getActivity(this, (int) System.currentTimeMillis(), intent,
                 PendingIntent.FLAG_ONE_SHOT);
 
-        final Uri defaultSoundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
+
+        final SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this.getBaseContext());
+        final String ringstonePreference = sharedPreferences.getString("notifications_ringtone", "");
+
+        Uri soundUri = null;
+        if (TextUtils.isEmpty(ringstonePreference) ) {
+            soundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
+        } else {
+            soundUri = Uri.parse(ringstonePreference);
+        }
+
         final NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(this)
                 .setSmallIcon(R.drawable.ic_emotion_1f44d)
                 .setLargeIcon(BitmapFactory.decodeResource(getResources(), Emotions.getByKey(emotion)))//TODO
                 .setContentTitle(name)
                 .setContentText(message)
                 .setAutoCancel(true)
-                .setSound(defaultSoundUri)
+                .setSound(soundUri)
                 .setContentIntent(pendingIntent);
 
         final NotificationManager notificationManager =
