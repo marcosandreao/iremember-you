@@ -22,10 +22,10 @@ public class SettingsActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_settings);
+        this.setContentView(R.layout.activity_settings);
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
+        final Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        this.setSupportActionBar(toolbar);
         this.getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         this.getFragmentManager().beginTransaction().replace(R.id.content, new GeneralPreferenceFragment()).commit();
@@ -40,7 +40,6 @@ public class SettingsActivity extends AppCompatActivity {
             setHasOptionsMenu(true);
 
             GeneralPreferenceFragment.bindPreferenceSummaryToValue(findPreference("name"));
-            //GeneralPreferenceFragment.bindPreferenceSummaryToValue(findPreference("notifications_vibrate"));
             GeneralPreferenceFragment.bindPreferenceSummaryToValue(findPreference("notifications_ringtone"));
         }
 
@@ -48,14 +47,13 @@ public class SettingsActivity extends AppCompatActivity {
         public boolean onOptionsItemSelected(MenuItem item) {
             int id = item.getItemId();
             if (id == android.R.id.home) {
-                startActivity(new Intent(getActivity(), SettingsActivity.class));
+                this.getActivity().onBackPressed();
                 return true;
             }
             return super.onOptionsItemSelected(item);
         }
 
         private static void bindPreferenceSummaryToValue(Preference preference) {
-            // Set the listener to watch for value changes.
             preference.setOnPreferenceChangeListener(sBindPreferenceSummaryToValueListener);
 
             SettingsActivity.sBindPreferenceSummaryToValueListener.onPreferenceChange(preference, PreferenceManager
@@ -112,18 +110,5 @@ public class SettingsActivity extends AppCompatActivity {
             return true;
         }
     };
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 }
