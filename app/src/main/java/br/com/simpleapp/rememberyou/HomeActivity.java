@@ -5,6 +5,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.design.widget.NavigationView;
@@ -13,9 +15,20 @@ import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.AppCompatSpinner;
+import android.support.v7.widget.ListPopupWindow;
 import android.support.v7.widget.Toolbar;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
+import android.widget.ImageView;
+import android.widget.PopupWindow;
+import android.widget.TextView;
+
+import java.util.List;
 
 import br.com.simpleapp.rememberyou.gcm.QuickstartPreferences;
 import br.com.simpleapp.rememberyou.home.HistoryFragment;
@@ -25,6 +38,8 @@ public class HomeActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
     private final IntentFilter filter = IConstatns.INTENT_FILTER_DETAIL;
+    private ListPopupWindow listPopupWindow;
+    private HomeSpinnerAdapter adapterDowpdown;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -108,6 +123,69 @@ public class HomeActivity extends AppCompatActivity
         return super.onCreateOptionsMenu(menu);
     }
 
+    private void createPopupWindow(View view){
+        if ( this.listPopupWindow == null ) {
+            this.listPopupWindow = new ListPopupWindow(this);
+            this.adapterDowpdown = new HomeSpinnerAdapter(this, this.getResources().getStringArray(R.array.history_filter_options));
+            this.listPopupWindow.setAdapter(this.adapterDowpdown);
+            this.listPopupWindow.setAnchorView(view);
+            this.listPopupWindow.setWidth(350);
+            // listPopupWindow.setBackgroundDrawable(new ColorDrawable(Color.WHITE));
+            this.listPopupWindow.setHeight(ViewGroup.LayoutParams.WRAP_CONTENT);
+            this.listPopupWindow.show();
+        } else {
+            this.listPopupWindow = null;
+        }
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if ( item.getItemId() == R.id.item_feedback ) {
+            this.createPopupWindow(findViewById(item.getItemId()));
+        }
+        return super.onOptionsItemSelected(item);
+    }
+/*
+    @Override
+    protected boolean onPrepareOptionsPanel(View view, Menu menu) {
+        final ArrayAdapter filterOptions = new HomeSpinnerAdapter(this, this.getResources().getStringArray(R.array.history_filter_options));
+        filterOptions.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        final AppCompatSpinner mSpinner = (AppCompatSpinner) menu.findItem(R.id.item_feedback).getActionView();
+        mSpinner.setAdapter(filterOptions);
+        return super.onPrepareOptionsPanel(view, menu);
+    }
+*/
+    public static class HomeSpinnerAdapter extends  ArrayAdapter<String> {
+
+        private LayoutInflater inflater;
+
+        public HomeSpinnerAdapter(Context context, String[] objects) {
+            super(context, 0, objects);
+            this.inflater = LayoutInflater.from(context);
+        }
+
+        @Override
+        public View getView(int position, View convertView, ViewGroup parent) {
+            ViewHolder holder = null;
+            if ( convertView == null ) {
+                convertView = this.inflater.inflate(R.layout.home_dropdown_item, null);
+                holder = new ViewHolder(convertView);
+                convertView.setTag(holder);
+            } else {
+                holder = (ViewHolder) convertView.getTag();
+            }
+            holder.tv.setText(this.getItem(position));
+            return convertView;
+        }
+
+        private static class ViewHolder {
+            final TextView tv;
+
+            public ViewHolder(View view) {
+                this.tv = (TextView) view.findViewById(android.R.id.text1);
+            }
+        }
+    }
     public BroadcastReceiver receiverSend = new BroadcastReceiver() {
 
         @Override
