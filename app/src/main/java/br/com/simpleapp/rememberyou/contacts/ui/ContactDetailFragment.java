@@ -18,10 +18,8 @@ package br.com.simpleapp.rememberyou.contacts.ui;
 
 import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
-import android.app.NotificationManager;
 import android.content.BroadcastReceiver;
 import android.content.ContentResolver;
-import android.content.ContentUris;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
@@ -37,7 +35,6 @@ import android.provider.ContactsContract;
 import android.provider.ContactsContract.Contacts;
 import android.provider.ContactsContract.Contacts.Photo;
 import android.provider.ContactsContract.Data;
-import android.support.annotation.BoolRes;
 import android.support.annotation.Nullable;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.FloatingActionButton;
@@ -57,44 +54,25 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
-
-import com.squareup.okhttp.ResponseBody;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
 
 import br.com.simpleapp.rememberyou.BuildConfig;
+import br.com.simpleapp.rememberyou.IConstatns;
 import br.com.simpleapp.rememberyou.R;
-import br.com.simpleapp.rememberyou.api.IRememberYou;
 import br.com.simpleapp.rememberyou.contacts.util.ImageLoader;
 import br.com.simpleapp.rememberyou.contacts.util.Utils;
 import br.com.simpleapp.rememberyou.entity.User;
 import br.com.simpleapp.rememberyou.gcm.QuickstartPreferences;
 import br.com.simpleapp.rememberyou.service.SendRemember;
 import br.com.simpleapp.rememberyou.service.UserService;
-import br.com.simpleapp.rememberyou.utils.Constants;
 import br.com.simpleapp.rememberyou.utils.Emotions;
 import br.com.simpleapp.rememberyou.utils.NotificationUtil;
-import retrofit.Callback;
-import retrofit.Response;
-import retrofit.Retrofit;
 
-/**
- * This fragment displays details of a specific contact from the contacts provider. It shows the
- * contact's display photo, name and all its mailing addresses. You can also modify this fragment
- * to show other information, such as phone numbers, email addresses and so forth.
- *
- * This fragment appears full-screen in an activity on devices with small screen sizes, and as
- * part of a two-pane layout on devices with larger screens, alongside the
- * {@link ContactsListFragment}.
- *
- * To create an instance of this fragment, use the factory method
- * {@link ContactDetailFragment#newInstance(android.net.Uri)}, passing as an argument the contact
- * Uri for the contact you want to display.
- */
+
 public class ContactDetailFragment extends Fragment implements
         LoaderManager.LoaderCallbacks<Cursor>, NotificationUtil.IPinnedNotificationListener {
 
@@ -127,7 +105,7 @@ public class ContactDetailFragment extends Fragment implements
 
     private View sendProgress;
 
-    private final IntentFilter filter = new IntentFilter("callback.send.from.DETAIL");
+    private final IntentFilter filter = IConstatns.INTENT_FILTER_DETAIL;
 
     /**
      * Factory method to generate a new instance of the fragment given a contact Uri. A factory

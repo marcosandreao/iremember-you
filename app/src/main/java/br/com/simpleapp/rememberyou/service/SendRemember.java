@@ -64,12 +64,12 @@ public class SendRemember extends IntentService {
         if (intent != null) {
             final String action = intent.getAction();
             if (ACTION_SEND.equals(action)) {
-
                 try {
                     this.handleActionSend(intent);
-                } catch (IOException e) {
+                } catch (Exception e) {
+                    final String to = intent.getStringExtra(EXTRA_TO);
+                    this.sendBroadcast(intent, to, STATE_DONE_ERROR);
                     e.printStackTrace();
-                    sendBroadcast(intent, STATE_DONE_ERROR);
                 }
             }
         }
@@ -77,9 +77,10 @@ public class SendRemember extends IntentService {
 
     private void handleActionSend(Intent intent) throws IOException {
         final String to = intent.getStringExtra(EXTRA_TO);
+
         final String emotion = intent.getStringExtra(EXTRA_EMOTION);
 
-        this.sendBroadcast(intent, STATE_START);
+        this.sendBroadcast(intent, to, STATE_START);
 
         final SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this.getBaseContext());
 
@@ -90,15 +91,17 @@ public class SendRemember extends IntentService {
         final retrofit.Response<ResponseBody> response =  service.message(from, to, getString(R.string.txt_notification), emotion).execute();
 
         if ( response.isSuccess() ) {
-            this.sendBroadcast(intent, STATE_DONE_SUCCESS);
+            this.sendBroadcast(intent, to, STATE_DONE_SUCCESS);
         } else {
-            this.sendBroadcast(intent, STATE_DONE_ERROR);
+            this.sendBroadcast(intent, to, STATE_DONE_ERROR);
         }
         Log.d("MESSAGE", response.raw().toString());
 
     }
 
-    private void sendBroadcast(Intent intent, int state) {
+    private void sendBroadcast(Intent intent, String to, int state) {
+
+        ManagerStateMessage.getInstance().setState(to, state);
 
         if ( !intent.hasExtra(SEND_BROADCAST_TO) ) {
             return;

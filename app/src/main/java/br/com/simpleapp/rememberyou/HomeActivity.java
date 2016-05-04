@@ -1,15 +1,20 @@
 package br.com.simpleapp.rememberyou;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.design.widget.NavigationView;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.view.Menu;
 import android.view.MenuItem;
 
 import br.com.simpleapp.rememberyou.gcm.QuickstartPreferences;
@@ -18,6 +23,8 @@ import br.com.simpleapp.rememberyou.home.UserFavoriteFragment;
 
 public class HomeActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
+
+    private final IntentFilter filter = IConstatns.INTENT_FILTER_DETAIL;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -73,6 +80,17 @@ public class HomeActivity extends AppCompatActivity
         return true;
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        LocalBroadcastManager.getInstance(this).registerReceiver(this.receiverSend, this.filter);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        LocalBroadcastManager.getInstance(this).unregisterReceiver(this.receiverSend);
+    }
 
     private void setFragment(int id ){
         if (id == R.id.nav_favorite) {
@@ -83,4 +101,18 @@ public class HomeActivity extends AppCompatActivity
             this.startActivity(new Intent(this, SettingsActivity.class));
         }
     }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        this.getMenuInflater().inflate(R.menu.home, menu);
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    public BroadcastReceiver receiverSend = new BroadcastReceiver() {
+
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            invalidateOptionsMenu();
+        }
+    };
 }
