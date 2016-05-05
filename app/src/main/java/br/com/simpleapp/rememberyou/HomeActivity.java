@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.PersistableBundle;
 import android.preference.PreferenceManager;
@@ -25,6 +26,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -35,14 +37,15 @@ import br.com.simpleapp.rememberyou.gcm.QuickstartPreferences;
 import br.com.simpleapp.rememberyou.home.HistoryFragment;
 import br.com.simpleapp.rememberyou.home.UserFavoriteFragment;
 import br.com.simpleapp.rememberyou.service.LogService;
+import br.com.simpleapp.rememberyou.utils.SendState;
 
-public class HomeActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener, LoaderManager.LoaderCallbacks<List<StatusSend>> {
+public class HomeActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
     private final IntentFilter filter = IConstatns.INTENT_FILTER_DETAIL;
     private ListPopupWindow listPopupWindow;
     private HomeSpinnerAdapter adapterDowpdown;
-    private List<StatusSend> data = new ArrayList<>();
+    private final LogService service = new LogService();
+    private Long count;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -109,7 +112,7 @@ public class HomeActivity extends AppCompatActivity
     }
 
     private void loadLog(){
-        this.getSupportLoaderManager().initLoader(0, null, this).forceLoad();
+        new LogLoader().execute();
     }
 
     @Override
@@ -143,10 +146,10 @@ public class HomeActivity extends AppCompatActivity
     private void createPopupWindow(View view){
         if ( this.listPopupWindow == null ) {
             this.listPopupWindow = new ListPopupWindow(this);
-            this.adapterDowpdown = new HomeSpinnerAdapter(this, this.data);
+            this.adapterDowpdown = new HomeSpinnerAdapter(this, this.service.list());
             this.listPopupWindow.setAdapter(this.adapterDowpdown);
             this.listPopupWindow.setAnchorView(view);
-            this.listPopupWindow.setWidth(350);
+            this.listPopupWindow.setWidth(400);
             // listPopupWindow.setBackgroundDrawable(new ColorDrawable(Color.WHITE));
             this.listPopupWindow.setHeight(ViewGroup.LayoutParams.WRAP_CONTENT);
             this.listPopupWindow.show();
@@ -162,23 +165,6 @@ public class HomeActivity extends AppCompatActivity
         }
         return super.onOptionsItemSelected(item);
     }
-
-    @Override
-    public Loader<List<StatusSend>> onCreateLoader(int id, Bundle args) {
-        return new LogLoader(this.getBaseContext());
-    }
-
-    @Override
-    public void onLoadFinished(Loader<List<StatusSend>> loader, List<StatusSend> data) {
-        this.data.clear();
-        this.data.addAll(data);
-    }
-
-    @Override
-    public void onLoaderReset(Loader<List<StatusSend>> loader) {
-
-    }
-
 
     public static class HomeSpinnerAdapter extends  ArrayAdapter<StatusSend> {
 
@@ -200,15 +186,28 @@ public class HomeActivity extends AppCompatActivity
                 holder = (ViewHolder) convertView.getTag();
             }
             StatusSend status = this.getItem(position);
-            holder.tv.setText(status.getName() + " " + status.getState());
+            holder.tv.setText(status.getName());
+
+            SendState state = SendState.getState(status.getState());
+            switch (state) {
+                case STATE_DONE_ERROR:
+                case STATE_DONE_NEED_INVITE:
+                    holder.iv.setImageResource(R.drawable.ic_cloud_off_white_24dp);
+                    break;
+                case STATE_DONE_SUCCESS:
+                    holder.iv.setImageResource(R.drawable.ic_cloud_done_white_24dp);
+            }
+
             return convertView;
         }
 
         private static class ViewHolder {
             final TextView tv;
+            final ImageView iv;
 
             public ViewHolder(View view) {
                 this.tv = (TextView) view.findViewById(android.R.id.text1);
+                this.iv = (ImageView) view.findViewById(R.id.iv_status);
             }
         }
     }
@@ -221,33 +220,18 @@ public class HomeActivity extends AppCompatActivity
         }
     };
 
-    public static class LogLoader extends AsyncTaskLoader<List<StatusSend>> {
+    public class LogLoader extends AsyncTask<Void, Void, Long> {
 
         private LogService service = new LogService();
-        private List<StatusSend> items;
 
-        public LogLoader(Context context) {
-            super(context);
+        @Override
+        protected Long doInBackground(Void... params) {
+            return this.service.count();
         }
 
         @Override
-        public List<StatusSend> loadInBackground() {
-            this.items = this.service.list();
-            return this.items;
-        }
-
-        /**
-         * Handles a request to start the Loader.
-         */
-        @Override
-        protected void onStartLoading() {
-            if (this.items != null) {
-                deliverResult(this.items);
-            }
-
-            if (takeContentChanged() || this.items == null) {
-                forceLoad();
-            }
+        protected void onPostExecute(Long count) {
+            HomeActivity.this.count = count;
         }
     }
 }

@@ -1,15 +1,26 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
+    android:orientation="horizontal"
+    android:layout_margin="7dp"
     android:layout_height="?android:attr/listPreferredItemHeight">
 
     <TextView
-        android:padding="5dp"
+
         android:id="@android:id/text1"
         style="?android:attr/spinnerDropDownItemStyle"
         android:singleLine="true"
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:ellipsize="marquee"
         android:layout_height="match_parent"
+        android:layout_weight="1"
         android:textAlignment="inherit"/>
+
+    <ImageView
+        android:id="@+id/iv_status"
+        android:tint="@color/theme_primary_accent"
+        android:layout_gravity="center_vertical|right"
+        android:layout_alignParentRight="true"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
 </LinearLayout>

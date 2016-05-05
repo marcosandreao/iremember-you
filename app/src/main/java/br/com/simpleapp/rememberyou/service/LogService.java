@@ -65,5 +65,9 @@ public class LogService {
         return result;
     }
 
+    public long count(){
+        return this.session.getStatusSendDao().queryBuilder().buildCount().count();
+    }
+
 
 }
