@@ -50,7 +50,7 @@ public class HistoryFragment extends Fragment implements HistoryRecyclerViewAdap
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         this.getActivity().setTitle(this.getActivity().getString(R.string.history_fragment_title));
-        this.getLoaderManager().initLoader(FILTER_ALL, null, this).forceLoad();
+        this.getActivity().getSupportLoaderManager().initLoader(FILTER_ALL, null, this).forceLoad();
         this.setHasOptionsMenu(true);
     }
 

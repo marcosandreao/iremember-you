@@ -12,6 +12,8 @@ public class GreendaoGenarator {
 
         GreendaoGenarator.createHistory(schema);
 
+        GreendaoGenarator.createStatusSend(schema);
+
         new DaoGenerator().generateAll(schema, "app/src/main/java/");
     }
 
@@ -32,6 +34,17 @@ public class GreendaoGenarator {
         user.addStringProperty("name");
         user.addStringProperty("email").notNull();
         user.addStringProperty("emotion");
+        user.addDateProperty("dateTime");
+    }
+
+    private static void createStatusSend(Schema schema) {
+        final Entity user = schema.addEntity("StatusSend");
+        user.addIdProperty();
+        // name apenas para consulta
+        user.addStringProperty("name");
+        user.addStringProperty("email").notNull();
+        user.addStringProperty("emotion");
+        user.addIntProperty("state");
         user.addDateProperty("dateTime");
     }
 }

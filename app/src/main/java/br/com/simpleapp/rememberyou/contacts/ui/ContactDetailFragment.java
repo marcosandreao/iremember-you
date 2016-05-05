@@ -720,6 +720,7 @@ public class ContactDetailFragment extends Fragment implements
                     fabsend.setTag(Boolean.FALSE);
                     break;
                 case SendRemember.STATE_DONE_SUCCESS:
+                case SendRemember.STATE_DONE_NEED_INVITE:
                     sendProgress.setVisibility(View.INVISIBLE);
                     fabsend.setImageResource(R.drawable.ic_cloud_done_white_24dp);
                     fabsend.setTag(Boolean.TRUE);
