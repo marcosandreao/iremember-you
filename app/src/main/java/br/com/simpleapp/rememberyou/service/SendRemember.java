@@ -30,8 +30,8 @@ public class SendRemember extends IntentService {
 
     private static final String SEND_BROADCAST_TO = "BROADCAST_TO";
 
-    private static final String EXTRA_TO = "TO";
-    private static final String EXTRA_EMOTION = "EMOTION";
+    public static final String EXTRA_TO = "TO";
+    public static final String EXTRA_EMOTION = "EMOTION";
 
     public static final String EXTRA_STATE = "STATE";
     public static final int STATE_START = 0;
@@ -128,6 +128,7 @@ public class SendRemember extends IntentService {
 
         final Intent intentStatus = new Intent(intent.getStringExtra(SEND_BROADCAST_TO));
         intentStatus.putExtra(EXTRA_STATE, state );
+        intentStatus.putExtra(EXTRA_TO, to );
         LocalBroadcastManager.getInstance(this.getBaseContext()).sendBroadcast(intentStatus);
     }
 

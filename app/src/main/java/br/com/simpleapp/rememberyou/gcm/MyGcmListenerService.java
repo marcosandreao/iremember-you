@@ -7,7 +7,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.BitmapFactory;
-import android.media.Ringtone;
 import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.Bundle;
@@ -18,10 +17,8 @@ import android.util.Log;
 
 import com.google.android.gms.gcm.GcmListenerService;
 
-import br.com.simpleapp.rememberyou.MainActivity;
+import br.com.simpleapp.rememberyou.HomeActivity;
 import br.com.simpleapp.rememberyou.R;
-import br.com.simpleapp.rememberyou.entity.History;
-import br.com.simpleapp.rememberyou.entity.HistoryDao;
 import br.com.simpleapp.rememberyou.service.HistoryService;
 import br.com.simpleapp.rememberyou.utils.Emotions;
 
@@ -41,14 +38,15 @@ public class MyGcmListenerService  extends GcmListenerService {
      */
     @Override
     public void onMessageReceived(String from, Bundle data) {
-        String name = data.getString("name");
-        String message = data.getString("msg");
-        String emotion = data.getString("emotion");
-        String email = data.getString("email");
+        final String name = data.getString("name");
+        final String message = data.getString("msg");
+        final String emotion = data.getString("emotion");
+        final String email = data.getString("from");
         Log.d(TAG, "From: " + from);
         Log.d(TAG, "name: " + name);
         Log.d(TAG, "Message: " + message);
         Log.d(TAG, "emotion: " + emotion);
+        Log.d(TAG, "email: " + email);
 
         if (from.startsWith("/topics/")) {
             // message received from some topic.
@@ -59,7 +57,7 @@ public class MyGcmListenerService  extends GcmListenerService {
 
         try {
             final HistoryService service = new HistoryService();
-            service.save(name, "marcosandreao@gmail.com", emotion );
+            service.save(name, email, emotion );
             Log.d(TAG, data.toString());
         } catch (Exception e) {
             e.printStackTrace();
@@ -74,7 +72,7 @@ public class MyGcmListenerService  extends GcmListenerService {
      */
     private void sendNotification(String name, String message, String emotion) {
 
-        final Intent intent = new Intent(this, MainActivity.class);
+        final Intent intent = new Intent(this, HomeActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         final PendingIntent pendingIntent = PendingIntent.getActivity(this, (int) System.currentTimeMillis(), intent,
                 PendingIntent.FLAG_ONE_SHOT);

@@ -9,6 +9,10 @@ public interface IConstatns {
 
     String INTENT_FILTER_ACTION_DETAIL = "callback.send.from.DETAIL";
 
+    String INTENT_FILTER_ACTION_HOME = "callback.send.from.HOME";
+
     IntentFilter INTENT_FILTER_DETAIL = new IntentFilter(INTENT_FILTER_ACTION_DETAIL);
+
+    IntentFilter INTENT_FILTER_HOME = new IntentFilter(INTENT_FILTER_ACTION_HOME);
 
 }

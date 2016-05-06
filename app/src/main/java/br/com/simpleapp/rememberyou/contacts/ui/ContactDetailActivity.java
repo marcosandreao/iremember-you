@@ -21,15 +21,11 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentTransaction;
-import android.support.v4.app.NavUtils;
 import android.support.v7.app.AppCompatActivity;
-import android.view.MenuItem;
 
 import br.com.simpleapp.rememberyou.BuildConfig;
-import br.com.simpleapp.rememberyou.MainActivity;
-import br.com.simpleapp.rememberyou.R;
+import br.com.simpleapp.rememberyou.HomeActivity;
 import br.com.simpleapp.rememberyou.contacts.util.Utils;
 import br.com.simpleapp.rememberyou.service.SendMessageReceiver;
 
@@ -84,7 +80,7 @@ public class ContactDetailActivity extends AppCompatActivity {
 
         // a partir da notificação
         if ( getIntent().hasExtra(SendMessageReceiver.BUNDLE_ID) ) {
-            Intent intent = new Intent(this, MainActivity.class);
+            Intent intent = new Intent(this, HomeActivity.class);
             intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP |
                     Intent.FLAG_ACTIVITY_CLEAR_TASK |
                     Intent.FLAG_ACTIVITY_NEW_TASK);
