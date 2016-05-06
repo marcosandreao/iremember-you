@@ -45,6 +45,9 @@ public class UserFavoriteFragment extends Fragment implements UserFavoriteAdapte
     private final IntentFilter filter = IConstatns.INTENT_FILTER_HOME;
     private HashMap<String, SendState> states  = new HashMap<>();
 
+    private View emptyView;
+    private RecyclerView recyclerView;
+
     public UserFavoriteFragment() {
     }
 
@@ -83,7 +86,7 @@ public class UserFavoriteFragment extends Fragment implements UserFavoriteAdapte
         super.onViewCreated(view, savedInstanceState);
 
         final Context context = view.getContext();
-        final RecyclerView recyclerView = (RecyclerView) view.findViewById(R.id.list);
+        this.recyclerView = (RecyclerView) view.findViewById(R.id.list);
         if (mColumnCount <= 1) {
             recyclerView.setLayoutManager(new LinearLayoutManager(context));
         } else {
@@ -92,7 +95,10 @@ public class UserFavoriteFragment extends Fragment implements UserFavoriteAdapte
         recyclerView.addOnScrollListener(new SampleScrollListener(getContext()));
         this.adapter = new UserFavoriteAdapter(new UserService().listFavorites(), this);
         recyclerView.setAdapter(this.adapter);
+        this.adapter.registerAdapterDataObserver(this.emptyObserver);
 
+        this.emptyView = view.findViewById(android.R.id.empty);
+        this.emptyView.setVisibility(View.GONE);
 
         LocalBroadcastManager.getInstance(this.getActivity()).registerReceiver(this.receiverSend, this.filter);
     }
@@ -153,6 +159,25 @@ public class UserFavoriteFragment extends Fragment implements UserFavoriteAdapte
             Log.e("onSendInteraction", e.getMessage());
         }
     }
+
+    private RecyclerView.AdapterDataObserver emptyObserver = new RecyclerView.AdapterDataObserver() {
+
+
+        @Override
+        public void onChanged() {
+            if(adapter != null && emptyView != null) {
+                if(adapter.getItemCount() == 0) {
+                    emptyView.setVisibility(View.VISIBLE);
+                    recyclerView.setVisibility(View.GONE);
+                }
+                else {
+                    emptyView.setVisibility(View.GONE);
+                    recyclerView.setVisibility(View.VISIBLE);
+                }
+            }
+
+        }
+    };
 
     private void handlerReceiver(final Intent intent){
         final int state = intent.getIntExtra(SendRemember.EXTRA_STATE, -1);

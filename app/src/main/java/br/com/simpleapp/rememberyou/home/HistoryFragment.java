@@ -32,6 +32,8 @@ public class HistoryFragment extends Fragment implements HistoryRecyclerViewAdap
     private HistoryRecyclerViewAdapter adapter;
 
     private static final int FILTER_ALL = 0;
+    private View emptyView;
+    private RecyclerView recyclerView;
 
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
@@ -81,17 +83,19 @@ public class HistoryFragment extends Fragment implements HistoryRecyclerViewAdap
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         // Set the adapter
-        if (view instanceof RecyclerView) {
-            Context context = view.getContext();
-            RecyclerView recyclerView = (RecyclerView) view;
-            if (mColumnCount <= 1) {
-                recyclerView.setLayoutManager(new LinearLayoutManager(context));
-            } else {
-                recyclerView.setLayoutManager(new GridLayoutManager(context, mColumnCount));
-            }
-            this.adapter = new HistoryRecyclerViewAdapter(this);
-            recyclerView.setAdapter(adapter);
+        Context context = view.getContext();
+        this.emptyView = view.findViewById(android.R.id.empty);
+        this.emptyView.setVisibility(View.GONE);
+
+        this.recyclerView = (RecyclerView) view.findViewById(R.id.list);
+        if (mColumnCount <= 1) {
+            recyclerView.setLayoutManager(new LinearLayoutManager(context));
+        } else {
+            recyclerView.setLayoutManager(new GridLayoutManager(context, mColumnCount));
         }
+        this.adapter = new HistoryRecyclerViewAdapter(this);
+        this.adapter.registerAdapterDataObserver(this.emptyObserver);
+        recyclerView.setAdapter(adapter);
     }
 
     @Override
@@ -124,6 +128,25 @@ public class HistoryFragment extends Fragment implements HistoryRecyclerViewAdap
     public void onNothingSelected(AdapterView<?> parent) {
 
     }
+
+    private RecyclerView.AdapterDataObserver emptyObserver = new RecyclerView.AdapterDataObserver() {
+
+
+        @Override
+        public void onChanged() {
+            if(adapter != null && emptyView != null) {
+                if(adapter.getItemCount() == 0) {
+                    emptyView.setVisibility(View.VISIBLE);
+                    recyclerView.setVisibility(View.GONE);
+                }
+                else {
+                    emptyView.setVisibility(View.GONE);
+                    recyclerView.setVisibility(View.VISIBLE);
+                }
+            }
+
+        }
+    };
 
     public static class HistoryLoader extends AsyncTaskLoader<List<? extends History>>{
 
