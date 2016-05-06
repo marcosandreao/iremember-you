@@ -81,6 +81,7 @@ public class NotificationUtil {
         notificationManager.cancel((int)id);
     }
 
+
     public static class DecodeResourseToBitmap extends AsyncTask<String, Void, Bitmap> {
 
         private IDecodeResourseToBitmap listener;

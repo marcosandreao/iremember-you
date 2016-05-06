@@ -130,6 +130,19 @@
             android:name=".service.SendMessageReceiver"
             android:enabled="true"
             android:exported="false" />
+
+        <service
+            android:name=".service.NotificationMessageReceiver"
+            android:enabled="true"
+            android:exported="false" />
+
+        <receiver
+            android:name=".service.NotificationMessageReceiver"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="callback.send.from.NOTIFICATION" />
+            </intent-filter>
+        </receiver>
         <service
             android:name=".service.SendRemember"
             android:exported="false" />

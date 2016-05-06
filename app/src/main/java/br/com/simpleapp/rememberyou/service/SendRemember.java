@@ -13,6 +13,7 @@ import com.squareup.okhttp.ResponseBody;
 
 import java.io.IOException;
 
+import br.com.simpleapp.rememberyou.IConstatns;
 import br.com.simpleapp.rememberyou.R;
 import br.com.simpleapp.rememberyou.api.IRememberYou;
 import br.com.simpleapp.rememberyou.entity.StatusSend;
@@ -129,7 +130,12 @@ public class SendRemember extends IntentService {
         final Intent intentStatus = new Intent(intent.getStringExtra(SEND_BROADCAST_TO));
         intentStatus.putExtra(EXTRA_STATE, state );
         intentStatus.putExtra(EXTRA_TO, to );
-        LocalBroadcastManager.getInstance(this.getBaseContext()).sendBroadcast(intentStatus);
+        if (IConstatns.INTENT_FILTER_ACTION_NOTIFICATION.equals(SEND_BROADCAST_TO)) {
+            this.getBaseContext().sendBroadcast(intentStatus);
+        } else {
+            LocalBroadcastManager.getInstance(this.getBaseContext()).sendBroadcast(intentStatus);
+        }
+
     }
 
 }
