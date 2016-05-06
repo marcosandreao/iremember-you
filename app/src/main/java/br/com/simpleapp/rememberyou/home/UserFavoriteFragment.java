@@ -93,13 +93,7 @@ public class UserFavoriteFragment extends Fragment implements UserFavoriteAdapte
         this.adapter = new UserFavoriteAdapter(new UserService().listFavorites(), this);
         recyclerView.setAdapter(this.adapter);
 
-        final FloatingActionButton fab = (FloatingActionButton) view.findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                 startActivityForResult(new Intent(getActivity(), ContactsListActivity.class), REQUEST_CHOOSE_ACCOUNT);
-            }
-        });
+
         LocalBroadcastManager.getInstance(this.getActivity()).registerReceiver(this.receiverSend, this.filter);
     }
 
