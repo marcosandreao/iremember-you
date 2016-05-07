@@ -147,4 +147,14 @@
     <string name="toast_send_not_found_user">" não utiliza a aplicação :(."</string>
     <string name="toast_send_success">"Lembrete enviado para: "</string>
     <string name="toast_send_error">" não pode ser lembrado, certifique-se que esteja connectado a internet."</string>
+    <string name="hot_show_again_msg_feedback">Não mostrar novamente</string>
+    <string name="popup_close_and_exit">Fechar</string>
+    <string name="dialog_messe_need_invite">"Convide "</string>
+    <string name="dialog_messe_need_invite_text_end">" para ser lembrado também."</string>
+    <string name="dialog_title_user_notfound">"Usuário não utiliza o "</string>
+    <string name="dialog_error_title">"Erro ao lembrar de "</string>
+    <string name="dialog_error_msg">certifique-se que esteja em uma conexão de internet ativa.</string>
+    <string name="dialog_error_tryagain">Tentar novamente?</string>
+    <string name="preference_confirm_invite_dialog">Exibir dialog quando o usuário lembrado não utilizar a app?</string>
+    <string name="preference_confirm_error_dialog">Exibir dialog quando de erro durante o envio?</string>
 </resources>
