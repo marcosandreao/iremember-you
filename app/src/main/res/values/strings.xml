@@ -143,4 +143,8 @@
     <string name="empty_history">Você ainda não foi lembrado, tente lembrar de alguem quem sabe você não tera essa lista cheia da proxima vez.</string>
     <string name="favorite_button_suggestion"><![CDATA[Botão flutuante >>>>]]></string>
     <string name="welcome_title">Bem vindo</string>
+    <string name="toast_send_start">Lembrando, aguarde...</string>
+    <string name="toast_send_not_found_user">" não utiliza a aplicação :(."</string>
+    <string name="toast_send_success">"Lembrete enviado para: "</string>
+    <string name="toast_send_error">" não pode ser lembrado, certifique-se que esteja connectado a internet."</string>
 </resources>

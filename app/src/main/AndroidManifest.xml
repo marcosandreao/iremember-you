@@ -131,14 +131,9 @@
             android:enabled="true"
             android:exported="false" />
 
-        <service
-            android:name=".service.NotificationMessageReceiver"
-            android:enabled="true"
-            android:exported="false" />
-
         <receiver
-            android:name=".service.NotificationMessageReceiver"
-            android:exported="true">
+            android:exported="true"
+            android:name=".service.NotificationMessageReceiver">
             <intent-filter>
                 <action android:name="callback.send.from.NOTIFICATION" />
             </intent-filter>

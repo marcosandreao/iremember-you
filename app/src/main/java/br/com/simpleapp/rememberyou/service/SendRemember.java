@@ -96,16 +96,16 @@ public class SendRemember extends IntentService {
             final retrofit.Response<ResponseBody> response =  service.message(from, to, getString(R.string.txt_notification), emotion).execute();
 
             if ( response.isSuccess() ) {
-                if ( response.code() == 404 ){
+                logService.update(id, SendState.STATE_DONE_SUCCESS);
+                this.sendBroadcast(intent, to, STATE_DONE_SUCCESS);
+            } else {
+                if (response.code() == 404 ) {
                     logService.update(id, SendState.STATE_DONE_NEED_INVITE);
                     this.sendBroadcast(intent, to, STATE_DONE_NEED_INVITE);
                 } else {
-                    logService.update(id, SendState.STATE_DONE_SUCCESS);
-                    this.sendBroadcast(intent, to, STATE_DONE_SUCCESS);
+                    logService.update(id, SendState.STATE_DONE_ERROR);
+                    this.sendBroadcast(intent, to, STATE_DONE_ERROR);
                 }
-            } else {
-                logService.update(id, SendState.STATE_DONE_ERROR);
-                this.sendBroadcast(intent, to, STATE_DONE_ERROR);
             }
             Log.d("MESSAGE", response.raw().toString());
         } catch (Exception e) {
@@ -126,11 +126,12 @@ public class SendRemember extends IntentService {
         if ( !intent.hasExtra(SEND_BROADCAST_TO) ) {
             return;
         }
+        final String targetBroadcast = intent.getStringExtra(SEND_BROADCAST_TO);
 
-        final Intent intentStatus = new Intent(intent.getStringExtra(SEND_BROADCAST_TO));
+        final Intent intentStatus = new Intent(targetBroadcast);
         intentStatus.putExtra(EXTRA_STATE, state );
         intentStatus.putExtra(EXTRA_TO, to );
-        if (IConstatns.INTENT_FILTER_ACTION_NOTIFICATION.equals(SEND_BROADCAST_TO)) {
+        if (IConstatns.INTENT_FILTER_ACTION_NOTIFICATION.equals(targetBroadcast)) {
             this.getBaseContext().sendBroadcast(intentStatus);
         } else {
             LocalBroadcastManager.getInstance(this.getBaseContext()).sendBroadcast(intentStatus);

@@ -1,21 +1,12 @@
 package br.com.simpleapp.rememberyou.service;
 
-import android.app.NotificationManager;
-import android.app.Service;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.BitmapFactory;
-import android.os.IBinder;
-import android.support.annotation.Nullable;
-import android.support.v4.app.NotificationCompat;
-import android.util.Log;
+import android.widget.Toast;
 
-import br.com.simpleapp.rememberyou.IConstatns;
 import br.com.simpleapp.rememberyou.R;
 import br.com.simpleapp.rememberyou.entity.User;
-import br.com.simpleapp.rememberyou.utils.Emotions;
-import br.com.simpleapp.rememberyou.utils.SendState;
 
 public class NotificationMessageReceiver extends BroadcastReceiver {
 
@@ -30,27 +21,23 @@ public class NotificationMessageReceiver extends BroadcastReceiver {
         final String email = intent.getStringExtra(SendRemember.EXTRA_TO);
         final User user = this.service.findByEmail(email);
         if (user != null){
-            final NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
 
             String text ="";
             switch (state){
                 case SendRemember.STATE_DONE_ERROR:
-                    text = "Enviado com sucesso";
+                    text = user.getName() + context.getString(R.string.toast_send_error);
                     break;
                 case SendRemember.STATE_DONE_SUCCESS:
-                    text = "Enviado com sucesso";
+                    text = context.getString(R.string.toast_send_success) + user.getName();
                     break;
                 case SendRemember.STATE_DONE_NEED_INVITE:
-                    text = "Usuário não cadastrado";
+                    text = user.getName() + context.getString(R.string.toast_send_not_found_user);
                     break;
                 case SendRemember.STATE_START:
-                    text = "Iniciado";
+                    text = context.getString(R.string.toast_send_start);
                     break;
             }
-            final NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(context)
-                    .addAction(R.drawable.ic_send_white_24dp, text, null);
-
-            notificationManager.notify( user.getId().intValue(), notificationBuilder.build());
+            Toast.makeText(context, text, Toast.LENGTH_LONG).show();
 
         }
 
