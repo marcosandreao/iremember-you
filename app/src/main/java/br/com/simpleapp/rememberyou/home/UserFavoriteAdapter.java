@@ -70,7 +70,7 @@ public class UserFavoriteAdapter extends RecyclerView.Adapter<UserFavoriteAdapte
                     holder.ivEmotion.setVisibility(View.VISIBLE);
                     break;
                 case STATE_START:
-                    holder.ivEmotion.setVisibility(View.INVISIBLE);
+                    holder.ivEmotion.setVisibility(View.GONE);
                     holder.pbSending.setVisibility(View.VISIBLE);
                     break;
             }
