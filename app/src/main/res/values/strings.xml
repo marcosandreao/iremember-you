@@ -155,6 +155,8 @@
     <string name="dialog_error_title">"Erro ao lembrar de "</string>
     <string name="dialog_error_msg">certifique-se que esteja em uma conexão de internet ativa.</string>
     <string name="dialog_error_tryagain">Tentar novamente?</string>
-    <string name="preference_confirm_invite_dialog">Exibir dialog quando o usuário lembrado não utilizar a app?</string>
-    <string name="preference_confirm_error_dialog">Exibir dialog quando de erro durante o envio?</string>
+    <string name="preference_confirm_invite_dialog">Mensagem de usuário não utilizar a app?</string>
+    <string name="preference_confirm_error_dialog">Mensagem de erro durante o envio?</string>
+    <string name="preference_confirm_error_dialog_sumary">Exibir ou não mensagem de erro que possa acontecer ao lembrar alguem</string>
+    <string name="preference_confirm_invite_dialog_summary">Exibir ou não mensagem de usuário não registrado ao lembrar alguem</string>
 </resources>

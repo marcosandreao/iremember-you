@@ -2,6 +2,7 @@ package br.com.simpleapp.rememberyou.home;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.net.Uri;
@@ -30,6 +31,7 @@ import br.com.simpleapp.rememberyou.entity.StatusSend;
 import br.com.simpleapp.rememberyou.entity.User;
 import br.com.simpleapp.rememberyou.service.SendRemember;
 import br.com.simpleapp.rememberyou.service.UserService;
+import br.com.simpleapp.rememberyou.utils.DialogUtils;
 import br.com.simpleapp.rememberyou.utils.SendState;
 
 public class UserFavoriteFragment extends Fragment implements UserFavoriteAdapter.OnListFragmentInteractionListener {
@@ -135,19 +137,48 @@ public class UserFavoriteFragment extends Fragment implements UserFavoriteAdapte
     }
 
     @Override
-    public void onSendInteraction(User mItem, int position) {
+    public void onSendInteraction(final User mItem, final int position) {
         if ( this.states.containsKey(mItem.getEmail()) ) {
-            SendState state = this.states.get(mItem.getEmail());
+
+
+            final SendState state = this.states.get(mItem.getEmail());
+
+            if ( state == SendState.STATE_START ) {
+                return;
+            }
+
+            this.states.remove(mItem.getEmail());
+            this.adapter.notifyItemChanged(position);
+
             switch (state) {
                 case STATE_DONE_ERROR:
+                    DialogUtils.showLocationDialogError(this.getActivity(), mItem.getName(), new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+
+                        }
+                    }, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            onSendInteraction(mItem, position);
+                        }
+                    });
+                    return;
                 case STATE_DONE_SUCCESS:
+                    return;
+                case STATE_START:
+                    return;
                 case STATE_DONE_NEED_INVITE:
-                    this.states.remove(mItem.getEmail());
-                    this.adapter.notifyItemChanged(position);
+                    DialogUtils.showLocationDialogNeedInvite(this.getActivity(), mItem.getName(), new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                        }
+                    });
                     return;
                 default:
 
             }
+
         }
 
         try {
