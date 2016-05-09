@@ -55,10 +55,11 @@
     <!-- Button labels -->
     <string name="sign_out">Sign Out</string>
     <string name="disconnect">Disconnect</string>
-    <string name="aguarde_registrando_dispositivo">Aguarde, Registrando dispositivo...</string>
+    <string name="wait_registered_device">Aguarde, Registrando dispositivo...</string>
+    <string name="wizard_try_again">Tentar novamente</string>
     <string name="register_success">Seu registro foi efetuado com sucesso! agora você já pode lembrar e ser lembrado.</string>
     <string name="register_error">Problema durante o registro, você precisa estar connectado com a internet.</string>
-    <string name="toque_aqui_para_iniciar_app">Toque aqui para iniciar App</string>
+    <string name="start_app">Toque aqui para iniciar App</string>
     <string name="name_required">Nome é muito importante a partir dele que seus lembrados te reconheceram.</string>
     <string name="loading_contacts">Aguarde, carregando dados do contato.</string>
     <string name="txt_notification">Lembrou de você</string>
@@ -159,4 +160,7 @@
     <string name="preference_confirm_error_dialog">Mensagem de erro durante o envio?</string>
     <string name="preference_confirm_error_dialog_sumary">Exibir ou não mensagem de erro que possa acontecer ao lembrar alguem</string>
     <string name="preference_confirm_invite_dialog_summary">Exibir ou não mensagem de usuário não registrado ao lembrar alguem</string>
+    <string name="wizard_email_required">Precisamos de um email para identificar você.</string>
+    <string name="wizard_select_account">Selecione um conta para entrar na app.</string>
+    <string name="input_nickname_or_name">Nickname ou nome</string>
 </resources>

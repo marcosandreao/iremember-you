@@ -37,13 +37,13 @@ public class WizardActivity extends AppCompatActivity implements IWizardListener
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        this.setContentView(R.layout.activity_wizard);
+        //this.setContentView(R.layout.activity_wizard);
 
-        final Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        toolbar.setTitle(R.string.welcome_title);
-        this.setSupportActionBar(toolbar);
+        //final Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        //toolbar.setTitle(R.string.welcome_title);
+        //this.setSupportActionBar(toolbar);
 
-        this.getSupportActionBar().setDisplayHomeAsUpEnabled(false);
+        //this.getSupportActionBar().setDisplayHomeAsUpEnabled(false);
 
 
         this.getSupportFragmentManager().beginTransaction().replace(android.R.id.content, new StepOneFragment()).commit();
@@ -184,7 +184,7 @@ public class WizardActivity extends AppCompatActivity implements IWizardListener
 
         private ProgressBar mRegistrationProgressBar;
         private TextView mInformationTextView;
-        private View btStart;
+        private Button btStart;
 
         @Override
         public void onAttach(Activity activity) {
@@ -223,16 +223,21 @@ public class WizardActivity extends AppCompatActivity implements IWizardListener
             sharedPreferences.edit().putString(QuickstartPreferences.NICK_NAME, this.name).apply();
 
             this.registerReceiver();
-
+            this.btStart = (Button) view.findViewById(R.id.bt_confirmar);
             this.registerDevice(this.account);
 
-            this.btStart = view.findViewById(R.id.bt_confirmar);
+
             this.btStart.setVisibility(View.GONE);
             this.btStart.setOnClickListener(new View.OnClickListener(){
 
                 @Override
                 public void onClick(View v) {
-                    mListener.startMainActivity();
+                    boolean success = v.getTag() == null? true : (Boolean) v.getTag();
+                    if ( success ) {
+                        mListener.startMainActivity();
+                    } else {
+                        registerDevice(account);
+                    }
                 }
             });
 
@@ -243,15 +248,24 @@ public class WizardActivity extends AppCompatActivity implements IWizardListener
         private void registerFinish(boolean sendToken){
             this.mListener.lockBackButton(false);
             if (sendToken) {
+                this.btStart.setText(R.string.start_app);
                 this.mRegistrationProgressBar.setVisibility(View.GONE);
                 this.mInformationTextView.setText(R.string.register_success);
                 this.btStart.setVisibility(View.VISIBLE);
+                this.btStart.setTag(Boolean.TRUE);
             } else {
+                this.btStart.setVisibility(View.VISIBLE);
+                this.mRegistrationProgressBar.setVisibility(View.GONE);
                 this.mInformationTextView.setText(R.string.register_error);
+                this.btStart.setText(R.string.wizard_try_again);
+                this.btStart.setTag(Boolean.FALSE);
             }
         }
 
         private void registerDevice(String accountName) {
+            this.mRegistrationProgressBar.setVisibility(View.VISIBLE);
+            this.btStart.setVisibility(View.GONE);
+            this.mInformationTextView.setText(R.string.wait_registered_device);
             Intent intent = new Intent(this.getActivity(), RegistrationIntentService.class);
             intent.putExtra(AccountManager.KEY_ACCOUNT_NAME, accountName);
             this.getActivity().startService(intent);
