@@ -24,6 +24,9 @@ import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 
+import com.google.android.gms.analytics.HitBuilders;
+
+import br.com.simpleapp.rememberyou.AnalyticsTrackers;
 import br.com.simpleapp.rememberyou.BuildConfig;
 import br.com.simpleapp.rememberyou.HomeActivity;
 import br.com.simpleapp.rememberyou.contacts.util.Utils;
@@ -89,5 +92,12 @@ public class ContactDetailActivity extends AppCompatActivity {
         } else {
             super.onBackPressed();
         }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        AnalyticsTrackers.getInstance().get().setScreenName("ContactDetailActivity");
+        AnalyticsTrackers.getInstance().get().send(new HitBuilders.ScreenViewBuilder().build());
     }
 }

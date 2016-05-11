@@ -6,6 +6,9 @@ import android.os.IBinder;
 import android.support.annotation.Nullable;
 import android.util.Log;
 
+import com.google.android.gms.analytics.HitBuilders;
+
+import br.com.simpleapp.rememberyou.AnalyticsTrackers;
 import br.com.simpleapp.rememberyou.IConstatns;
 
 public class SendMessageReceiver extends Service {
@@ -23,6 +26,13 @@ public class SendMessageReceiver extends Service {
         Log.d("RECEIVER", "SendMessageReceiver onstartComand");
 
         try {
+            AnalyticsTrackers.getInstance().get().setScreenName("SendMessageReceiver");
+            AnalyticsTrackers.getInstance().get().send(new HitBuilders.ScreenViewBuilder().build());
+
+            AnalyticsTrackers.getInstance().get().send(new HitBuilders.EventBuilder()
+                    .setCategory("Send")
+                    .setAction(intent.getStringExtra(BUNDLE_EMOTION))
+                    .build());
             SendRemember.startActionSend(this.getBaseContext(), intent.getStringExtra(BUNDLE_EMAIL), intent.getStringExtra(BUNDLE_EMOTION), IConstatns.INTENT_FILTER_ACTION_NOTIFICATION);
         } catch (Exception e ) {
             e.printStackTrace();

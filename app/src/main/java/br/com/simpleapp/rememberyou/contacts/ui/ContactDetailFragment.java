@@ -59,9 +59,12 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.analytics.HitBuilders;
+
 import java.io.FileNotFoundException;
 import java.io.IOException;
 
+import br.com.simpleapp.rememberyou.AnalyticsTrackers;
 import br.com.simpleapp.rememberyou.BuildConfig;
 import br.com.simpleapp.rememberyou.IConstatns;
 import br.com.simpleapp.rememberyou.R;
@@ -342,6 +345,12 @@ public class ContactDetailFragment extends Fragment implements
             this.getActivity().onBackPressed();
             return;
         }
+
+        AnalyticsTrackers.getInstance().get().send(new HitBuilders.EventBuilder()
+                .setCategory("Send")
+                .setAction(this.ivEmotionTarget.getTag().toString())
+                .build());
+
         this.favoriteService.prepareToSent(this.contactId, this.contactName, this.emailAddress, this.ivEmotionTarget.getTag().toString());
 
         SendRemember.startActionSend(this.getContext(), this.emailAddress, this.ivEmotionTarget.getTag().toString(), this.filter.getAction(0));
@@ -428,6 +437,10 @@ public class ContactDetailFragment extends Fragment implements
                     NotificationUtil.removeNotification(this.getContext(), user.getId());
                 }
                 this.getActivity().invalidateOptionsMenu();
+                AnalyticsTrackers.getInstance().get().send(new HitBuilders.EventBuilder()
+                        .setCategory("Action")
+                        .setAction("Unpin")
+                        .build());
                 return true;
             case R.id.menu_pin:
 
@@ -436,6 +449,10 @@ public class ContactDetailFragment extends Fragment implements
                 NotificationUtil.pinNotification(this.getActivity(), this.contactId, (int) id,  emailAddress,
                         contactName, this.ivEmotionTarget.getTag().toString(), this);
 
+                AnalyticsTrackers.getInstance().get().send(new HitBuilders.EventBuilder()
+                        .setCategory("Action")
+                        .setAction("Pin")
+                        .build());
 
                 this.getActivity().invalidateOptionsMenu();
                 return true;

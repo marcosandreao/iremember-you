@@ -6,6 +6,9 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 
+import com.google.android.gms.analytics.HitBuilders;
+
+import br.com.simpleapp.rememberyou.AnalyticsTrackers;
 import br.com.simpleapp.rememberyou.BuildConfig;
 import br.com.simpleapp.rememberyou.R;
 
@@ -52,6 +55,11 @@ public class ContactsListActivity extends AppCompatActivity implements
         Intent intent = new Intent(this, ContactDetailActivity.class);
         intent.setData(contactUri);
         startActivity(intent);
+
+        AnalyticsTrackers.getInstance().get().send(new HitBuilders.EventBuilder()
+                .setCategory("Action")
+                .setAction("Select User")
+                .build());
     }
 
     /**
@@ -68,5 +76,12 @@ public class ContactsListActivity extends AppCompatActivity implements
         // Don't allow another search if this activity instance is already showing
         // search results. Only used pre-HC.
         return !isSearchResultView && super.onSearchRequested();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        AnalyticsTrackers.getInstance().get().setScreenName("ContactsListActivity");
+        AnalyticsTrackers.getInstance().get().send(new HitBuilders.ScreenViewBuilder().build());
     }
 }

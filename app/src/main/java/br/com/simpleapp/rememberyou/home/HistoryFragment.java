@@ -7,6 +7,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.AsyncTaskLoader;
 import android.support.v4.content.Loader;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.AppCompatSpinner;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
@@ -18,9 +19,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.ListView;
+
+import com.google.android.gms.analytics.HitBuilders;
 
 import java.util.List;
 
+import br.com.simpleapp.rememberyou.AnalyticsTrackers;
 import br.com.simpleapp.rememberyou.R;
 import br.com.simpleapp.rememberyou.entity.History;
 import br.com.simpleapp.rememberyou.service.HistoryService;
@@ -82,6 +87,7 @@ public class HistoryFragment extends Fragment implements HistoryRecyclerViewAdap
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+
         // Set the adapter
         Context context = view.getContext();
         this.emptyView = view.findViewById(android.R.id.empty);
@@ -122,11 +128,22 @@ public class HistoryFragment extends Fragment implements HistoryRecyclerViewAdap
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
         this.getLoaderManager().initLoader(position, null, this).forceLoad();
+        AnalyticsTrackers.getInstance().get().send(new HitBuilders.EventBuilder()
+                .setCategory("Action")
+                .setAction("Filter " + position)
+                .build());
     }
 
     @Override
     public void onNothingSelected(AdapterView<?> parent) {
 
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        AnalyticsTrackers.getInstance().get().setScreenName("HistoryFragment");
+        AnalyticsTrackers.getInstance().get().send(new HitBuilders.ScreenViewBuilder().build());
     }
 
     private RecyclerView.AdapterDataObserver emptyObserver = new RecyclerView.AdapterDataObserver() {

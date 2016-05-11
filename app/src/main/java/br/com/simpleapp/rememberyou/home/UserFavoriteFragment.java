@@ -19,9 +19,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.google.android.gms.analytics.HitBuilders;
+
 import java.util.HashMap;
 import java.util.Map;
 
+import br.com.simpleapp.rememberyou.AnalyticsTrackers;
 import br.com.simpleapp.rememberyou.IConstatns;
 import br.com.simpleapp.rememberyou.R;
 import br.com.simpleapp.rememberyou.contacts.ui.ContactDetailActivity;
@@ -114,6 +117,8 @@ public class UserFavoriteFragment extends Fragment implements UserFavoriteAdapte
     @Override
     public void onResume() {
         super.onResume();
+        AnalyticsTrackers.getInstance().get().setScreenName("FavoriteFragment");
+        AnalyticsTrackers.getInstance().get().send(new HitBuilders.ScreenViewBuilder().build());
         if ( this.adapter != null ) {
             this.adapter.setItems(new UserService().listFavorites());
         }
@@ -125,6 +130,11 @@ public class UserFavoriteFragment extends Fragment implements UserFavoriteAdapte
         Intent intent = new Intent(this.getActivity(), ContactDetailActivity.class);
         intent.setData(contactUri);
         startActivityForResult(intent, REQUEST_CHOOSE_ACCOUNT);
+
+        AnalyticsTrackers.getInstance().get().send(new HitBuilders.EventBuilder()
+                .setCategory("Action")
+                .setAction("Select User")
+                .build());
     }
 
     @Override
@@ -180,7 +190,10 @@ public class UserFavoriteFragment extends Fragment implements UserFavoriteAdapte
             }
 
         }
-
+        AnalyticsTrackers.getInstance().get().send(new HitBuilders.EventBuilder()
+                .setCategory("Send")
+                .setAction(mItem.getLastEmotion())
+                .build());
         try {
             SendRemember.startActionSend(this.getActivity(), mItem.getEmail(), mItem.getLastEmotion(), IConstatns.INTENT_FILTER_ACTION_HOME);
             this.states.put(mItem.getEmail(), SendState.STATE_START);

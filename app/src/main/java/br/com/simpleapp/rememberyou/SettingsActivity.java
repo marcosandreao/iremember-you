@@ -17,6 +17,8 @@ import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.view.MenuItem;
 
+import com.google.android.gms.analytics.HitBuilders;
+
 public class SettingsActivity extends AppCompatActivity {
 
     @Override
@@ -29,6 +31,13 @@ public class SettingsActivity extends AppCompatActivity {
         this.getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         this.getFragmentManager().beginTransaction().replace(R.id.content, new GeneralPreferenceFragment()).commit();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        AnalyticsTrackers.getInstance().get().setScreenName("SettingsActivity");
+        AnalyticsTrackers.getInstance().get().send(new HitBuilders.ScreenViewBuilder().build());
     }
 
     @TargetApi(Build.VERSION_CODES.HONEYCOMB)

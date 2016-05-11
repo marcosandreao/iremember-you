@@ -14,6 +14,8 @@ import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
 
+import com.google.android.gms.analytics.HitBuilders;
+
 import br.com.simpleapp.rememberyou.contacts.ui.ContactsListActivity;
 import br.com.simpleapp.rememberyou.gcm.QuickstartPreferences;
 import br.com.simpleapp.rememberyou.home.HistoryFragment;
@@ -91,4 +93,10 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         }
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        AnalyticsTrackers.getInstance().get().setScreenName("HomeActivity");
+        AnalyticsTrackers.getInstance().get().send(new HitBuilders.ScreenViewBuilder().build());
+    }
 }
