@@ -274,8 +274,19 @@ public class ContactDetailFragment extends Fragment implements
                 if( emailAddress != null ) {
                     favoriteService.setWithFavorie(contactId, contactName, emailAddress);
                     setImageFavorite();
+
+                    AnalyticsTrackers.getInstance().get().send(new HitBuilders.EventBuilder()
+                            .setCategory("Action")
+                            .setAction("favorite")
+                            .build());
+
                 } else {
                     Toast.makeText(ContactDetailFragment.this.getContext(), R.string.loading_contacts, Toast.LENGTH_SHORT).show();
+
+                    AnalyticsTrackers.getInstance().get().send(new HitBuilders.EventBuilder()
+                            .setCategory("Action")
+                            .setAction("favorite_without_email")
+                            .build());
                 }
             }
         });

@@ -23,6 +23,7 @@ import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.common.AccountPicker;
 
 import br.com.simpleapp.rememberyou.gcm.QuickstartPreferences;
@@ -148,6 +149,10 @@ public class WizardActivity extends AppCompatActivity implements IWizardListener
                     this.tvChooseError.setVisibility(View.GONE);
                 }
                 if ( valid ) {
+                    AnalyticsTrackers.getInstance().get().send(new HitBuilders.EventBuilder()
+                            .setCategory("Action")
+                            .setAction("gotoStepTwo")
+                            .build());
                     this.mListener.gotoStepTwo(this.account, this.tvName.getText().toString());
                 }
 
@@ -173,6 +178,12 @@ public class WizardActivity extends AppCompatActivity implements IWizardListener
             }
         }
 
+        @Override
+        public void onResume() {
+            super.onResume();
+            AnalyticsTrackers.getInstance().get().setScreenName("StepOneFragment");
+            AnalyticsTrackers.getInstance().get().send(new HitBuilders.ScreenViewBuilder().build());
+        }
     }
 
     public static class StepTwoFragment extends Fragment {
@@ -199,8 +210,6 @@ public class WizardActivity extends AppCompatActivity implements IWizardListener
         @Override
         public void onActivityCreated(@Nullable Bundle savedInstanceState) {
             super.onActivityCreated(savedInstanceState);
-
-
         }
 
 
@@ -236,6 +245,10 @@ public class WizardActivity extends AppCompatActivity implements IWizardListener
                     if ( success ) {
                         mListener.startMainActivity();
                     } else {
+                        AnalyticsTrackers.getInstance().get().send(new HitBuilders.EventBuilder()
+                                .setCategory("Action")
+                                .setAction("registerDevice tryAgain")
+                                .build());
                         registerDevice(account);
                     }
                 }
@@ -247,6 +260,7 @@ public class WizardActivity extends AppCompatActivity implements IWizardListener
 
         private void registerFinish(boolean sendToken){
             this.mListener.lockBackButton(false);
+
             if (sendToken) {
                 this.btStart.setText(R.string.start_app);
                 this.mRegistrationProgressBar.setVisibility(View.GONE);
@@ -260,6 +274,11 @@ public class WizardActivity extends AppCompatActivity implements IWizardListener
                 this.btStart.setText(R.string.wizard_try_again);
                 this.btStart.setTag(Boolean.FALSE);
             }
+
+            AnalyticsTrackers.getInstance().get().send(new HitBuilders.EventBuilder()
+                    .setCategory("Action")
+                    .setAction("registerFinish " + sendToken)
+                    .build());
         }
 
         private void registerDevice(String accountName) {
@@ -296,6 +315,13 @@ public class WizardActivity extends AppCompatActivity implements IWizardListener
                 registerFinish(sentToken);
             }
         };
+
+        @Override
+        public void onResume() {
+            super.onResume();
+            AnalyticsTrackers.getInstance().get().setScreenName("StepTwoFragment");
+            AnalyticsTrackers.getInstance().get().send(new HitBuilders.ScreenViewBuilder().build());
+        }
 
     }
 

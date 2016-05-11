@@ -93,10 +93,4 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         }
     }
 
-    @Override
-    protected void onResume() {
-        super.onResume();
-        AnalyticsTrackers.getInstance().get().setScreenName("HomeActivity");
-        AnalyticsTrackers.getInstance().get().send(new HitBuilders.ScreenViewBuilder().build());
-    }
 }
