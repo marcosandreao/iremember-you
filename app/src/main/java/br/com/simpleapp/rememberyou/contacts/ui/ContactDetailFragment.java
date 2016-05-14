@@ -28,9 +28,11 @@ import android.content.SharedPreferences;
 import android.content.res.AssetFileDescriptor;
 import android.database.Cursor;
 import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
 import android.preference.PreferenceManager;
 import android.provider.ContactsContract;
 import android.provider.ContactsContract.Contacts;
@@ -114,14 +116,8 @@ public class ContactDetailFragment extends Fragment implements
 
     private final IntentFilter filter = IConstatns.INTENT_FILTER_DETAIL;
 
-    /**
-     * Factory method to generate a new instance of the fragment given a contact Uri. A factory
-     * method is preferable to simply using the constructor as it handles creating the bundle and
-     * setting the bundle as an argument.
-     *
-     * @param contactUri The contact Uri to load
-     * @return A new instance of {@link ContactDetailFragment}
-     */
+    private Handler mHandler = new Handler();
+
     public static ContactDetailFragment newInstance(Uri contactUri) {
         // Create new instance of this fragment
         final ContactDetailFragment fragment = new ContactDetailFragment();
@@ -137,46 +133,20 @@ public class ContactDetailFragment extends Fragment implements
         return fragment;
     }
 
-    /**
-     * Fragments require an empty constructor.
-     */
     public ContactDetailFragment() {}
 
-    /**
-     * Sets the contact that this Fragment displays, or clears the display if the contact argument
-     * is null. This will re-initialize all the views and start the queries to the system contacts
-     * provider to populate the contact information.
-     *
-     * @param contactLookupUri The contact lookup Uri to load and display in this fragment. Passing
-     *                         null is valid and the fragment will display a message that no
-     *                         contact is currently selected instead.
-     */
     public void setContact(Uri contactLookupUri) {
-
         this.contactId = contactLookupUri.toString();
-
-
-        // In version 3.0 and later, stores the provided contact lookup Uri in a class field. This
-        // Uri is then used at various points in this class to map to the provided contact.
         if (Utils.hasHoneycomb()) {
             mContactUri = contactLookupUri;
         } else {
-            // For versions earlier than Android 3.0, stores a contact Uri that's constructed from
-            // contactLookupUri. Later on, the resulting Uri is combined with
-            // Contacts.Data.CONTENT_DIRECTORY to map to the provided contact. It's done
-            // differently for these earlier versions because Contacts.Data.CONTENT_DIRECTORY works
-            // differently for Android versions before 3.0.
             mContactUri = Contacts.lookupContact(getActivity().getContentResolver(),
                     contactLookupUri);
         }
-
-
-        // If the Uri contains data, load the contact's image and load contact details.
         if (contactLookupUri != null) {
             // Asynchronously loads the contact image
             mImageLoader.loadImage(mContactUri, mImageView);
 
-            // Shows the contact photo ImageView and hides the empty view
             mImageView.setVisibility(View.VISIBLE);
             mEmptyView.setVisibility(View.GONE);
 
@@ -185,20 +155,10 @@ public class ContactDetailFragment extends Fragment implements
                 mEditContactMenuItem.setVisible(true);
             }
 
-
             Log.d("ID", "id do contato " + this.contactId);
-            // Starts two queries to to retrieve contact information from the Contacts Provider.
-            // restartLoader() is used instead of initLoader() as this method may be called
-            // multiple times.
             getLoaderManager().restartLoader(ContactDetailQuery.QUERY_ID, null, this);
             getLoaderManager().restartLoader(ContactEmailQuery.QUERY_ID, null, this);
         } else {
-            // If contactLookupUri is null, then the method was called when no contact was selected
-            // in the contacts list. This should only happen in a two-pane layout when the user
-            // hasn't yet selected a contact. Don't display an image for the contact, and don't
-            // account for the view's space in the layout. Turn on the TextView that appears when
-            // the layout is empty, and set the contact name to the empty string. Turn off any menu
-            // items that are visible.
             mImageView.setVisibility(View.GONE);
             mEmptyView.setVisibility(View.VISIBLE);
             if (mContactName != null) {
@@ -210,39 +170,22 @@ public class ContactDetailFragment extends Fragment implements
         }
     }
 
-    /**
-     * When the Fragment is first created, this callback is invoked. It initializes some key
-     * class fields.
-     */
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-
         // Let this fragment contribute menu items
         setHasOptionsMenu(true);
 
-        /*
-         * The ImageLoader takes care of loading and resizing images asynchronously into the
-         * ImageView. More thorough sample code demonstrating background image loading as well as
-         * details on how it works can be found in the following Android Training class:
-         * http://developer.android.com/training/displaying-bitmaps/
-         */
         mImageLoader = new ImageLoader(getActivity(), getLargestScreenDimension()) {
             @Override
             protected Bitmap processBitmap(Object data) {
-                // This gets called in a background thread and passed the data from
-                // ImageLoader.loadImage().
                 return loadContactPhoto((Uri) data, getImageSize());
 
             }
         };
 
-        // Set a placeholder loading image for the image loader
         mImageLoader.setLoadingImage(R.drawable.ic_contact_picture_180_holo_light);
 
-        // Tell the image loader to set the image directly when it's finished loading
-        // rather than fading in
         mImageLoader.setImageFadeIn(false);
     }
 
@@ -250,7 +193,6 @@ public class ContactDetailFragment extends Fragment implements
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
             Bundle savedInstanceState) {
 
-        // Inflates the main layout to be used by this fragment
         final View detailView =
                 inflater.inflate(R.layout.contact_detail_fragment, container, false);
 
@@ -356,6 +298,7 @@ public class ContactDetailFragment extends Fragment implements
             this.getActivity().onBackPressed();
             return;
         }
+        this.mHandler.removeCallbacks(null);
 
         AnalyticsTrackers.getInstance().get().send(new HitBuilders.EventBuilder()
                 .setCategory("Send")
@@ -366,6 +309,7 @@ public class ContactDetailFragment extends Fragment implements
 
         SendRemember.startActionSend(this.getContext(), this.emailAddress, this.ivEmotionTarget.getTag().toString(), this.filter.getAction(0));
 
+        this.fabsend.setColorFilter(android.R.color.white);
         this.fabsend.setTag(SendState.STATE_START);
         this.sendProgress.setVisibility(View.VISIBLE);
     }
@@ -427,10 +371,6 @@ public class ContactDetailFragment extends Fragment implements
         }
     }
 
-    /**
-     * When the Fragment is being saved in order to change activity state, save the
-     * currently-selected contact.
-     */
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
@@ -524,9 +464,6 @@ public class ContactDetailFragment extends Fragment implements
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
 
-        // If this fragment was cleared while the query was running
-        // eg. from from a call like setContact(uri) then don't do
-        // anything.
         if (mContactUri == null) {
             return;
         }
@@ -581,22 +518,10 @@ public class ContactDetailFragment extends Fragment implements
 
     @Override
     public void onLoaderReset(Loader<Cursor> loader) {
-        // Nothing to do here. The Cursor does not need to be released as it was never directly
-        // bound to anything (like an adapter).
     }
 
 
-    /**
-     * Fetches the width or height of the screen in pixels, whichever is larger. This is used to
-     * set a maximum size limit on the contact photo that is retrieved from the Contacts Provider.
-     * This limit prevents the app from trying to decode and load an image that is much larger than
-     * the available screen area.
-     *
-     * @return The largest screen dimension in pixels.
-     */
     private int getLargestScreenDimension() {
-        // Gets a DisplayMetrics object, which is used to retrieve the display's pixel height and
-        // width
         final DisplayMetrics displayMetrics = new DisplayMetrics();
 
         // Retrieves a displayMetrics object for the device's default display
@@ -608,12 +533,6 @@ public class ContactDetailFragment extends Fragment implements
         return height > width ? height : width;
     }
 
-    /**
-     * Decodes and returns the contact's thumbnail image.
-     * @param contactUri The Uri of the contact containing the image.
-     * @param imageSize The desired target width and height of the output image in pixels.
-     * @return If a thumbnail image exists for the contact, a Bitmap image, otherwise null.
-     */
     @TargetApi(Build.VERSION_CODES.ICE_CREAM_SANDWICH)
     private Bitmap loadContactPhoto(Uri contactUri, int imageSize) {
 
@@ -681,6 +600,26 @@ public class ContactDetailFragment extends Fragment implements
         }
     }
 
+    @Override
+    public void onPause() {
+        super.onPause();
+        this.mHandler.removeCallbacks(null);
+    }
+
+    private void postFabSend(){
+        this.mHandler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    fabsend.setColorFilter(android.R.color.white);
+                    fabsend.setImageResource(R.drawable.ic_send_white_24dp);
+                    fabsend.setTag(null);
+                } catch ( Exception e){
+                }
+            }
+        }, 5000);
+    }
+
 
 
     public interface ContactDetailQuery {
@@ -721,17 +660,29 @@ public class ContactDetailFragment extends Fragment implements
             switch (state){
                 case SendRemember.STATE_DONE_ERROR:
                     sendProgress.setVisibility(View.INVISIBLE);
+                    postFabSend();
+                    Toast.makeText(ContactDetailFragment.this.getActivity(), R.string.toast_send_error, Toast.LENGTH_LONG).show();
+
+                    fabsend.setColorFilter(Color.RED);
                     fabsend.setImageResource(R.drawable.ic_cloud_off_white_24dp);
                     fabsend.setTag(SendState.STATE_DONE_ERROR);
+
                     break;
                 case SendRemember.STATE_DONE_SUCCESS:
+                    postFabSend();
                     sendProgress.setVisibility(View.INVISIBLE);
                     fabsend.setImageResource(R.drawable.ic_cloud_done_white_24dp);
                     fabsend.setTag(SendState.STATE_DONE_SUCCESS);
                     break;
                 case SendRemember.STATE_DONE_NEED_INVITE:
+
+                    Toast.makeText(ContactDetailFragment.this.getActivity(),
+                            contactName + context.getString(R.string.toast_send_not_found_user), Toast.LENGTH_LONG).show();
+
                     sendProgress.setVisibility(View.INVISIBLE);
+                    postFabSend();
                     fabsend.setImageResource(R.drawable.ic_cloud_done_white_24dp);
+                    fabsend.setColorFilter(Color.RED);
                     fabsend.setTag(SendState.STATE_DONE_NEED_INVITE);
                     break;
                 case SendRemember.STATE_START:
@@ -741,5 +692,7 @@ public class ContactDetailFragment extends Fragment implements
             }
         }
     };
+
+
 
 }
