@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
@@ -18,6 +19,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.google.android.gms.analytics.HitBuilders;
 
@@ -49,6 +51,7 @@ public class UserFavoriteFragment extends Fragment implements UserFavoriteAdapte
 
     private final IntentFilter filter = IConstatns.INTENT_FILTER_HOME;
     private HashMap<String, SendState> states  = new HashMap<>();
+    private HashMap<String, Runnable> postStates  = new HashMap<>();
 
     private View emptyView;
     private RecyclerView recyclerView;
@@ -146,16 +149,26 @@ public class UserFavoriteFragment extends Fragment implements UserFavoriteAdapte
 
     }
 
+    private void removePostByEmail(String email) {
+        if ( this.postStates.containsKey(email)) {
+            this.mHandler.removeCallbacks(this.postStates.get(email));
+            this.postStates.remove(email);
+        }
+    }
+
     @Override
     public void onSendInteraction(final User mItem, final int position) {
+        Log.d("DTE", "onSendInteraction " + mItem.getEmail());
         if ( this.states.containsKey(mItem.getEmail()) ) {
-
 
             final SendState state = this.states.get(mItem.getEmail());
 
             if ( state == SendState.STATE_START ) {
                 return;
             }
+
+            Log.d("DTE", "!=STATE_START ");
+            this.removePostByEmail(mItem.getEmail());
 
             this.states.remove(mItem.getEmail());
             this.adapter.notifyItemChanged(position);
@@ -190,6 +203,10 @@ public class UserFavoriteFragment extends Fragment implements UserFavoriteAdapte
             }
 
         }
+        Log.d("DTE", "ELSE ");
+
+        this.removePostByEmail(mItem.getEmail());
+
         AnalyticsTrackers.getInstance().get().send(new HitBuilders.EventBuilder()
                 .setCategory("Send")
                 .setAction(mItem.getLastEmotion())
@@ -223,19 +240,52 @@ public class UserFavoriteFragment extends Fragment implements UserFavoriteAdapte
         }
     };
 
+    private Handler mHandler = new Handler();
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        this.mHandler.removeCallbacks(null);
+    }
+
+    private void postDelay(final String email){
+
+        this.postStates.put(email, new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    states.remove(email);
+                    postStates.remove(email);
+                    final int position = adapter.getPostionItemByEmail(email);
+                    if ( position != -1 ) {
+                        adapter.notifyItemChanged(position);
+                    }
+                } catch (Exception e){}
+            }
+        });
+
+        this.mHandler.postDelayed(this.postStates.get(email), 4000);
+    }
+
     private void handlerReceiver(final Intent intent){
         final int state = intent.getIntExtra(SendRemember.EXTRA_STATE, -1);
         final String email = intent.getStringExtra(SendRemember.EXTRA_TO);
 
         switch (state){
             case SendRemember.STATE_DONE_ERROR:
+                Toast.makeText(UserFavoriteFragment.this.getActivity(), R.string.toast_send_error, Toast.LENGTH_LONG).show();
                 this.states.put(email, SendState.STATE_DONE_ERROR);
+                postDelay(email);
                 break;
             case SendRemember.STATE_DONE_SUCCESS:
                 this.states.put(email, SendState.STATE_DONE_SUCCESS);
                 break;
             case SendRemember.STATE_DONE_NEED_INVITE:
+                Toast.makeText(UserFavoriteFragment.this.getActivity(),
+                        email + getString(R.string.toast_send_not_found_user), Toast.LENGTH_LONG).show();
+
                 this.states.put(email, SendState.STATE_DONE_NEED_INVITE);
+                postDelay(email);
                 break;
             case SendRemember.STATE_START:
                 this.states.put(email, SendState.STATE_START);

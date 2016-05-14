@@ -270,6 +270,7 @@ public class ContactDetailFragment extends Fragment implements
             if ( state == SendState.STATE_START ) {
                 return;
             }
+            this.mHandler.removeCallbacks(null);
             if ( state == SendState.STATE_DONE_NEED_INVITE ) {
                 DialogUtils.showLocationDialogNeedInvite(this.getActivity(), this.contactName, new DialogInterface.OnClickListener() {
                     @Override
@@ -617,7 +618,7 @@ public class ContactDetailFragment extends Fragment implements
                 } catch ( Exception e){
                 }
             }
-        }, 5000);
+        }, 4000);
     }
 
 
