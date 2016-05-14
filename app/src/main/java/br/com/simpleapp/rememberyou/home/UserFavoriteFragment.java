@@ -21,6 +21,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdView;
 import com.google.android.gms.analytics.HitBuilders;
 
 import java.util.HashMap;
@@ -92,6 +94,10 @@ public class UserFavoriteFragment extends Fragment implements UserFavoriteAdapte
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+
+        final AdView mAdView = (AdView) view.findViewById(R.id.adView);
+        final AdRequest adRequest = new AdRequest.Builder().build();
+        mAdView.loadAd(adRequest);
 
         final Context context = view.getContext();
         this.recyclerView = (RecyclerView) view.findViewById(R.id.list);

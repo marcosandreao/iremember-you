@@ -41,7 +41,7 @@ public class MyGcmListenerService  extends GcmListenerService {
         final String name = data.getString("name");
         final String message = data.getString("msg");
         final String emotion = data.getString("emotion");
-        final String email = data.getString("from");
+        final String email = data.getString("email");
         Log.d(TAG, "From: " + from);
         Log.d(TAG, "name: " + name);
         Log.d(TAG, "Message: " + message);

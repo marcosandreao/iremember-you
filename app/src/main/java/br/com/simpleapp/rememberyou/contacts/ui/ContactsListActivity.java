@@ -6,6 +6,8 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdView;
 import com.google.android.gms.analytics.HitBuilders;
 
 import br.com.simpleapp.rememberyou.AnalyticsTrackers;
@@ -39,6 +41,10 @@ public class ContactsListActivity extends AppCompatActivity implements
 
         this.setSupportActionBar((Toolbar) this.findViewById(R.id.toolbar));
         this.getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+        final AdView mAdView = (AdView) this.findViewById(R.id.adView);
+        final AdRequest adRequest = new AdRequest.Builder().build();
+        mAdView.loadAd(adRequest);
 
     }
 
