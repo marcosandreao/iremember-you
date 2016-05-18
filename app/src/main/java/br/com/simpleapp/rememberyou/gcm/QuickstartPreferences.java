@@ -21,6 +21,7 @@ public class QuickstartPreferences {
     public static final String SENT_TOKEN_TO_SERVER = "sentTokenToServer";
     public static final String REGISTRATION_COMPLETE = "registrationComplete";
     public static final String ACCOUNT = "account";
+    public static final String TOKEN = "TOKEN";
     public static final String NICK_NAME = "name";
     public static final String SHOW_DIALOG_ERROR = "show_dialog_error";
     public static final String SHOW_DIALOG_INVITE = "show_dialog_invite";

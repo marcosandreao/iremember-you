@@ -92,7 +92,7 @@ public class SendRemember extends IntentService {
             final Retrofit retrofit = new Retrofit.Builder().baseUrl( Constants.URL_SERVER).build();
 
             final IRememberYou service = retrofit.create(IRememberYou.class);
-            final String from = sharedPreferences.getString(QuickstartPreferences.ACCOUNT, "");
+            final String from = sharedPreferences.getString(QuickstartPreferences.TOKEN, "");
             final retrofit.Response<ResponseBody> response =  service.message(from, to, getString(R.string.txt_notification), emotion).execute();
 
             if ( response.isSuccess() ) {
