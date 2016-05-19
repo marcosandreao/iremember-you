@@ -70,6 +70,7 @@ public class RegistrationIntentService extends IntentService {
 
             Log.i(TAG, "GCM Registration account: " +  intent.getStringExtra(AccountManager.KEY_ACCOUNT_NAME));
             sharedPreferences.edit().putString(QuickstartPreferences.ACCOUNT, intent.getStringExtra(AccountManager.KEY_ACCOUNT_NAME)).apply();
+            sharedPreferences.edit().putString(QuickstartPreferences.TOKEN, token).apply();
 
             // Subscribe to topic channels
             subscribeTopics(token);
@@ -117,7 +118,6 @@ public class RegistrationIntentService extends IntentService {
      * Subscribe to any GCM topics of interest, as defined by the TOPICS constant.
      *
      * @param token GCM token
-     * @param string
      * @throws IOException if unable to reach the GCM PubSub service
      */
     // [START subscribe_topics]

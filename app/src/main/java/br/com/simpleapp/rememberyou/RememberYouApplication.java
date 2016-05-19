@@ -18,6 +18,8 @@ public class RememberYouApplication extends MultiDexApplication {
         super.onCreate();
         instance = this;
 
+        AnalyticsTrackers.initialize(this);
+
         final DaoMaster.DevOpenHelper openHelper = new DaoMaster.DevOpenHelper(this, "remeber-db", null);
         this.daoMaster = new DaoMaster(openHelper.getWritableDatabase());
 

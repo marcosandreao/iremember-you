@@ -14,6 +14,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,6 +23,7 @@ import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.common.AccountPicker;
 
 import br.com.simpleapp.rememberyou.gcm.QuickstartPreferences;
@@ -35,6 +37,15 @@ public class WizardActivity extends AppCompatActivity implements IWizardListener
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        //this.setContentView(R.layout.activity_wizard);
+
+        //final Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        //toolbar.setTitle(R.string.welcome_title);
+        //this.setSupportActionBar(toolbar);
+
+        //this.getSupportActionBar().setDisplayHomeAsUpEnabled(false);
+
 
         this.getSupportFragmentManager().beginTransaction().replace(android.R.id.content, new StepOneFragment()).commit();
     }
@@ -64,7 +75,7 @@ public class WizardActivity extends AppCompatActivity implements IWizardListener
 
     @Override
     public void startMainActivity() {
-        Intent intent = new Intent(this, MainActivity.class);
+        Intent intent = new Intent(this, HomeActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP |
                 Intent.FLAG_ACTIVITY_CLEAR_TASK |
                 Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -138,6 +149,10 @@ public class WizardActivity extends AppCompatActivity implements IWizardListener
                     this.tvChooseError.setVisibility(View.GONE);
                 }
                 if ( valid ) {
+                    AnalyticsTrackers.getInstance().get().send(new HitBuilders.EventBuilder()
+                            .setCategory("Action")
+                            .setAction("gotoStepTwo")
+                            .build());
                     this.mListener.gotoStepTwo(this.account, this.tvName.getText().toString());
                 }
 
@@ -163,6 +178,12 @@ public class WizardActivity extends AppCompatActivity implements IWizardListener
             }
         }
 
+        @Override
+        public void onResume() {
+            super.onResume();
+            AnalyticsTrackers.getInstance().get().setScreenName("StepOneFragment");
+            AnalyticsTrackers.getInstance().get().send(new HitBuilders.ScreenViewBuilder().build());
+        }
     }
 
     public static class StepTwoFragment extends Fragment {
@@ -174,7 +195,7 @@ public class WizardActivity extends AppCompatActivity implements IWizardListener
 
         private ProgressBar mRegistrationProgressBar;
         private TextView mInformationTextView;
-        private View btStart;
+        private Button btStart;
 
         @Override
         public void onAttach(Activity activity) {
@@ -189,8 +210,6 @@ public class WizardActivity extends AppCompatActivity implements IWizardListener
         @Override
         public void onActivityCreated(@Nullable Bundle savedInstanceState) {
             super.onActivityCreated(savedInstanceState);
-
-
         }
 
 
@@ -213,16 +232,25 @@ public class WizardActivity extends AppCompatActivity implements IWizardListener
             sharedPreferences.edit().putString(QuickstartPreferences.NICK_NAME, this.name).apply();
 
             this.registerReceiver();
-
+            this.btStart = (Button) view.findViewById(R.id.bt_confirmar);
             this.registerDevice(this.account);
 
-            this.btStart = view.findViewById(R.id.bt_confirmar);
+
             this.btStart.setVisibility(View.GONE);
             this.btStart.setOnClickListener(new View.OnClickListener(){
 
                 @Override
                 public void onClick(View v) {
-                    mListener.startMainActivity();
+                    boolean success = v.getTag() == null? true : (Boolean) v.getTag();
+                    if ( success ) {
+                        mListener.startMainActivity();
+                    } else {
+                        AnalyticsTrackers.getInstance().get().send(new HitBuilders.EventBuilder()
+                                .setCategory("Action")
+                                .setAction("registerDevice tryAgain")
+                                .build());
+                        registerDevice(account);
+                    }
                 }
             });
 
@@ -232,16 +260,31 @@ public class WizardActivity extends AppCompatActivity implements IWizardListener
 
         private void registerFinish(boolean sendToken){
             this.mListener.lockBackButton(false);
+
             if (sendToken) {
+                this.btStart.setText(R.string.start_app);
                 this.mRegistrationProgressBar.setVisibility(View.GONE);
                 this.mInformationTextView.setText(R.string.register_success);
                 this.btStart.setVisibility(View.VISIBLE);
+                this.btStart.setTag(Boolean.TRUE);
             } else {
+                this.btStart.setVisibility(View.VISIBLE);
+                this.mRegistrationProgressBar.setVisibility(View.GONE);
                 this.mInformationTextView.setText(R.string.register_error);
+                this.btStart.setText(R.string.wizard_try_again);
+                this.btStart.setTag(Boolean.FALSE);
             }
+
+            AnalyticsTrackers.getInstance().get().send(new HitBuilders.EventBuilder()
+                    .setCategory("Action")
+                    .setAction("registerFinish " + sendToken)
+                    .build());
         }
 
         private void registerDevice(String accountName) {
+            this.mRegistrationProgressBar.setVisibility(View.VISIBLE);
+            this.btStart.setVisibility(View.GONE);
+            this.mInformationTextView.setText(R.string.wait_registered_device);
             Intent intent = new Intent(this.getActivity(), RegistrationIntentService.class);
             intent.putExtra(AccountManager.KEY_ACCOUNT_NAME, accountName);
             this.getActivity().startService(intent);
@@ -272,6 +315,13 @@ public class WizardActivity extends AppCompatActivity implements IWizardListener
                 registerFinish(sentToken);
             }
         };
+
+        @Override
+        public void onResume() {
+            super.onResume();
+            AnalyticsTrackers.getInstance().get().setScreenName("StepTwoFragment");
+            AnalyticsTrackers.getInstance().get().send(new HitBuilders.ScreenViewBuilder().build());
+        }
 
     }
 

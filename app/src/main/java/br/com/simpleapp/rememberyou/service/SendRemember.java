@@ -13,10 +13,13 @@ import com.squareup.okhttp.ResponseBody;
 
 import java.io.IOException;
 
+import br.com.simpleapp.rememberyou.IConstatns;
 import br.com.simpleapp.rememberyou.R;
 import br.com.simpleapp.rememberyou.api.IRememberYou;
+import br.com.simpleapp.rememberyou.entity.StatusSend;
 import br.com.simpleapp.rememberyou.gcm.QuickstartPreferences;
 import br.com.simpleapp.rememberyou.utils.Constants;
+import br.com.simpleapp.rememberyou.utils.SendState;
 import retrofit.Callback;
 import retrofit.Response;
 import retrofit.Retrofit;
@@ -28,14 +31,15 @@ public class SendRemember extends IntentService {
 
     private static final String SEND_BROADCAST_TO = "BROADCAST_TO";
 
-    private static final String EXTRA_TO = "TO";
-    private static final String EXTRA_TXT = "TXT";
-    private static final String EXTRA_EMOTION = "EMOTION";
+    public static final String EXTRA_TO = "TO";
+    public static final String EXTRA_EMOTION = "EMOTION";
 
     public static final String EXTRA_STATE = "STATE";
-    public static final int STATE_START = 1;
-    public static final int STATE_DONE_SUCCESS = 2;
+    public static final int STATE_START = 0;
+    public static final int STATE_DONE_SUCCESS = 1;
+    public static final int STATE_DONE_NEED_INVITE = 2;
     public static final int STATE_DONE_ERROR = 3;
+
 
 
     public SendRemember() {
@@ -64,49 +68,75 @@ public class SendRemember extends IntentService {
         if (intent != null) {
             final String action = intent.getAction();
             if (ACTION_SEND.equals(action)) {
-
-                try {
-                    this.handleActionSend(intent);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                    sendBroadcast(intent, STATE_DONE_ERROR);
-                }
+               this.handleActionSend(intent);
             }
         }
     }
 
-    private void handleActionSend(Intent intent) throws IOException {
-        final String to = intent.getStringExtra(EXTRA_TO);
-        final String emotion = intent.getStringExtra(EXTRA_EMOTION);
+    private void handleActionSend(Intent intent) {
+        Long id = null;
 
-        this.sendBroadcast(intent, STATE_START);
+        final LogService logService = new LogService();
 
-        final SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this.getBaseContext());
+        try {
 
-        final Retrofit retrofit = new Retrofit.Builder().baseUrl( Constants.URL_SERVER).build();
+            final String to = intent.getStringExtra(EXTRA_TO);
 
-        final IRememberYou service = retrofit.create(IRememberYou.class);
-        final String from = sharedPreferences.getString(QuickstartPreferences.ACCOUNT, "");
-        final retrofit.Response<ResponseBody> response =  service.message(from, to, getString(R.string.txt_notification), emotion).execute();
+            final String emotion = intent.getStringExtra(EXTRA_EMOTION);
 
-        if ( response.isSuccess() ) {
-            this.sendBroadcast(intent, STATE_DONE_SUCCESS);
-        } else {
-            this.sendBroadcast(intent, STATE_DONE_ERROR);
+            id = logService.save(to, SendState.STATE_START);
+            this.sendBroadcast(intent, to, STATE_START);
+
+            final SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this.getBaseContext());
+
+            final Retrofit retrofit = new Retrofit.Builder().baseUrl( Constants.URL_SERVER).build();
+
+            final IRememberYou service = retrofit.create(IRememberYou.class);
+            final String from = sharedPreferences.getString(QuickstartPreferences.TOKEN, "");
+            final retrofit.Response<ResponseBody> response =  service.message(from, to, getString(R.string.txt_notification), emotion).execute();
+
+            if ( response.isSuccess() ) {
+                logService.update(id, SendState.STATE_DONE_SUCCESS);
+                this.sendBroadcast(intent, to, STATE_DONE_SUCCESS);
+            } else {
+                if (response.code() == 404 ) {
+                    logService.update(id, SendState.STATE_DONE_NEED_INVITE);
+                    this.sendBroadcast(intent, to, STATE_DONE_NEED_INVITE);
+                } else {
+                    logService.update(id, SendState.STATE_DONE_ERROR);
+                    this.sendBroadcast(intent, to, STATE_DONE_ERROR);
+                }
+            }
+            Log.d("MESSAGE", response.raw().toString());
+        } catch (Exception e) {
+            final String to = intent.getStringExtra(EXTRA_TO);
+            this.sendBroadcast(intent, to, STATE_DONE_ERROR);
+            if ( id != null ) {
+                logService.update(id, SendState.STATE_DONE_ERROR);
+            }
+            e.printStackTrace();
         }
-        Log.d("MESSAGE", response.raw().toString());
 
     }
 
-    private void sendBroadcast(Intent intent, int state) {
+    private void sendBroadcast(Intent intent, String to, int state) {
+
+        ManagerStateMessage.getInstance().setState(to, state);
 
         if ( !intent.hasExtra(SEND_BROADCAST_TO) ) {
             return;
         }
+        final String targetBroadcast = intent.getStringExtra(SEND_BROADCAST_TO);
 
-        final Intent intentStatus = new Intent(intent.getStringExtra(SEND_BROADCAST_TO));
+        final Intent intentStatus = new Intent(targetBroadcast);
         intentStatus.putExtra(EXTRA_STATE, state );
-        LocalBroadcastManager.getInstance(this.getBaseContext()).sendBroadcast(intentStatus);
+        intentStatus.putExtra(EXTRA_TO, to );
+        if (IConstatns.INTENT_FILTER_ACTION_NOTIFICATION.equals(targetBroadcast)) {
+            this.getBaseContext().sendBroadcast(intentStatus);
+        } else {
+            LocalBroadcastManager.getInstance(this.getBaseContext()).sendBroadcast(intentStatus);
+        }
+
     }
 
 }

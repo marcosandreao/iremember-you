@@ -2,7 +2,6 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
-
     <LinearLayout
         android:layout_centerInParent="true"
         android:orientation="vertical"
@@ -17,13 +16,13 @@
             android:layout_height="wrap_content">
 
             <EditText
-                android:maxLength="70"
+                android:maxLength="30"
                 android:singleLine="true"
                 android:lines="1"
                 android:id="@+id/input_name"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="Nickname ou nome" />
+                android:hint="@string/input_nickname_or_name" />
 
         </android.support.design.widget.TextInputLayout>
 
@@ -36,10 +35,10 @@
             android:gravity="center_horizontal"
 
             android:textAppearance="?android:attr/textAppearanceMedium"
-            android:text="Selecione um conta para entrar na app."
+            android:text="@string/wizard_select_account"
             android:id="@+id/textView" />
 
-        <Button
+        <android.support.v7.widget.AppCompatButton
             android:layout_marginTop="10dp"
             android:layout_marginLeft="25dp"
             android:layout_marginRight="25dp"
@@ -47,7 +46,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Selecionar conta"
-            style="?android:attr/borderlessButtonStyle"
+            style="@style/AppButton"
             />
         <TextView
             android:layout_marginLeft="25dp"
@@ -58,12 +57,12 @@
             android:gravity="center_horizontal"
             android:textColor="@android:color/holo_red_dark"
             android:textAppearance="?android:attr/textAppearanceSmall"
-            android:text="Precisamos de um email para identificar você."
+            android:text="@string/wizard_email_required"
             android:id="@+id/tv_choose_error" />
 
     </LinearLayout>
 
-    <Button
+    <android.support.v7.widget.AppCompatButton
         android:layout_alignParentBottom="true"
         android:layout_marginTop="10dp"
         android:layout_marginLeft="25dp"
@@ -73,7 +72,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Confirmar"
-        style="?android:attr/borderlessButtonStyle"
+        style="@style/AppButton"
         />
 
 

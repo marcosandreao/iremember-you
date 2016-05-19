@@ -17,7 +17,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceMedium"
-            android:text="@string/aguarde_registrando_dispositivo"
+            android:text="@string/wait_registered_device"
             android:gravity="center_horizontal"
             android:id="@+id/informationTextView"
             android:layout_gravity="center_horizontal" />
@@ -31,7 +31,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
 
-        <Button
+        <android.support.v7.widget.AppCompatButton
             android:layout_alignParentBottom="true"
             android:layout_marginTop="10dp"
             android:layout_marginLeft="25dp"
@@ -40,8 +40,8 @@
             android:id="@+id/bt_confirmar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/toque_aqui_para_iniciar_app"
-            style="?android:attr/borderlessButtonStyle"
+            android:text="@string/start_app"
+            style="@style/AppButton"
             />
 
     </LinearLayout>

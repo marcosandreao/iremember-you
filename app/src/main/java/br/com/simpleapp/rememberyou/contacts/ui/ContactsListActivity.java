@@ -1,37 +1,20 @@
-/*
- * Copyright (C) 2013 The Android Open Source Project
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-
 package br.com.simpleapp.rememberyou.contacts.ui;
 
-import android.app.SearchManager;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.v4.app.FragmentActivity;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdView;
+import com.google.android.gms.analytics.HitBuilders;
+
+import br.com.simpleapp.rememberyou.AnalyticsTrackers;
 import br.com.simpleapp.rememberyou.BuildConfig;
 import br.com.simpleapp.rememberyou.R;
-import br.com.simpleapp.rememberyou.contacts.util.Utils;
 
-/**
- * FragmentActivity to hold the main {@link ContactsListFragment}. On larger screen devices which
- * can fit two panes also load {@link ContactDetailFragment}.
- */
+
 public class ContactsListActivity extends AppCompatActivity implements
         ContactsListFragment.OnContactsInteractionListener {
 
@@ -59,6 +42,10 @@ public class ContactsListActivity extends AppCompatActivity implements
         this.setSupportActionBar((Toolbar) this.findViewById(R.id.toolbar));
         this.getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
+        final AdView mAdView = (AdView) this.findViewById(R.id.adView);
+        final AdRequest adRequest = new AdRequest.Builder().build();
+        mAdView.loadAd(adRequest);
+
     }
 
     /**
@@ -74,6 +61,11 @@ public class ContactsListActivity extends AppCompatActivity implements
         Intent intent = new Intent(this, ContactDetailActivity.class);
         intent.setData(contactUri);
         startActivity(intent);
+
+        AnalyticsTrackers.getInstance().get().send(new HitBuilders.EventBuilder()
+                .setCategory("Action")
+                .setAction("Select User")
+                .build());
     }
 
     /**
@@ -90,5 +82,12 @@ public class ContactsListActivity extends AppCompatActivity implements
         // Don't allow another search if this activity instance is already showing
         // search results. Only used pre-HC.
         return !isSearchResultView && super.onSearchRequested();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        AnalyticsTrackers.getInstance().get().setScreenName("ContactsListActivity");
+        AnalyticsTrackers.getInstance().get().send(new HitBuilders.ScreenViewBuilder().build());
     }
 }

@@ -53,7 +53,8 @@ public final class AnalyticsTrackers {
     mContext = context.getApplicationContext();
   }
 
-  public synchronized Tracker get(Target target) {
+  public synchronized Tracker get() {
+    final Target target = Target.APP;
     if (!mTrackers.containsKey(target)) {
       Tracker tracker;
       switch (target) {

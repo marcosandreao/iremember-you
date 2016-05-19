@@ -13,7 +13,7 @@ import retrofit.http.POST;
 public interface IRememberYou {
 
     @FormUrlEncoded
-    @POST("device")
+    @POST("user")
     Call<ResponseBody> registerDevice(@Field("name") String name, @Field("email")  String email, @Field("device_id")  String device_id);
 
     @FormUrlEncoded
