@@ -142,7 +142,7 @@ public class UserFavoriteFragment extends Fragment implements UserFavoriteAdapte
 
         AnalyticsTrackers.getInstance().get().send(new HitBuilders.EventBuilder()
                 .setCategory("Action")
-                .setAction("Select User")
+                .setAction("Selected User From Favorite")
                 .build());
     }
 

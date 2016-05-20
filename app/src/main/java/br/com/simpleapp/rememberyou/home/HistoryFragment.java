@@ -1,6 +1,8 @@
 package br.com.simpleapp.rememberyou.home;
 
 import android.content.Context;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -20,6 +22,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
@@ -29,8 +32,11 @@ import java.util.List;
 
 import br.com.simpleapp.rememberyou.AnalyticsTrackers;
 import br.com.simpleapp.rememberyou.R;
+import br.com.simpleapp.rememberyou.contacts.ui.ContactDetailActivity;
 import br.com.simpleapp.rememberyou.entity.History;
+import br.com.simpleapp.rememberyou.entity.User;
 import br.com.simpleapp.rememberyou.service.HistoryService;
+import br.com.simpleapp.rememberyou.service.UserService;
 
 public class HistoryFragment extends Fragment implements HistoryRecyclerViewAdapter.OnListFragmentInteractionListener,
         LoaderManager.LoaderCallbacks<List<? extends History>>, AdapterView.OnItemSelectedListener{
@@ -112,7 +118,29 @@ public class HistoryFragment extends Fragment implements HistoryRecyclerViewAdap
 
     @Override
     public void onListFragmentInteraction(History item) {
+        try {
+            final UserService service = new UserService();
+            final User user = service.findByEmail(item.getEmail());
+            if (user == null) {
+                AnalyticsTrackers.getInstance().get().send(new HitBuilders.EventBuilder()
+                        .setCategory("Action")
+                        .setAction("Selected User From History (usernotfound)")
+                        .build());
+                Toast.makeText(this.getActivity(), this.getActivity().getString(R.string.hirstory_item_click_usernotfound, item.getName()), Toast.LENGTH_LONG).show();
+            } else {
+                Uri contactUri = Uri.parse(user.getContactId());
+                Intent intent = new Intent(this.getActivity(), ContactDetailActivity.class);
+                intent.setData(contactUri);
+                startActivityForResult(intent, 1);
 
+                AnalyticsTrackers.getInstance().get().send(new HitBuilders.EventBuilder()
+                        .setCategory("Action")
+                        .setAction("Selected User From History")
+                        .build());
+            }
+        } catch (Exception e){
+
+        }
     }
 
     @Override
