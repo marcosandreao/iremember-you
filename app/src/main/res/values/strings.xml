@@ -166,4 +166,5 @@
     <string name="wizard_email_required">Precisamos de um email para identificar você.</string>
     <string name="wizard_select_account">Selecione um conta para entrar na app.</string>
     <string name="input_nickname_or_name">Nickname ou nome</string>
+    <string name="add_with_favorite">Favorito</string>
 </resources>

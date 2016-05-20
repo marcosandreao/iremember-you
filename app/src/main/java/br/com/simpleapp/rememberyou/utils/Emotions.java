@@ -19,6 +19,7 @@ public enum Emotions {
 
     public final int res;
 
+
     private Emotions(int res){
         this.res = res;
     }

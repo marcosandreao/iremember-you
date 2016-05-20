@@ -109,7 +109,6 @@ public class ContactDetailFragment extends Fragment implements
     private UserService favoriteService = new UserService();
     private String contactName;
 
-    private FloatingActionButton favoriteActionButton;
     private FloatingActionButton fabsend;
     private ImageView ivEmotionTarget;
     private String contactId;
@@ -209,33 +208,29 @@ public class ContactDetailFragment extends Fragment implements
         this.sendProgress = detailView.findViewById(R.id.send_loading);
         this.sendProgress.setVisibility(View.INVISIBLE);
         this.ivEmotionTarget = (ImageView) detailView.findViewById(R.id.ivEmotionTarget);
-        this.favoriteActionButton = (FloatingActionButton) detailView.findViewById(R.id.fab);
         this.fabsend = (FloatingActionButton) detailView.findViewById(R.id.fabsend);
-        this.favoriteActionButton.setOnClickListener(new OnClickListener(){
-
-            @Override
-            public void onClick(View v) {
-                if( emailAddress != null ) {
-                    favoriteService.setWithFavorie(contactId, contactName, emailAddress);
-                    setImageFavorite();
-
-                    AnalyticsTrackers.getInstance().get().send(new HitBuilders.EventBuilder()
-                            .setCategory("Action")
-                            .setAction("favorite")
-                            .build());
-
-                } else {
-                    Toast.makeText(ContactDetailFragment.this.getContext(), R.string.loading_contacts, Toast.LENGTH_SHORT).show();
-
-                    AnalyticsTrackers.getInstance().get().send(new HitBuilders.EventBuilder()
-                            .setCategory("Action")
-                            .setAction("favorite_without_email")
-                            .build());
-                }
-            }
-        });
         setClicksEmotions( (ViewGroup) detailView.findViewById(R.id.llEmotions));
         return detailView;
+    }
+
+    private void onFavoriteClick(){
+        if( emailAddress != null ) {
+            favoriteService.setWithFavorie(contactId, contactName, emailAddress);
+            this.getActivity().invalidateOptionsMenu();
+
+            AnalyticsTrackers.getInstance().get().send(new HitBuilders.EventBuilder()
+                    .setCategory("Action")
+                    .setAction("favorite")
+                    .build());
+
+        } else {
+            Toast.makeText(ContactDetailFragment.this.getContext(), R.string.loading_contacts, Toast.LENGTH_SHORT).show();
+
+            AnalyticsTrackers.getInstance().get().send(new HitBuilders.EventBuilder()
+                    .setCategory("Action")
+                    .setAction("favorite_without_email")
+                    .build());
+        }
     }
 
     @Override
@@ -414,6 +409,10 @@ public class ContactDetailFragment extends Fragment implements
 
                 this.getActivity().invalidateOptionsMenu();
                 return true;
+
+            case R.id.menu_fav:
+                this.onFavoriteClick();
+                return true;
             default:
                 this.getActivity().onBackPressed();
                 return true;
@@ -443,6 +442,8 @@ public class ContactDetailFragment extends Fragment implements
         } else {
             itemUnpin.setVisible(false);
         }
+
+        this.setImageFavorite(menu.findItem(R.id.menu_fav));
 
         itemPin.setVisible(!itemUnpin.isVisible());
     }
@@ -504,7 +505,6 @@ public class ContactDetailFragment extends Fragment implements
                             mark(user.getLastEmotion());
                         }
 
-                        this.setImageFavorite();
                         this.getActivity().invalidateOptionsMenu();
 
                         break;
@@ -514,12 +514,12 @@ public class ContactDetailFragment extends Fragment implements
         }
     }
 
-    private void setImageFavorite(){
+    private void setImageFavorite(MenuItem item){
 
         if( this.emailAddress != null && this.favoriteService.isFavorie(this.emailAddress) ) {
-            this.favoriteActionButton.setImageResource(R.drawable.ic_star_white_18dp);
+            item.setIcon(R.drawable.ic_favorite_white_24dp);
         } else {
-            this.favoriteActionButton.setImageResource(R.drawable.ic_star_border_white_18dp);
+            item.setIcon(R.drawable.ic_favorite_border_white_24dp);
         }
     }
 
