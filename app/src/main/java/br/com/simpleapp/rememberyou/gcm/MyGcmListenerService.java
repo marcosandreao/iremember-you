@@ -6,6 +6,7 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.media.RingtoneManager;
 import android.net.Uri;
@@ -17,10 +18,11 @@ import android.util.Log;
 
 import com.google.android.gms.gcm.GcmListenerService;
 
+import br.com.simpleapp.rememberyou.BuildConfig;
 import br.com.simpleapp.rememberyou.HomeActivity;
 import br.com.simpleapp.rememberyou.R;
 import br.com.simpleapp.rememberyou.service.HistoryService;
-import br.com.simpleapp.rememberyou.utils.Emotions;
+import br.com.simpleapp.rememberyou.utils.NotificationUtil;
 
 /**
  * Created by socram on 22/03/16.
@@ -42,11 +44,13 @@ public class MyGcmListenerService  extends GcmListenerService {
         final String message = data.getString("msg");
         final String emotion = data.getString("emotion");
         final String email = data.getString("email");
-        Log.d(TAG, "From: " + from);
-        Log.d(TAG, "name: " + name);
-        Log.d(TAG, "Message: " + message);
-        Log.d(TAG, "emotion: " + emotion);
-        Log.d(TAG, "email: " + email);
+        if (BuildConfig.DEBUG) {
+            Log.d(TAG, "From: " + from);
+            Log.d(TAG, "name: " + name);
+            Log.d(TAG, "Message: " + message);
+            Log.d(TAG, "emotion: " + emotion);
+            Log.d(TAG, "email: " + email);
+        }
 
         if (from.startsWith("/topics/")) {
             // message received from some topic.
@@ -70,7 +74,7 @@ public class MyGcmListenerService  extends GcmListenerService {
      *
      * @param message GCM message received.
      */
-    private void sendNotification(String name, String message, String emotion) {
+    private void sendNotification(final String name, final String message, final String emotion) {
 
         final Intent intent = new Intent(this, HomeActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
@@ -81,25 +85,33 @@ public class MyGcmListenerService  extends GcmListenerService {
         final SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this.getBaseContext());
         final String ringstonePreference = sharedPreferences.getString("notifications_ringtone", "");
 
-        Uri soundUri = null;
-        if (TextUtils.isEmpty(ringstonePreference) ) {
-            soundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
-        } else {
-            soundUri = Uri.parse(ringstonePreference);
-        }
+        new  NotificationUtil.DecodeResourseToBitmap(this, new NotificationUtil.IDecodeResourseToBitmap() {
 
-        final NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(this)
-                .setSmallIcon(R.drawable.ic_emotion_1f44d)
-                .setLargeIcon(BitmapFactory.decodeResource(getResources(), Emotions.getByKey(emotion)))//TODO
-                .setContentTitle(name)
-                .setContentText(message)
-                .setAutoCancel(true)
-                .setSound(soundUri)
-                .setContentIntent(pendingIntent);
+            @Override
+            public void onFinish(Bitmap mBitmap) {
+                Uri soundUri = null;
+                if (TextUtils.isEmpty(ringstonePreference) ) {
+                    soundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
+                } else {
+                    soundUri = Uri.parse(ringstonePreference);
+                }
 
-        final NotificationManager notificationManager =
-                (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+                final NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(MyGcmListenerService.this)
+                        .setSmallIcon(R.drawable.ic_emotion_1f44d)
+                        .setLargeIcon(mBitmap)
+                        .setContentTitle(name)
+                        .setContentText(message)
+                        .setAutoCancel(true)
+                        .setSound(soundUri)
+                        .setContentIntent(pendingIntent);
 
-        notificationManager.notify( (int) System.currentTimeMillis(), notificationBuilder.build());
+                final NotificationManager notificationManager =
+                        (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+
+                notificationManager.notify( (int) System.currentTimeMillis(), notificationBuilder.build());
+            }
+        });
+
+
     }
 }

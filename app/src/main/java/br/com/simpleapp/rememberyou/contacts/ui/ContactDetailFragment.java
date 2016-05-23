@@ -46,7 +46,6 @@ import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 import android.support.v4.content.LocalBroadcastManager;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.Toolbar;
 import android.util.DisplayMetrics;
 import android.util.Log;
@@ -64,6 +63,7 @@ import android.widget.Toast;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
 import com.google.android.gms.analytics.HitBuilders;
+import com.squareup.picasso.Picasso;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -74,12 +74,12 @@ import br.com.simpleapp.rememberyou.IConstatns;
 import br.com.simpleapp.rememberyou.R;
 import br.com.simpleapp.rememberyou.contacts.util.ImageLoader;
 import br.com.simpleapp.rememberyou.contacts.util.Utils;
+import br.com.simpleapp.rememberyou.emotions.EmotionManager;
 import br.com.simpleapp.rememberyou.entity.User;
 import br.com.simpleapp.rememberyou.gcm.QuickstartPreferences;
 import br.com.simpleapp.rememberyou.service.SendRemember;
 import br.com.simpleapp.rememberyou.service.UserService;
 import br.com.simpleapp.rememberyou.utils.DialogUtils;
-import br.com.simpleapp.rememberyou.utils.Emotions;
 import br.com.simpleapp.rememberyou.utils.NotificationUtil;
 import br.com.simpleapp.rememberyou.utils.SendState;
 
@@ -215,7 +215,7 @@ public class ContactDetailFragment extends Fragment implements
 
     private void onFavoriteClick(){
         if( emailAddress != null ) {
-            favoriteService.setWithFavorie(contactId, contactName, emailAddress);
+            favoriteService.setWithFavorie(contactId, contactName, emailAddress, ivEmotionTarget.getTag().toString());
             this.getActivity().invalidateOptionsMenu();
 
             AnalyticsTrackers.getInstance().get().send(new HitBuilders.EventBuilder()
@@ -253,6 +253,8 @@ public class ContactDetailFragment extends Fragment implements
         });
 
         LocalBroadcastManager.getInstance(this.getActivity()).registerReceiver(this.receiverSend, this.filter);
+
+        this.bindFavorites();
 
 
     }
@@ -336,9 +338,9 @@ public class ContactDetailFragment extends Fragment implements
     }
 
     private void mark(String tag) {
-        ivEmotionTarget.setTag(tag);
+        this.ivEmotionTarget.setTag(tag);
         Log.d("tag", tag);
-        ivEmotionTarget.setImageResource(Emotions.getByKey(tag));
+        Picasso.with(this.getContext()).load(EmotionManager.getInstance().buildUri(tag)).into(this.ivEmotionTarget);
         markItem();
     }
 
@@ -356,6 +358,28 @@ public class ContactDetailFragment extends Fragment implements
             }
 
         }
+    }
+
+    private void bindFavorites(){
+        final ViewGroup view = (ViewGroup) getView().findViewById(R.id.llEmotions);
+        int count = 0;
+        final EmotionManager emotionManager = EmotionManager.getInstance();
+
+        for ( int i = 0; i < view.getChildCount(); i++ ){
+            ViewGroup group = (ViewGroup) view.getChildAt(i);
+            for ( int j = 0; j < group.getChildCount(); j++ ){
+                View viewItem = group.getChildAt(j);
+                final String emotion = emotionManager.listFavories()[count];
+                final String uri = emotionManager.buildUri(emotion);
+                viewItem.setTag(emotion);
+
+                Picasso.with(this.getContext()).load(uri).into((ImageView) viewItem);
+                count++;
+            }
+
+        }
+
+        this.ivEmotionTarget.setTag(emotionManager.listFavories()[0]);
     }
 
     @Override

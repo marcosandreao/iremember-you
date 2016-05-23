@@ -145,32 +145,28 @@
                             android:layout_weight="2"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:tag="emotion_1f44d"
-                            android:src="@drawable/emotion_1f44d"/>
+                            />
 
                         <ImageView
                             android:layout_weight="2"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:alpha="0.5"
-                            android:tag="emotion_1f60d"
-                            android:src="@drawable/emotion_1f60d"/>
+                            />
 
                         <ImageView
                             android:layout_weight="2"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:alpha="0.5"
-                            android:tag="emotion_1f494"
-                            android:src="@drawable/emotion_1f494"/>
+                           />
 
                         <ImageView
                             android:layout_weight="2"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:alpha="0.5"
-                            android:tag="emotion_1f600"
-                            android:src="@drawable/emotion_1f600"/>
+                            />
 
                     </LinearLayout>
 
@@ -185,32 +181,28 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:alpha="0.5"
-                            android:tag="emotion_2764"
-                            android:src="@drawable/emotion_2764"/>
+                           />
 
                         <ImageView
                             android:layout_weight="1"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:alpha="0.5"
-                            android:tag="emotion_1f609"
-                            android:src="@drawable/emotion_1f609"/>
+                            />
 
                         <ImageView
                             android:layout_weight="1"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:alpha="0.5"
-                            android:tag="emotion_1f614"
-                            android:src="@drawable/emotion_1f614"/>
+                            />
 
                         <ImageView
                             android:layout_weight="1"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:alpha="0.5"
-                            android:tag="emotion_1f621"
-                            android:src="@drawable/emotion_1f621"/>
+                            />
 
                     </LinearLayout>
                 </LinearLayout>

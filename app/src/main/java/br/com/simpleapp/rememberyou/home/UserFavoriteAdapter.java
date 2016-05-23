@@ -13,13 +13,11 @@ import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
 
-import org.w3c.dom.Text;
-
 import java.util.List;
 
 import br.com.simpleapp.rememberyou.R;
+import br.com.simpleapp.rememberyou.emotions.EmotionManager;
 import br.com.simpleapp.rememberyou.entity.User;
-import br.com.simpleapp.rememberyou.utils.Emotions;
 import br.com.simpleapp.rememberyou.utils.SendState;
 
 public class UserFavoriteAdapter extends RecyclerView.Adapter<UserFavoriteAdapter.ViewHolder> {
@@ -83,19 +81,13 @@ public class UserFavoriteAdapter extends RecyclerView.Adapter<UserFavoriteAdapte
 
 
         if (loadEmotion ) {
-            int emotionResource = 0;
             if (holder.mItem.getLastEmotion() != null && !"".equals(holder.mItem.getLastEmotion())) {
                 holder.ivEmotion.setTag(holder.mItem.getLastEmotion());
                 Log.d("TAG", holder.mItem.getLastEmotion());
-                emotionResource = Emotions.getByKey(holder.mItem.getLastEmotion());
-            } else {
-                final String emotion = "emotion_1f609";
-                holder.ivEmotion.setTag(emotion);
-                //holder.ivEmotion.setImageResource(Emotions.getByKey(emotion));
-                emotionResource = Emotions.getByKey(emotion);
+                Picasso.with(holder.tvName.getContext()).load(EmotionManager.getInstance().buildUri( holder.mItem.getLastEmotion()))
+                        .tag(holder.tvName.getContext()).into(holder.ivEmotion);
             }
-            Picasso.with(holder.tvName.getContext()).load(emotionResource)
-                    .tag(holder.tvName.getContext()).into(holder.ivEmotion);
+
         }
 
         final Uri contactUri = Uri.parse(holder.mItem.getContactId());
