@@ -72,6 +72,7 @@ import br.com.simpleapp.rememberyou.AnalyticsTrackers;
 import br.com.simpleapp.rememberyou.BuildConfig;
 import br.com.simpleapp.rememberyou.IConstatns;
 import br.com.simpleapp.rememberyou.R;
+import br.com.simpleapp.rememberyou.contacts.EmotionsFragment;
 import br.com.simpleapp.rememberyou.contacts.util.ImageLoader;
 import br.com.simpleapp.rememberyou.contacts.util.Utils;
 import br.com.simpleapp.rememberyou.emotions.EmotionManager;
@@ -92,6 +93,7 @@ public class ContactDetailFragment extends Fragment implements
 
     // Defines a tag for identifying log entries
     private static final String TAG = "ContactDetailFragment";
+    private static final String EMOTIONS_FRAGMENT_TAG = "tag_emotions";
 
 
     private Uri mContactUri; // Stores the contact Uri for this fragment instance
@@ -436,6 +438,8 @@ public class ContactDetailFragment extends Fragment implements
 
             case R.id.menu_fav:
                 this.onFavoriteClick();
+
+                this.toggleEmotions();
                 return true;
             default:
                 this.getActivity().onBackPressed();
@@ -681,6 +685,24 @@ public class ContactDetailFragment extends Fragment implements
                 Data.MIMETYPE + "='" + ContactsContract.CommonDataKinds.Email.CONTENT_ITEM_TYPE + "'";
 
         int ADDRESS = 1;
+    }
+
+    private void toggleEmotions() {
+        Fragment f = getFragmentManager()
+                .findFragmentByTag(EMOTIONS_FRAGMENT_TAG);
+        if (f != null) {
+            this.getChildFragmentManager().popBackStack();
+        } else {
+             this.getChildFragmentManager().beginTransaction()
+                    .setCustomAnimations(R.anim.slide_up,
+                            R.anim.slide_down,
+                            R.anim.slide_up,
+                            R.anim.slide_down)
+                    .add(R.id.emotions_fragment_container, Fragment
+                                    .instantiate(this.getActivity(), EmotionsFragment.class.getName()),
+                            EMOTIONS_FRAGMENT_TAG
+                    ).addToBackStack(null).commit();
+        }
     }
 
     public BroadcastReceiver receiverSend = new BroadcastReceiver() {
