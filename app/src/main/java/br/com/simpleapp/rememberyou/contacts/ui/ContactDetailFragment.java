@@ -683,9 +683,15 @@ public class ContactDetailFragment extends Fragment implements
         final String target = category + "_" + emotion;
 
         final String oldValue = this.ivEmotionTarget.getTag().toString();
+
+        if ( !EmotionManager.getInstance().updateFavorites(oldValue, target) ){
+            return;
+        }
+
         ViewGroup view = (ViewGroup) getView().findViewById(R.id.llEmotions);
+        ViewGroup group = null;
         for ( int i = 0; i < view.getChildCount(); i++ ){
-            ViewGroup group = (ViewGroup) view.getChildAt(i);
+            group = (ViewGroup) view.getChildAt(i);
             for ( int j = 0; j < group.getChildCount(); j++ ){
                 View viewItem = group.getChildAt(j);
                 if ( viewItem.getTag().toString().equals(oldValue) ){
@@ -698,7 +704,8 @@ public class ContactDetailFragment extends Fragment implements
         }
         this.ivEmotionTarget.setTag(target);
         Picasso.with(this.getContext()).load(EmotionManager.getInstance().buildUri(target)).into(this.ivEmotionTarget);
-        EmotionManager.getInstance().updateFavorites(oldValue, target);
+
+
     }
 
     public interface ContactDetailQuery {

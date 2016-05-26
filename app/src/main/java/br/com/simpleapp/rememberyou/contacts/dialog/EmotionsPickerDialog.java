@@ -5,6 +5,7 @@ import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
@@ -40,8 +41,16 @@ public class EmotionsPickerDialog extends AppCompatDialogFragment implements Emo
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        final FragmentAdapter adapter = new FragmentAdapter(this.getChildFragmentManager());
         final ViewPager viewPager = (ViewPager) view.findViewById(R.id.viewpager);
-        viewPager.setAdapter(new FragmentAdapter(this.getChildFragmentManager()));
+        viewPager.setAdapter(adapter);
+
+        final TabLayout tabLayout = (TabLayout) view.findViewById(R.id.tabs);
+        tabLayout.setupWithViewPager(viewPager);
+
+        for ( int i = 0; i < adapter.getCount(); i++ ) {
+            tabLayout.getTabAt(i).setIcon(EmotionManager.icons[i]);
+        }
 
         view.findViewById(android.R.id.empty).setOnClickListener(new View.OnClickListener(){
 
@@ -95,6 +104,10 @@ public class EmotionsPickerDialog extends AppCompatDialogFragment implements Emo
             return this.categories.length;
         }
 
+        @Override
+        public CharSequence getPageTitle(int position) {
+            return null;
+        }
 
     }
 

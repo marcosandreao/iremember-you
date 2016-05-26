@@ -10,6 +10,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import br.com.simpleapp.rememberyou.R;
 import br.com.simpleapp.rememberyou.RememberYouApplication;
 
 /**
@@ -31,11 +32,26 @@ public class EmotionManager {
             "animais",
             "esporte",
             "construcoes",
-            "escola_trabalho",
-            "parque",
-            "placas",
-            "bandeiras",
-            "outros"
+            "escola_trabalho"
+            //"parque"
+            //"placas"
+            //"bandeiras"
+            //"outros"
+    };
+
+    public static final int[] icons = new int[]{
+            R.drawable.cat_emotions,
+            R.drawable.cat_gestos,
+            R.drawable.cat_rostos,
+            R.drawable.cat_comidas,
+            R.drawable.cat_animais,
+            R.drawable.cat_esporte,
+            R.drawable.cat_construcoes,
+            R.drawable.cat_trabalho
+            //R.drawable.cat_parque
+            //R.drawable.cat_placas,
+            //R.drawable.cat_bandeiras,
+            //R.drawable.cat_outros
     };
 
     private EmotionManager(){}
@@ -63,8 +79,8 @@ public class EmotionManager {
         return RememberYouApplication.instance.listFavorites();
     }
 
-    public void updateFavorites(String oldFav, String newFav) {
-        RememberYouApplication.instance.updateFavorite(oldFav, newFav);
+    public boolean updateFavorites(String oldFav, String newFav) {
+        return RememberYouApplication.instance.updateFavorite(oldFav, newFav);
     }
 
     public String buildUri(String cat, String emotion){

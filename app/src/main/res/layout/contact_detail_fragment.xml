@@ -207,6 +207,7 @@
                             android:id="@+id/ivEmotionTarget"
                             android:layout_width="50dp"
                             android:tag="emotion_1f44d"
+                            android:layout_gravity="center_vertical"
                             android:src="@drawable/emotion_1f44d"
                             android:layout_height="wrap_content"/>
                         <LinearLayout

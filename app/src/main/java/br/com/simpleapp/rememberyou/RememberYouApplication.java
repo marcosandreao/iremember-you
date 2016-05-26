@@ -41,7 +41,7 @@ public class RememberYouApplication extends MultiDexApplication {
     private void initFavorites(){
         final SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
         Set<String> favs = sharedPreferences.getStringSet(FAVORITE_KEY, new LinkedHashSet<String>());
-        if ( favs.isEmpty() ) {
+        if ( true || favs.isEmpty() ) {
             favs.addAll(listFavorites);
             sharedPreferences.edit().putStringSet(FAVORITE_KEY, favs).commit();
         } else {
@@ -54,7 +54,12 @@ public class RememberYouApplication extends MultiDexApplication {
         return listFavorites;
     }
 
-    public void updateFavorite(String oldFav, String newFav){
+    public boolean updateFavorite(String oldFav, String newFav){
+
+        if ( this.listFavorites().contains(newFav)) {
+            return false;
+        }
+
         final SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
         final Set<String> favs = sharedPreferences.getStringSet(FAVORITE_KEY, new LinkedHashSet<String>());
         final List<String> values = new ArrayList<>(favs);
@@ -67,6 +72,8 @@ public class RememberYouApplication extends MultiDexApplication {
         sharedPreferences.edit().putStringSet(FAVORITE_KEY, favs).commit();
         listFavorites.clear();
         listFavorites.addAll(favs);
+
+        return true;
     }
 
     static {
