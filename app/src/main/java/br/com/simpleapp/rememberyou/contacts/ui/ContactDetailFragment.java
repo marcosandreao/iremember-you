@@ -268,6 +268,7 @@ public class ContactDetailFragment extends Fragment implements
             }
         });
 
+        this.markItem();
     }
 
     @Override
@@ -340,7 +341,6 @@ public class ContactDetailFragment extends Fragment implements
                     public void onClick(View v) {
                         String tag = v.getTag().toString();
                         mark(tag);
-
                     }
                 });
             }
@@ -356,6 +356,7 @@ public class ContactDetailFragment extends Fragment implements
     }
 
     private void markItem(){
+        boolean marked = false;
         ViewGroup view = (ViewGroup) getView().findViewById(R.id.llEmotions);
         for ( int i = 0; i < view.getChildCount(); i++ ){
             ViewGroup group = (ViewGroup) view.getChildAt(i);
@@ -363,11 +364,15 @@ public class ContactDetailFragment extends Fragment implements
                 View viewItem = group.getChildAt(j);
                 if ( viewItem.getTag().toString().equals(ivEmotionTarget.getTag().toString()) ){
                     viewItem.setAlpha(1F);
+                    marked = true;
                 } else {
                     viewItem.setAlpha(0.5F);
                 }
             }
 
+        }
+        if ( !marked ) {
+            mark(EmotionManager.getInstance().listFavorites().get(0));
         }
     }
 
@@ -380,7 +385,7 @@ public class ContactDetailFragment extends Fragment implements
             ViewGroup group = (ViewGroup) view.getChildAt(i);
             for ( int j = 0; j < group.getChildCount(); j++ ){
                 View viewItem = group.getChildAt(j);
-                final String emotion = emotionManager.listFavories()[count];
+                final String emotion = emotionManager.listFavorites().get(count);
                 final String uri = emotionManager.buildUri(emotion);
                 viewItem.setTag(emotion);
 
@@ -390,7 +395,7 @@ public class ContactDetailFragment extends Fragment implements
 
         }
 
-        this.ivEmotionTarget.setTag(emotionManager.listFavories()[0]);
+        this.ivEmotionTarget.setTag(emotionManager.listFavorites().get(0));
     }
 
     @Override
@@ -677,12 +682,13 @@ public class ContactDetailFragment extends Fragment implements
         }
         final String target = category + "_" + emotion;
 
+        final String oldValue = this.ivEmotionTarget.getTag().toString();
         ViewGroup view = (ViewGroup) getView().findViewById(R.id.llEmotions);
         for ( int i = 0; i < view.getChildCount(); i++ ){
             ViewGroup group = (ViewGroup) view.getChildAt(i);
             for ( int j = 0; j < group.getChildCount(); j++ ){
                 View viewItem = group.getChildAt(j);
-                if ( viewItem.getTag().toString().equals(ivEmotionTarget.getTag().toString()) ){
+                if ( viewItem.getTag().toString().equals(oldValue) ){
                     viewItem.setTag(target);
                     Picasso.with(this.getContext()).load(EmotionManager.getInstance().buildUri(target)).into((ImageView) viewItem);
                     break;
@@ -692,6 +698,7 @@ public class ContactDetailFragment extends Fragment implements
         }
         this.ivEmotionTarget.setTag(target);
         Picasso.with(this.getContext()).load(EmotionManager.getInstance().buildUri(target)).into(this.ivEmotionTarget);
+        EmotionManager.getInstance().updateFavorites(oldValue, target);
     }
 
     public interface ContactDetailQuery {

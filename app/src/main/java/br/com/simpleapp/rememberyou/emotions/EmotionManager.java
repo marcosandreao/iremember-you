@@ -1,8 +1,16 @@
 package br.com.simpleapp.rememberyou.emotions;
 
 import android.content.Context;
+import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
+import br.com.simpleapp.rememberyou.RememberYouApplication;
 
 /**
  * Created by socram on 22/05/16.
@@ -30,17 +38,6 @@ public class EmotionManager {
             "outros"
     };
 
-    private static String[] favorites = new String[]{
-            "emotions_1f609",
-            "rostos_1f494",
-            "emotions_1f634",
-            "emotions_1f600",
-            "emotions_1f609",
-            "emotions_1f60d",
-            "gestos_270c",
-            "emotions_1f621"
-    };
-
     private EmotionManager(){}
 
     public static EmotionManager getInstance(){
@@ -62,8 +59,12 @@ public class EmotionManager {
         }
     }
 
-    public String[] listFavories(){
-        return favorites;
+    public List<String> listFavorites(){
+        return RememberYouApplication.instance.listFavorites();
+    }
+
+    public void updateFavorites(String oldFav, String newFav) {
+        RememberYouApplication.instance.updateFavorite(oldFav, newFav);
     }
 
     public String buildUri(String cat, String emotion){
