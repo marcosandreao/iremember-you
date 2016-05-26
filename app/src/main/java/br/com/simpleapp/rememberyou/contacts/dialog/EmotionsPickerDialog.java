@@ -23,7 +23,7 @@ import br.com.simpleapp.rememberyou.emotions.EmotionManager;
 /**
  * Created by marcos on 26/05/16.
  */
-public class EmotionsPickerDialog extends AppCompatDialogFragment {
+public class EmotionsPickerDialog extends AppCompatDialogFragment implements EmotionsRecyclerViewAdapter.OnListFragmentInteractionListener {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -42,6 +42,14 @@ public class EmotionsPickerDialog extends AppCompatDialogFragment {
 
         final ViewPager viewPager = (ViewPager) view.findViewById(R.id.viewpager);
         viewPager.setAdapter(new FragmentAdapter(this.getChildFragmentManager()));
+
+        view.findViewById(android.R.id.empty).setOnClickListener(new View.OnClickListener(){
+
+            @Override
+            public void onClick(View v) {
+                dismiss();
+            }
+        });
     }
 
     @Override
@@ -60,6 +68,13 @@ public class EmotionsPickerDialog extends AppCompatDialogFragment {
         if ( d != null){
             d.getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         }
+    }
+
+    @Override
+    public void onEmotionsSelected(String category, String item) {
+
+        ((EmotionsRecyclerViewAdapter.OnListFragmentInteractionListener) getParentFragment()).onEmotionsSelected(category, item);
+        this.dismiss();
     }
 
     public class FragmentAdapter  extends FragmentPagerAdapter {

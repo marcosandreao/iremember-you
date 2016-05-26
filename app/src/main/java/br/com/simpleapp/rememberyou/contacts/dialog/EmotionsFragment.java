@@ -17,19 +17,13 @@ import android.view.ViewGroup;
 import br.com.simpleapp.rememberyou.R;
 import br.com.simpleapp.rememberyou.emotions.EmotionManager;
 
-public class EmotionsFragment extends Fragment implements EmotionsRecyclerViewAdapter.OnListFragmentInteractionListener,
-        LoaderManager.LoaderCallbacks<String[]> {
+public class EmotionsFragment extends Fragment implements LoaderManager.LoaderCallbacks<String[]> {
 
     private int mColumnCount = 6;
 
     private EmotionsRecyclerViewAdapter adapter;
 
     public EmotionsFragment() {
-    }
-
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
     }
 
     public static EmotionsFragment getInstance(String category){
@@ -59,7 +53,7 @@ public class EmotionsFragment extends Fragment implements EmotionsRecyclerViewAd
             } else {
                 recyclerView.setLayoutManager(new GridLayoutManager(context, mColumnCount));
             }
-            this.adapter = new EmotionsRecyclerViewAdapter(getCategory(), this);
+            this.adapter = new EmotionsRecyclerViewAdapter(getCategory(), (EmotionsRecyclerViewAdapter.OnListFragmentInteractionListener) getParentFragment());
             recyclerView.setAdapter(this.adapter);
         }
         return view;
@@ -67,12 +61,6 @@ public class EmotionsFragment extends Fragment implements EmotionsRecyclerViewAd
 
     private String getCategory() {
         return this.getArguments().getString("cat");
-    }
-
-
-    @Override
-    public void onEmotionsSelected(String category, String item) {
-
     }
 
     @Override

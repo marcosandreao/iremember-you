@@ -74,6 +74,7 @@ import br.com.simpleapp.rememberyou.BuildConfig;
 import br.com.simpleapp.rememberyou.IConstatns;
 import br.com.simpleapp.rememberyou.R;
 import br.com.simpleapp.rememberyou.contacts.dialog.EmotionsPickerDialog;
+import br.com.simpleapp.rememberyou.contacts.dialog.EmotionsRecyclerViewAdapter;
 import br.com.simpleapp.rememberyou.contacts.util.ImageLoader;
 import br.com.simpleapp.rememberyou.contacts.util.Utils;
 import br.com.simpleapp.rememberyou.emotions.EmotionManager;
@@ -87,7 +88,7 @@ import br.com.simpleapp.rememberyou.utils.SendState;
 
 
 public class ContactDetailFragment extends Fragment implements
-        LoaderManager.LoaderCallbacks<Cursor>, NotificationUtil.IPinnedNotificationListener {
+        LoaderManager.LoaderCallbacks<Cursor>, NotificationUtil.IPinnedNotificationListener, EmotionsRecyclerViewAdapter.OnListFragmentInteractionListener {
 
     public static final String EXTRA_CONTACT_URI =
             "com.example.android.contactslist.ui.EXTRA_CONTACT_URI";
@@ -259,6 +260,13 @@ public class ContactDetailFragment extends Fragment implements
 
         this.bindFavorites();
 
+        view.findViewById(R.id.fab_more_emotion).setOnClickListener(new View.OnClickListener(){
+
+            @Override
+            public void onClick(View v) {
+                pickerEmotions();
+            }
+        });
 
     }
 
@@ -439,8 +447,6 @@ public class ContactDetailFragment extends Fragment implements
 
             case R.id.menu_fav:
                 this.onFavoriteClick();
-
-                this.pickerEmotions();
                 return true;
             default:
                 this.getActivity().onBackPressed();
@@ -663,7 +669,30 @@ public class ContactDetailFragment extends Fragment implements
         }, 4000);
     }
 
+    @Override
+    public void onEmotionsSelected(String category, String item) {
+        String emotion = item;
+        if ( item.endsWith(".png")) {
+            emotion = item.replaceAll(".png", "");
+        }
+        final String target = category + "_" + emotion;
 
+        ViewGroup view = (ViewGroup) getView().findViewById(R.id.llEmotions);
+        for ( int i = 0; i < view.getChildCount(); i++ ){
+            ViewGroup group = (ViewGroup) view.getChildAt(i);
+            for ( int j = 0; j < group.getChildCount(); j++ ){
+                View viewItem = group.getChildAt(j);
+                if ( viewItem.getTag().toString().equals(ivEmotionTarget.getTag().toString()) ){
+                    viewItem.setTag(target);
+                    Picasso.with(this.getContext()).load(EmotionManager.getInstance().buildUri(target)).into((ImageView) viewItem);
+                    break;
+                }
+            }
+
+        }
+        this.ivEmotionTarget.setTag(target);
+        Picasso.with(this.getContext()).load(EmotionManager.getInstance().buildUri(target)).into(this.ivEmotionTarget);
+    }
 
     public interface ContactDetailQuery {
         int QUERY_ID = 1;
