@@ -42,6 +42,7 @@ import android.support.annotation.Nullable;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
@@ -72,7 +73,7 @@ import br.com.simpleapp.rememberyou.AnalyticsTrackers;
 import br.com.simpleapp.rememberyou.BuildConfig;
 import br.com.simpleapp.rememberyou.IConstatns;
 import br.com.simpleapp.rememberyou.R;
-import br.com.simpleapp.rememberyou.contacts.EmotionsFragment;
+import br.com.simpleapp.rememberyou.contacts.dialog.EmotionsPickerDialog;
 import br.com.simpleapp.rememberyou.contacts.util.ImageLoader;
 import br.com.simpleapp.rememberyou.contacts.util.Utils;
 import br.com.simpleapp.rememberyou.emotions.EmotionManager;
@@ -439,13 +440,19 @@ public class ContactDetailFragment extends Fragment implements
             case R.id.menu_fav:
                 this.onFavoriteClick();
 
-                this.toggleEmotions();
+                this.pickerEmotions();
                 return true;
             default:
                 this.getActivity().onBackPressed();
                 return true;
 
         }
+    }
+
+    private void pickerEmotions() {
+        FragmentTransaction ft = getChildFragmentManager().beginTransaction();
+        EmotionsPickerDialog newFragment = new EmotionsPickerDialog();
+        newFragment.show(ft, "dialog");
     }
 
     @Override
@@ -460,6 +467,7 @@ public class ContactDetailFragment extends Fragment implements
 
         MenuItem itemUnpin = menu.findItem(R.id.menu_unpin);
         MenuItem itemPin = menu.findItem(R.id.menu_pin);
+
         if ( this.emailAddress != null && !"".equals(this.emailAddress) ) {
             User user = this.favoriteService.findByEmail(this.emailAddress);
             if (user != null && NotificationUtil.hasNotificationPinned(this.getActivity(), user.getId()) ){
@@ -685,24 +693,6 @@ public class ContactDetailFragment extends Fragment implements
                 Data.MIMETYPE + "='" + ContactsContract.CommonDataKinds.Email.CONTENT_ITEM_TYPE + "'";
 
         int ADDRESS = 1;
-    }
-
-    private void toggleEmotions() {
-        Fragment f = getFragmentManager()
-                .findFragmentByTag(EMOTIONS_FRAGMENT_TAG);
-        if (f != null) {
-            this.getChildFragmentManager().popBackStack();
-        } else {
-             this.getChildFragmentManager().beginTransaction()
-                    .setCustomAnimations(R.anim.slide_up,
-                            R.anim.slide_down,
-                            R.anim.slide_up,
-                            R.anim.slide_down)
-                    .add(R.id.emotions_fragment_container, Fragment
-                                    .instantiate(this.getActivity(), EmotionsFragment.class.getName()),
-                            EMOTIONS_FRAGMENT_TAG
-                    ).addToBackStack(null).commit();
-        }
     }
 
     public BroadcastReceiver receiverSend = new BroadcastReceiver() {

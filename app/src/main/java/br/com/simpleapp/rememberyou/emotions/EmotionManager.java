@@ -11,7 +11,9 @@ public class EmotionManager {
 
     private static EmotionManager instance;
 
-    private static final String BASE_URI = "file:///android_asset/%s/%s.png";
+    private static final String BASE_URI_PNG = "file:///android_asset/%s/%s.png";
+
+    private static final String BASE_URI = "file:///android_asset/%s/%s";
 
     private static final String[] categories = new String[]{
             "emotions",
@@ -65,12 +67,16 @@ public class EmotionManager {
     }
 
     public String buildUri(String cat, String emotion){
-        return String.format(BASE_URI, cat, emotion);
+        String baseUri = BASE_URI_PNG;
+        if ( emotion.endsWith(".png") ) {
+            baseUri = BASE_URI;
+        }
+        return String.format(baseUri, cat, emotion);
     }
 
     public String buildUri(String emotion){
         final String values[] = emotion.split("_");
-        return String.format(BASE_URI, values[0], values[1]);
+        return String.format(BASE_URI_PNG, values[0], values[1]);
     }
 
     public String buildFile(String emotion) {
