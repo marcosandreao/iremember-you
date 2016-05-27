@@ -113,4 +113,19 @@ public class DialogUtils {
         dialog.show();
     }
 
+    public static void showRequestPermission(Context ctx, final DialogInterface.OnClickListener callbackClose ) {
+
+        final AlertDialog.Builder builder = new AlertDialog.Builder(ctx);
+        builder.setMessage(ctx.getString(R.string.request_permission));
+
+        builder.setNegativeButton(ctx.getString(R.string.request_permission_cacell), null);
+
+        builder.setNeutralButton(ctx.getString(R.string.request_permission_ok), callbackClose);
+
+        AlertDialog dialog = builder.create();
+        // display dialog
+        dialog.show();
+    }
+
+
 }
