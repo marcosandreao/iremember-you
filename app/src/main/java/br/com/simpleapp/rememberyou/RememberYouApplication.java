@@ -41,7 +41,7 @@ public class RememberYouApplication extends MultiDexApplication {
     private void initFavorites(){
         final SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
         Set<String> favs = sharedPreferences.getStringSet(FAVORITE_KEY, new LinkedHashSet<String>());
-        if ( true || favs.isEmpty() ) {
+        if ( favs.isEmpty() ) {
             favs.addAll(listFavorites);
             sharedPreferences.edit().putStringSet(FAVORITE_KEY, favs).commit();
         } else {

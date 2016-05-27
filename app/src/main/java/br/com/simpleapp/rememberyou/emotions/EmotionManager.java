@@ -32,7 +32,7 @@ public class EmotionManager {
             "animais",
             "esporte",
             "construcoes",
-            "escola_trabalho"
+            "escolatrabalho"
             //"parque"
             //"placas"
             //"bandeiras"

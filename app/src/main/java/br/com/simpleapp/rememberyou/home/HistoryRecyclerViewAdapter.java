@@ -49,7 +49,7 @@ public class HistoryRecyclerViewAdapter extends RecyclerView.Adapter<HistoryRecy
             Object[] keys = emotions.keySet().toArray();
             ImageView iv = null;
             TextView tv = null;
-            for ( int i = 0; i < keys.length; i++){
+            for ( int i = 0; i < keys.length && i < 8; i++){
                 String key = keys[i].toString();
                 int count = emotions.get(key);
                 ViewGroup target = (ViewGroup) holder.vGroupEmotions.getChildAt(i);

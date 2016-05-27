@@ -97,7 +97,7 @@ public class MyGcmListenerService  extends GcmListenerService {
                 }
 
                 final NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(MyGcmListenerService.this)
-                        .setSmallIcon(R.drawable.ic_emotion_1f44d)
+                        .setSmallIcon(R.drawable.ic_launcher)
                         .setLargeIcon(mBitmap)
                         .setContentTitle(name)
                         .setContentText(message)
@@ -110,7 +110,7 @@ public class MyGcmListenerService  extends GcmListenerService {
 
                 notificationManager.notify( (int) System.currentTimeMillis(), notificationBuilder.build());
             }
-        });
+        }).execute(emotion);
 
 
     }
