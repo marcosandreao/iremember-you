@@ -425,6 +425,9 @@ public class ContactDetailFragment extends Fragment implements
         switch (item.getItemId()) {
             case R.id.menu_unpin:
 
+                if ( this.emailAddress == null ){
+                    return false;
+                }
                 User user = this.favoriteService.findByEmail(this.emailAddress);
                 if (user != null ){
                     NotificationUtil.removeNotification(this.getContext(), user.getId());
@@ -436,7 +439,9 @@ public class ContactDetailFragment extends Fragment implements
                         .build());
                 return true;
             case R.id.menu_pin:
-
+                if ( this.emailAddress == null ){
+                    return false;
+                }
                 try {
                     long id = this.favoriteService.prepareToSent(this.contactId, this.contactName, emailAddress, this.ivEmotionTarget.getTag().toString());
 
