@@ -437,17 +437,24 @@ public class ContactDetailFragment extends Fragment implements
                 return true;
             case R.id.menu_pin:
 
-                long id = this.favoriteService.prepareToSent(this.contactId, this.contactName, emailAddress, this.ivEmotionTarget.getTag().toString());
+                try {
+                    long id = this.favoriteService.prepareToSent(this.contactId, this.contactName, emailAddress, this.ivEmotionTarget.getTag().toString());
 
-                NotificationUtil.pinNotification(this.getActivity(), this.contactId, (int) id,  emailAddress,
-                        contactName, this.ivEmotionTarget.getTag().toString(), this);
+                    NotificationUtil.pinNotification(this.getActivity(), this.contactId, (int) id, emailAddress,
+                            contactName, this.ivEmotionTarget.getTag().toString(), this);
 
-                AnalyticsTrackers.getInstance().get().send(new HitBuilders.EventBuilder()
-                        .setCategory("Action")
-                        .setAction("Pin")
-                        .build());
+                    AnalyticsTrackers.getInstance().get().send(new HitBuilders.EventBuilder()
+                            .setCategory("Action")
+                            .setAction("Pin")
+                            .build());
 
-                this.getActivity().invalidateOptionsMenu();
+                    this.getActivity().invalidateOptionsMenu();
+                } catch (Exception e){
+                    AnalyticsTrackers.getInstance().get().send(new HitBuilders.EventBuilder()
+                            .setCategory("Action")
+                            .setAction("Pin error")
+                            .build());
+                }
                 return true;
 
             case R.id.menu_fav:

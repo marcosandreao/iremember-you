@@ -89,7 +89,7 @@ public class MyGcmListenerService  extends GcmListenerService {
 
         final SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this.getBaseContext());
         final String ringstonePreference = sharedPreferences.getString("notifications_ringtone", "");
-
+        final boolean canVibrate = sharedPreferences.getBoolean("notifications_vibrate", true);
         new  NotificationUtil.DecodeResourseToBitmap(this, new NotificationUtil.IDecodeResourseToBitmap() {
 
             @Override
@@ -110,6 +110,9 @@ public class MyGcmListenerService  extends GcmListenerService {
                         .setSound(soundUri)
                         .setContentIntent(pendingIntent);
 
+                if ( canVibrate ) {
+                    notificationBuilder.setVibrate(new long[] {0, 300});
+                }
                 final NotificationManager notificationManager =
                         (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
 
