@@ -97,7 +97,7 @@ public class MyGcmListenerService  extends GcmListenerService {
                 }
 
                 final NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(MyGcmListenerService.this)
-                        .setSmallIcon(R.drawable.ic_launcher)
+                        .setSmallIcon(R.drawable.ic_insert_emoticon_white_24dp)
                         .setLargeIcon(mBitmap)
                         .setContentTitle(name)
                         .setContentText(message)

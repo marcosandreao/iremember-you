@@ -16,18 +16,25 @@
         <dex dex="/home/marcos/Developer/projects/irememberedyou/iremember-you/app/build/intermediates/transforms/dex/debug/folders/1000/10/com.android.support-mediarouter-v7-23.0.0_0c109326daec997ac543654643199324445c4aeb/classes.dex" />
     </item>
     <item
-        jar="/home/marcos/Developer/projects/irememberedyou/iremember-you/app/build/intermediates/exploded-aar/com.android.support/animated-vector-drawable/24.0.0-alpha1/jars/classes.jar"
-        jumboMode="true"
-        revision="23.0.3"
-        sha1="a6af5beedc2e8c946abc3771525e2fed77439309">
-        <dex dex="/home/marcos/Developer/projects/irememberedyou/iremember-you/app/build/intermediates/transforms/dex/debug/folders/1000/10/com.android.support-animated-vector-drawable-24.0.0-alpha1_2f6ac1d15cb0b608082a7998ca478e2f8f304b87/classes.dex" />
-    </item>
-    <item
         jar="/home/marcos/Developer/projects/irememberedyou/iremember-you/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-auth/8.4.0/jars/classes.jar"
         jumboMode="true"
         revision="23.0.3"
         sha1="966e5771a5a2ebfb31bf00d7cd6cd2546d245517">
         <dex dex="/home/marcos/Developer/projects/irememberedyou/iremember-you/app/build/intermediates/transforms/dex/debug/folders/1000/10/com.google.android.gms-play-services-auth-8.4.0_20477b3680151df65cecccc5182549011401c860/classes.dex" />
+    </item>
+    <item
+        jar="/home/marcos/Developer/projects/irememberedyou/iremember-you/app/build/intermediates/exploded-aar/com.android.support/animated-vector-drawable/23.3.0/jars/classes.jar"
+        jumboMode="true"
+        revision="23.0.3"
+        sha1="23be6993826b8fd88bbc8d14928bb3b8960d3d4e">
+        <dex dex="/home/marcos/Developer/projects/irememberedyou/iremember-you/app/build/intermediates/transforms/dex/debug/folders/1000/10/com.android.support-animated-vector-drawable-23.3.0_8a51c5e905dec4f79ec0c08826a76cb7352085b6/classes.dex" />
+    </item>
+    <item
+        jar="/home/marcos/Developer/projects/irememberedyou/iremember-you/app/build/intermediates/exploded-aar/com.android.support/support-vector-drawable/23.3.0/jars/classes.jar"
+        jumboMode="true"
+        revision="23.0.3"
+        sha1="a0b5d60246cd9d4f3f2443611b3b4c25265840b5">
+        <dex dex="/home/marcos/Developer/projects/irememberedyou/iremember-you/app/build/intermediates/transforms/dex/debug/folders/1000/10/com.android.support-support-vector-drawable-23.3.0_c4e6c3e12aee95fe578d5bd2d130f5f422420650/classes.dex" />
     </item>
     <item
         jar="/home/marcos/Developer/projects/irememberedyou/iremember-you/app/build/intermediates/exploded-aar/com.dmitrymalkovich.android/progress-fab/1.3/jars/classes.jar"
@@ -37,17 +44,10 @@
         <dex dex="/home/marcos/Developer/projects/irememberedyou/iremember-you/app/build/intermediates/transforms/dex/debug/folders/1000/10/com.dmitrymalkovich.android-progress-fab-1.3_f8310370d7dc7cfa5cd6814292b4fdd12b82d163/classes.dex" />
     </item>
     <item
-        jar="/home/marcos/Developer/tools/android/sdk/extras/android/m2repository/com/android/support/support-annotations/24.0.0-alpha1/support-annotations-24.0.0-alpha1.jar"
-        jumboMode="true"
-        revision="23.0.3"
-        sha1="b8062546971a3d196343232a19a3c0016272ba47">
-        <dex dex="/home/marcos/Developer/projects/irememberedyou/iremember-you/app/build/intermediates/transforms/dex/debug/folders/1000/10/support-annotations-24.0.0-alpha1_18c3e219744246d95bcd4b8ec354104d4e812cd8/classes.dex" />
-    </item>
-    <item
         jar="/home/marcos/Developer/projects/irememberedyou/iremember-you/app/build/intermediates/incremental-runtime-classes/debug/instant-run.jar"
         jumboMode="true"
         revision="23.0.3"
-        sha1="e916a995dc877017d7e1fbc99b9b682ec1cb154e">
+        sha1="dd9c350113510c0b2900a72bce0f3eb18f7525d1">
         <dex dex="/home/marcos/Developer/projects/irememberedyou/iremember-you/app/build/intermediates/transforms/dex/debug/folders/1000/10/instant-run_23f023ffffa5c8ed2fb2bbe818ef404791eb451f/classes.dex" />
     </item>
     <item
@@ -56,6 +56,13 @@
         revision="23.0.3"
         sha1="e167a34eaca0b31704212f43f9576ea84e05046f">
         <dex dex="/home/marcos/Developer/projects/irememberedyou/iremember-you/app/build/intermediates/transforms/dex/debug/folders/1000/10/com.google.android.gms-play-services-wearable-8.4.0_86f731fc7d4fb5f990e7dd8ff3fd499297ed2c20/classes.dex" />
+    </item>
+    <item
+        jar="/home/marcos/Developer/projects/irememberedyou/iremember-you/app/build/intermediates/exploded-aar/com.android.support/appcompat-v7/23.3.0/jars/classes.jar"
+        jumboMode="true"
+        revision="23.0.3"
+        sha1="1b8e03daaa43fb0a4cd57e378167c2fd70454c1e">
+        <dex dex="/home/marcos/Developer/projects/irememberedyou/iremember-you/app/build/intermediates/transforms/dex/debug/folders/1000/10/com.android.support-appcompat-v7-23.3.0_f9bacc1bceb18c5c680296f0bb4d2577b82814c7/classes.dex" />
     </item>
     <item
         jar="/home/marcos/.gradle/caches/modules-2/files-2.1/com.squareup.okhttp/okhttp/2.7.0/1477ec5caf8319ab4b51eb43553cd66aa86fdea5/okhttp-2.7.0.jar"
@@ -70,6 +77,20 @@
         revision="23.0.3"
         sha1="82ce13fd19cdfde0e392f03c27edeba8d4333648">
         <dex dex="/home/marcos/Developer/projects/irememberedyou/iremember-you/app/build/intermediates/transforms/dex/debug/folders/1000/10/com.android.support-cardview-v7-23.3.0_42d1f76d78256e95eb8e4400a3c247314807e86c/classes.dex" />
+    </item>
+    <item
+        jar="/home/marcos/Developer/projects/irememberedyou/iremember-you/app/build/intermediates/exploded-aar/com.android.support/support-v4/23.3.0/jars/libs/internal_impl-23.3.0.jar"
+        jumboMode="true"
+        revision="23.0.3"
+        sha1="4da5a4d697d32497c6f85567a5112e62fdfd0676">
+        <dex dex="/home/marcos/Developer/projects/irememberedyou/iremember-you/app/build/intermediates/transforms/dex/debug/folders/1000/10/internal_impl-23.3.0_894a5eb6578b6a5eaf988aa8c7fed1e8b5b7c5fc/classes.dex" />
+    </item>
+    <item
+        jar="/home/marcos/Developer/projects/irememberedyou/iremember-you/app/build/intermediates/exploded-aar/com.android.support/recyclerview-v7/23.3.0/jars/classes.jar"
+        jumboMode="true"
+        revision="23.0.3"
+        sha1="debf30ce0a7560396b6235edef77e447006454c2">
+        <dex dex="/home/marcos/Developer/projects/irememberedyou/iremember-you/app/build/intermediates/transforms/dex/debug/folders/1000/10/com.android.support-recyclerview-v7-23.3.0_f21abcc65c2ce1ac0dc1a90583bfdd0e139832f4/classes.dex" />
     </item>
     <item
         jar="/home/marcos/Developer/projects/irememberedyou/iremember-you/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-nearby/8.4.0/jars/classes.jar"
@@ -96,7 +117,7 @@
         jar="/home/marcos/Developer/projects/irememberedyou/iremember-you/app/build/intermediates/incremental-classes/debug/instant-run-bootstrap.jar"
         jumboMode="true"
         revision="23.0.3"
-        sha1="636b2bc3fc745153ef763a0f5c01b3cd0a833a1c">
+        sha1="9edda1aafdbbbfe9f9256dfc8bcf9e4c82bdcfdb">
         <dex dex="/home/marcos/Developer/projects/irememberedyou/iremember-you/app/build/intermediates/transforms/dex/debug/folders/1000/10/instant-run-bootstrap_85ce2de09d39dc296ecc805f93d15e5af8fbfc74/classes.dex" />
     </item>
     <item
@@ -121,13 +142,6 @@
         <dex dex="/home/marcos/Developer/projects/irememberedyou/iremember-you/app/build/intermediates/transforms/dex/debug/folders/1000/10/com.google.android.gms-play-services-games-8.4.0_b7d5f254b1bf8d43655586dec51f1281630106d2/classes.dex" />
     </item>
     <item
-        jar="/home/marcos/Developer/projects/irememberedyou/iremember-you/app/build/intermediates/exploded-aar/com.android.support/support-vector-drawable/24.0.0-alpha1/jars/classes.jar"
-        jumboMode="true"
-        revision="23.0.3"
-        sha1="ed88e1f0c8fbf66e1da918545f0a6790f893bceb">
-        <dex dex="/home/marcos/Developer/projects/irememberedyou/iremember-you/app/build/intermediates/transforms/dex/debug/folders/1000/10/com.android.support-support-vector-drawable-24.0.0-alpha1_057cc8e8d57ad3d48dc5f3a8cf755b0d28f31517/classes.dex" />
-    </item>
-    <item
         jar="/home/marcos/Developer/projects/irememberedyou/iremember-you/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-drive/8.4.0/jars/classes.jar"
         jumboMode="true"
         revision="23.0.3"
@@ -135,18 +149,18 @@
         <dex dex="/home/marcos/Developer/projects/irememberedyou/iremember-you/app/build/intermediates/transforms/dex/debug/folders/1000/10/com.google.android.gms-play-services-drive-8.4.0_02e127e9c1a9915a004e034b0bbc12f2de387b1d/classes.dex" />
     </item>
     <item
-        jar="/home/marcos/Developer/projects/irememberedyou/iremember-you/app/build/intermediates/exploded-aar/com.android.support/appcompat-v7/24.0.0-alpha1/jars/classes.jar"
-        jumboMode="true"
-        revision="23.0.3"
-        sha1="9684c95278dc45a142d7de3db9e7e39aa520e1e0">
-        <dex dex="/home/marcos/Developer/projects/irememberedyou/iremember-you/app/build/intermediates/transforms/dex/debug/folders/1000/10/com.android.support-appcompat-v7-24.0.0-alpha1_c1c85cbdd4fe9aec25ebf627193654775f96dfde/classes.dex" />
-    </item>
-    <item
         jar="/home/marcos/Developer/projects/irememberedyou/iremember-you/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-gcm/8.4.0/jars/classes.jar"
         jumboMode="true"
         revision="23.0.3"
         sha1="2d7fe76982677315c4dc4edfb459c8ca718a9d4c">
         <dex dex="/home/marcos/Developer/projects/irememberedyou/iremember-you/app/build/intermediates/transforms/dex/debug/folders/1000/10/com.google.android.gms-play-services-gcm-8.4.0_7bf22115e96295dca68b4579bd976c550840cf08/classes.dex" />
+    </item>
+    <item
+        jar="/home/marcos/Developer/tools/android/sdk/extras/android/m2repository/com/android/support/support-annotations/23.3.0/support-annotations-23.3.0.jar"
+        jumboMode="true"
+        revision="23.0.3"
+        sha1="db7791d75a07fef9844d06236c1c59ba7bf6997c">
+        <dex dex="/home/marcos/Developer/projects/irememberedyou/iremember-you/app/build/intermediates/transforms/dex/debug/folders/1000/10/support-annotations-23.3.0_25e12b4dae7a21d7a31241ab2bb81857e21cd585/classes.dex" />
     </item>
     <item
         jar="/home/marcos/Developer/projects/irememberedyou/iremember-you/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-location/8.4.0/jars/classes.jar"
@@ -163,25 +177,11 @@
         <dex dex="/home/marcos/Developer/projects/irememberedyou/iremember-you/app/build/intermediates/transforms/dex/debug/folders/1000/10/com.google.android.gms-play-services-basement-8.4.0_72a54a34c98bca522c599229437831d39975a6cb/classes.dex" />
     </item>
     <item
-        jar="/home/marcos/Developer/projects/irememberedyou/iremember-you/app/build/intermediates/exploded-aar/com.android.support/support-v4/24.0.0-alpha1/jars/libs/internal_impl-24.0.0-alpha1.jar"
-        jumboMode="true"
-        revision="23.0.3"
-        sha1="e57fba0a2d57d3501d8f4ff44c23092978804845">
-        <dex dex="/home/marcos/Developer/projects/irememberedyou/iremember-you/app/build/intermediates/transforms/dex/debug/folders/1000/10/internal_impl-24.0.0-alpha1_d7e59645c1916db83d91d6dbe062f2a88fd8c2c2/classes.dex" />
-    </item>
-    <item
         jar="/home/marcos/Developer/projects/irememberedyou/iremember-you/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-base/8.4.0/jars/classes.jar"
         jumboMode="true"
         revision="23.0.3"
         sha1="fef2b3e4b6b1b0e5fe7b69fa137a5fa55a3182ab">
         <dex dex="/home/marcos/Developer/projects/irememberedyou/iremember-you/app/build/intermediates/transforms/dex/debug/folders/1000/10/com.google.android.gms-play-services-base-8.4.0_a6170c916b5047dbde2bccca9c6f1ddcb7144e88/classes.dex" />
-    </item>
-    <item
-        jar="/home/marcos/Developer/projects/irememberedyou/iremember-you/app/build/intermediates/exploded-aar/com.android.support/support-v4/24.0.0-alpha1/jars/classes.jar"
-        jumboMode="true"
-        revision="23.0.3"
-        sha1="9aaaea3a89040f8176f810c85e288fc74d5d1f12">
-        <dex dex="/home/marcos/Developer/projects/irememberedyou/iremember-you/app/build/intermediates/transforms/dex/debug/folders/1000/10/com.android.support-support-v4-24.0.0-alpha1_a91562469a9887fcb8a5ca3171c4cb15330ec2b7/classes.dex" />
     </item>
     <item
         jar="/home/marcos/.gradle/caches/modules-2/files-2.1/com.squareup.picasso/picasso/2.5.2/7446d06ec8d4f7ffcc53f1da37c95f200dcb9387/picasso-2.5.2.jar"
@@ -205,11 +205,11 @@
         <dex dex="/home/marcos/Developer/projects/irememberedyou/iremember-you/app/build/intermediates/transforms/dex/debug/folders/1000/10/com.google.android.gms-play-services-panorama-8.4.0_fcc05afb4d83a2000a677c3c76578e14d43929ff/classes.dex" />
     </item>
     <item
-        jar="/home/marcos/Developer/projects/irememberedyou/iremember-you/app/build/intermediates/exploded-aar/com.android.support/design/24.0.0-alpha1/jars/classes.jar"
+        jar="/home/marcos/Developer/projects/irememberedyou/iremember-you/app/build/intermediates/exploded-aar/com.android.support/support-v4/23.3.0/jars/classes.jar"
         jumboMode="true"
         revision="23.0.3"
-        sha1="cd688796dadc28f7f95db229cbfdaf91ebbb0d61">
-        <dex dex="/home/marcos/Developer/projects/irememberedyou/iremember-you/app/build/intermediates/transforms/dex/debug/folders/1000/10/com.android.support-design-24.0.0-alpha1_917a5c01ff732cebc6a4701296df949b11f2c37d/classes.dex" />
+        sha1="8a034dd16c0dfd75fe86c52c2cd581592acc684a">
+        <dex dex="/home/marcos/Developer/projects/irememberedyou/iremember-you/app/build/intermediates/transforms/dex/debug/folders/1000/10/com.android.support-support-v4-23.3.0_fcf9a27a73d188da201b083459b4c743872290bd/classes.dex" />
     </item>
     <item
         jar="/home/marcos/Developer/projects/irememberedyou/iremember-you/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-analytics/8.4.0/jars/classes.jar"
@@ -217,13 +217,6 @@
         revision="23.0.3"
         sha1="1c9f35e952b212c843f7bd2c7eec8e82ad95602e">
         <dex dex="/home/marcos/Developer/projects/irememberedyou/iremember-you/app/build/intermediates/transforms/dex/debug/folders/1000/10/com.google.android.gms-play-services-analytics-8.4.0_eaf7453124bdf17493367ee28f3cfc41e08f1dfc/classes.dex" />
-    </item>
-    <item
-        jar="/home/marcos/Developer/projects/irememberedyou/iremember-you/app/build/intermediates/exploded-aar/com.android.support/recyclerview-v7/24.0.0-alpha1/jars/classes.jar"
-        jumboMode="true"
-        revision="23.0.3"
-        sha1="1f1c7067e22acf05bddbca9f94422050cd848a86">
-        <dex dex="/home/marcos/Developer/projects/irememberedyou/iremember-you/app/build/intermediates/transforms/dex/debug/folders/1000/10/com.android.support-recyclerview-v7-24.0.0-alpha1_ae53d72350412067269f62691470f1f66be86bfb/classes.dex" />
     </item>
     <item
         jar="/home/marcos/Developer/projects/irememberedyou/iremember-you/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-appindexing/8.4.0/jars/classes.jar"
@@ -266,6 +259,13 @@
         revision="23.0.3"
         sha1="1a78298e7724d5440d210bcb946b3493250d354d">
         <dex dex="/home/marcos/Developer/projects/irememberedyou/iremember-you/app/build/intermediates/transforms/dex/debug/folders/1000/10/com.google.android.gms-play-services-plus-8.4.0_fca877c45ede2f08edeca15e29d06d1ef9a9d85c/classes.dex" />
+    </item>
+    <item
+        jar="/home/marcos/Developer/projects/irememberedyou/iremember-you/app/build/intermediates/exploded-aar/com.android.support/design/23.3.0/jars/classes.jar"
+        jumboMode="true"
+        revision="23.0.3"
+        sha1="f0001e71cea6ae432a00021c6f727f5ef0f3d27e">
+        <dex dex="/home/marcos/Developer/projects/irememberedyou/iremember-you/app/build/intermediates/transforms/dex/debug/folders/1000/10/com.android.support-design-23.3.0_8f4dc19b49e958a86fe71c8e6f13425da7d61170/classes.dex" />
     </item>
     <item
         jar="/home/marcos/.gradle/caches/modules-2/files-2.1/com.squareup.okhttp/okhttp-urlconnection/2.7.0/d9986de376d6aaeadd5e2c12390f99d17dc9f6e8/okhttp-urlconnection-2.7.0.jar"

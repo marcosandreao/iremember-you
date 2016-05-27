@@ -47,7 +47,7 @@ public class NotificationUtil {
 
                 final Uri defaultSoundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
                 final NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(ctx)
-                        .setSmallIcon(R.drawable.ic_emotion_1f44d)
+                        .setSmallIcon(R.drawable.ic_insert_emoticon_white_24dp)
                         .setLargeIcon(mBitmap)
                         .setContentTitle(ctx.getString(R.string.notification_send_remember_of))
                         .setOngoing(true)
