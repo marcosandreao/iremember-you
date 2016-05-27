@@ -66,6 +66,7 @@
     <string name="name_required">Nome é muito importante a partir dele que seus lembrados te reconheceram.</string>
     <string name="loading_contacts">Aguarde, carregando dados do contato.</string>
     <string name="txt_notification">Lembrou de você</string>
+    <string name="string_key_message">Lembrou de você</string>
     <string name="send_from_notification">Enviar</string>
     <string name="notification_send_remember_of">Lembrar de:</string>
     <string name="fixar_como_notifica_o">Fixar Como notificação</string>

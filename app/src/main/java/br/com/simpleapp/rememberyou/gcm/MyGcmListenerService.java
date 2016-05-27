@@ -52,12 +52,17 @@ public class MyGcmListenerService  extends GcmListenerService {
             Log.d(TAG, "email: " + email);
         }
 
+        final String pack = getPackageName();
+        final String id = message;
+        final int resId = getResources().getIdentifier(id, "string", pack);
+        final String msgValue = getResources().getString(resId);
+
         if (from.startsWith("/topics/")) {
             // message received from some topic.
         } else {
             // normal downstream message.
         }
-        sendNotification(name, message, emotion);
+        sendNotification(name, msgValue, emotion);
 
         try {
             final HistoryService service = new HistoryService();
