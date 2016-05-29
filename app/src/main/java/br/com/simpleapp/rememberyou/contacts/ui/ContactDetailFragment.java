@@ -287,7 +287,7 @@ public class ContactDetailFragment extends Fragment implements
             }
             this.mHandler.removeCallbacks(null);
             if ( state == SendState.STATE_DONE_NEED_INVITE ) {
-                DialogUtils.showLocationDialogNeedInvite(this.getActivity(), this.contactName, new DialogInterface.OnClickListener() {
+                DialogUtils.showLocationDialogNeedInvite(this.getActivity(), this.contactName, this.emailAddress, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         getActivity().onBackPressed();

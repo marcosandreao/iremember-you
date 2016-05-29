@@ -172,4 +172,7 @@
     <string name="request_permission">A app utiliza o email como forma de identificar os usuários, logo, para evitar fazermos cadastros utilizamos os contatos já previamente cadastrado por você.\nIremos listar seus contatos para você escolher quem lembrar</string>
     <string name="request_permission_cacell">Cancelar</string>
     <string name="request_permission_ok">OK, vamos nessa!</string>
+    <string name="invite_msg_text">Quero lembrar de você, mas não consigo :(..\n Instale a app https://play.google.com/store/apps/details?id=br.com.simpleapp.rememberyou para eu poder mostrar quanto lembro do você ;)</string>
+    <string name="invite_msg_chooser">Convidar via:</string>
+    <string name="invite_btn">Convidar</string>
 </resources>

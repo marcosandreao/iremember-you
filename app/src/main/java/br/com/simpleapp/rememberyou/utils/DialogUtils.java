@@ -6,6 +6,9 @@ import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 import android.support.v7.app.AlertDialog;
 
+import com.google.android.gms.analytics.HitBuilders;
+
+import br.com.simpleapp.rememberyou.AnalyticsTrackers;
 import br.com.simpleapp.rememberyou.R;
 import br.com.simpleapp.rememberyou.gcm.QuickstartPreferences;
 
@@ -15,7 +18,7 @@ import br.com.simpleapp.rememberyou.gcm.QuickstartPreferences;
 public class DialogUtils {
     private DialogUtils(){}
 
-    public static void showLocationDialogNeedInvite(Context ctx, String name, final DialogInterface.OnClickListener callback ) {
+    public static void showLocationDialogNeedInvite(final Context ctx, String name, final String email, final DialogInterface.OnClickListener callback ) {
         final SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(ctx);
         if ( !sharedPreferences.getBoolean(QuickstartPreferences.SHOW_DIALOG_INVITE, true) ) {
             callback.onClick(null, 0);
@@ -28,7 +31,7 @@ public class DialogUtils {
 
 
         String negativeText = ctx.getString(R.string.hot_show_again_msg_feedback);
-        builder.setNegativeButton(negativeText,
+        builder.setNeutralButton(negativeText,
                 new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
@@ -38,7 +41,7 @@ public class DialogUtils {
                 });
 
         String positiveText = ctx.getString(R.string.popup_close_and_exit);
-        builder.setPositiveButton(positiveText,
+        builder.setNegativeButton(positiveText,
                 new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
@@ -46,13 +49,25 @@ public class DialogUtils {
                     }
                 });
 
+        builder.setPositiveButton(R.string.invite_btn,
+                new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        IntentUtils.invite(ctx, email);
+                        AnalyticsTrackers.getInstance().get().send(new HitBuilders.EventBuilder()
+                                .setCategory("Invite")
+                                .setAction("Convidar")
+                                .build());
+                    }
+                });
 
-        builder.setOnCancelListener(new DialogInterface.OnCancelListener() {
-            @Override
-            public void onCancel(DialogInterface dialog) {
-                callback.onClick(dialog, 0);
-            }
-        });
+
+        //builder.setOnCancelListener(new DialogInterface.OnCancelListener() {
+        //    @Override
+        //    public void onCancel(DialogInterface dialog) {
+
+       //     }
+       // });
 
 
         AlertDialog dialog = builder.create();

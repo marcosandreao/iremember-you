@@ -194,7 +194,7 @@ public class UserFavoriteFragment extends Fragment implements UserFavoriteAdapte
                 case STATE_START:
                     return;
                 case STATE_DONE_NEED_INVITE:
-                    DialogUtils.showLocationDialogNeedInvite(this.getActivity(), mItem.getName(), new DialogInterface.OnClickListener() {
+                    DialogUtils.showLocationDialogNeedInvite(this.getActivity(), mItem.getName(), mItem.getEmail(), new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
                         }
