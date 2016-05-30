@@ -759,7 +759,7 @@ public class ContactDetailFragment extends Fragment implements
                 case SendRemember.STATE_DONE_ERROR:
                     sendProgress.setVisibility(View.INVISIBLE);
                     postFabSend();
-                    Toast.makeText(ContactDetailFragment.this.getActivity(), R.string.toast_send_error, Toast.LENGTH_LONG).show();
+                    Toast.makeText(ContactDetailFragment.this.getActivity(), context.getString(R.string.toast_send_error, contactName), Toast.LENGTH_LONG).show();
 
                     fabsend.setColorFilter(Color.RED);
                     fabsend.setImageResource(R.drawable.ic_cloud_off_white_24dp);
@@ -774,8 +774,7 @@ public class ContactDetailFragment extends Fragment implements
                     break;
                 case SendRemember.STATE_DONE_NEED_INVITE:
 
-                    Toast.makeText(ContactDetailFragment.this.getActivity(),
-                            contactName + context.getString(R.string.toast_send_not_found_user), Toast.LENGTH_LONG).show();
+                    Toast.makeText(ContactDetailFragment.this.getActivity(), context.getString(R.string.toast_send_not_found_user, contactName), Toast.LENGTH_LONG).show();
 
                     sendProgress.setVisibility(View.INVISIBLE);
                     postFabSend();

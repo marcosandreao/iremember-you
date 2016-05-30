@@ -25,9 +25,10 @@ public class DialogUtils {
             return;
         }
 
+        final String appname = ctx.getString(R.string.app_name);
         final AlertDialog.Builder builder = new AlertDialog.Builder(ctx);
-        builder.setTitle(ctx.getString(R.string.dialog_title_user_notfound) + ctx.getString(R.string.app_name));
-        builder.setMessage(ctx.getString(R.string.dialog_messe_need_invite) + name + ctx.getString(R.string.dialog_messe_need_invite_text_end));
+        builder.setTitle(ctx.getString(R.string.dialog_title_user_notfound, appname));
+        builder.setMessage(ctx.getString(R.string.dialog_messe_need_invite, name));
 
 
         String negativeText = ctx.getString(R.string.hot_show_again_msg_feedback);
@@ -85,7 +86,7 @@ public class DialogUtils {
         }
 
         final AlertDialog.Builder builder = new AlertDialog.Builder(ctx);
-        builder.setTitle(ctx.getString(R.string.dialog_error_title) + name);
+        builder.setTitle(ctx.getString(R.string.dialog_error_title, name));
         builder.setMessage(ctx.getString(R.string.dialog_error_msg));
 
 

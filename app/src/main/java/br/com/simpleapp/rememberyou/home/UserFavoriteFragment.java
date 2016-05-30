@@ -78,7 +78,7 @@ public class UserFavoriteFragment extends Fragment implements UserFavoriteAdapte
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        this.getActivity().setTitle(this.getActivity().getString(R.string.app_name));
+        this.getActivity().setTitle(this.getActivity().getString(R.string.screem_list_favorites_title));
     }
 
     @Override
@@ -275,7 +275,7 @@ public class UserFavoriteFragment extends Fragment implements UserFavoriteAdapte
 
         switch (state){
             case SendRemember.STATE_DONE_ERROR:
-                Toast.makeText(UserFavoriteFragment.this.getActivity(), R.string.toast_send_error, Toast.LENGTH_LONG).show();
+                Toast.makeText(UserFavoriteFragment.this.getActivity(), getString(R.string.toast_send_error, email), Toast.LENGTH_LONG).show();
                 this.states.put(email, SendState.STATE_DONE_ERROR);
                 this.postDelay(email);
                 break;
@@ -285,7 +285,7 @@ public class UserFavoriteFragment extends Fragment implements UserFavoriteAdapte
                 break;
             case SendRemember.STATE_DONE_NEED_INVITE:
                 Toast.makeText(UserFavoriteFragment.this.getActivity(),
-                        email + getString(R.string.toast_send_not_found_user), Toast.LENGTH_LONG).show();
+                        getString(R.string.toast_send_not_found_user, email), Toast.LENGTH_LONG).show();
 
                 this.states.put(email, SendState.STATE_DONE_NEED_INVITE);
                 this.postDelay(email);
