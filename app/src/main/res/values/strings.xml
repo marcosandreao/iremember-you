@@ -95,7 +95,7 @@
     <string name="request_permission">"The app uses email as a way to identify users, just to avoid doing unnecessary entries will use the contacts previously registered for you. \nIremos list your contacts to choose who you want to remember"</string>
     <string name="request_permission_cacell">"Cancel"</string>
     <string name="request_permission_ok">"OK! here we go!"</string>
-    <string name="invite_msg_text">"I want to remind you, but I can not: (.. \n Install https://play.google.com/store/apps/details?id=br.com.simpleapp.rememberyou app so I can show how much remember you ;)"</string>
+    <string name="invite_msg_text">"I want to remind you, but I can not :(.. \n Install https://play.google.com/store/apps/details?id=br.com.simpleapp.rememberyou app so I can show how much remember you ;)"</string>
     <string name="invite_msg_chooser">"Invite from:"</string>
     <string name="invite_btn">"Invite"</string>
 </resources>
