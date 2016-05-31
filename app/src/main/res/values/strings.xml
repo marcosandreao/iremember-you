@@ -1,104 +1,101 @@
 <resources>
 
-    <string name="banner_ad_unit_id">ca-app-pub-1307163239881833/9759369913</string>
+    <string name="banner_ad_unit_id">"ca-app-pub-1307163239881833/9759369913"</string>
 
-    <string name="app_name">Lembrei de você</string>
-    <string name="screem_list_favorites_title">Meus favoritos</string>
-    <string name="action_settings">Settings</string>
-    <!--string name="gcm_defaultSenderId">DEFAULT_GCM_SENDER_ID</string-->
+    <string name="app_name">"Remember you"</string>
+    <string name="screem_list_favorites_title">"My Favorites"</string>
+    <string name="action_settings">"Settings"</string>
 
+    <string name="activity_contacts_list">"Contacts List"</string>
+    <string name="activity_contact_detail">"Contact Detail"</string>
+    <string name="contacts_list_search_results_title">"Contacts List Search for \" %s \""</string>
+    <string name="app_description">"This is a sample app, Demonstrating use of the Android system Contacts Provider."</string>
+    <string name="imageview_description">"Contact Thumbnail"</string>
+    <string name="address_button_description">"View Address"</string>
+    <string name="menu_search">"Procurar"</string>
+    <string name="menu_add_contact">"Add Contact"</string>
+    <string name="menu_edit_contact">"Edit Contact"</string>
+    <string name="no_contacts">"No contact found"</string>
+    <string name="no_contact_selected">"No Contact Selected"</string>
+    <string name="search_hint">"Find contacts"</string>
 
-    <string name="activity_contacts_list">Contacts List</string>
-    <string name="activity_contact_detail">Contact Detail</string>
-    <string name="contacts_list_search_results_title">Contacts List Search for \"%s\"</string>
-    <string name="app_description">This is a sample app, demonstrating use of the Android system Contacts Provider.</string>
-    <string name="imageview_description">Contact Thumbnail</string>
-    <string name="address_button_description">View Address</string>
-    <string name="menu_search">Search</string>
-    <string name="menu_add_contact">Adicionar Contato</string>
-    <string name="menu_edit_contact">Edit Contact</string>
-    <string name="no_contacts">Nenhum contato encontrado</string>
-    <string name="no_contact_selected">No Contact Selected</string>
-    <string name="search_hint">Find contacts</string>
+    <string name="alphabet">"ABCDEFGHIJKLMNOPQRSTUVWXYZ"</string>
 
-    <string name="alphabet">ABCDEFGHIJKLMNOPQRSTUVWXYZ</string>
+    <string name="search_match_other">"Matches Other Field"</string>
 
-    <string name="search_match_other">Matches Other Field</string>
-
-    <string name="no_address">No addresses found</string>
-    <string name="no_intent_found">No application found to handle this action</string>
+    <string name="no_address">"No addresses found"</string>
+    <string name="no_intent_found">"No the application found to handle this action"</string>
 
     <!-- Button labels -->
-    <string name="wait_registered_device">Aguarde, registrando dispositivo...</string>
-    <string name="wizard_try_again">Tentar novamente.</string>
-    <string name="register_success">Seu registro foi efetuado com sucesso! Agora você já pode lembrar e ser lembrado.</string>
-    <string name="register_error">Problema durante o registro, você precisa estar conectado com a internet.</string>
-    <string name="start_app">Toque aqui para iniciar App</string>
-    <string name="name_required">Nome é muito importante a partir dele que seus lembrados te reconheceram.</string>
-    <string name="loading_contacts">Aguarde, carregando dados do contato.</string>
-    <string name="txt_notification">Lembrou de você</string>
-    <string name="string_key_message">Lembrou de você</string>
-    <string name="send_from_notification">Enviar</string>
-    <string name="notification_send_remember_of">Lembrar de:</string>
-    <string name="fixar_como_notifica_o">Fixar como notificação</string>
-    <string name="remove_from_notification">Remover da notificação</string>
-    <string name="title_activity_home">HomeActivity</string>
+    <string name="wait_registered_device">"Wait, registering device ..."</string>
+    <string name="wizard_try_again">"Try again."</string>
+    <string name="register_success">"You were registered successfully! Now you can remember and be remembered."</string>
+    <string name="register_error">"Problems during registration, you must be connected to the internet."</string>
+    <string name="start_app">"Tap here to start App"</string>
+    <string name="name_required">"Name is very important, as it will recognize you."</string>
+    <string name="loading_contacts">"Please wait, loading contact data."</string>
+    <string name="txt_notification">"Remembered you"</string>
+    <string name="string_key_message">"Remembered you"</string>
+    <string name="send_from_notification">"Send"</string>
+    <string name="notification_send_remember_of">"Remember:"</string>
+    <string name="fixar_como_notifica_o">"Pin as notification"</string>
+    <string name="remove_from_notification">"Remove from notification"</string>
+    <string name="title_activity_home">"HomeActivity"</string>
 
-    <string name="navigation_drawer_open">Open navigation drawer</string>
-    <string name="navigation_drawer_close">Close navigation drawer</string>
-    <string name="history_fragment_title">Lembretes recebidos</string>
-    <string name="filter">Filtro</string>
-    <string name="favorite">Favoritos</string>
-    <string name="history">Histórico</string>
-    <string name="settings">Configuração</string>
+    <string name="navigation_drawer_open">"Open navigation drawer"</string>
+    <string name="navigation_drawer_close">"Close navigation drawer"</string>
+    <string name="history_fragment_title">"reminders received"</string>
+    <string name="filter">"Filter"</string>
+    <string name="favorite">"Favorites"</string>
+    <string name="history">"History"</string>
+    <string name="settings">"Settings"</string>
 
     <string-array name="history_filter_options">
-        <item>Todos</item>
-        <item>Agrupado</item>
+        <item>"All"</item>
+        <item>"Grouped"</item>
     </string-array>
-    <string name="title_activity_settings">Configurações</string>
+    <string name="title_activity_settings">"Settings "</string>
 
-    <string name="pref_title_display_name">Nome ou nickname</string>
-    <string name="pref_default_display_name"></string>
+    <string name="pref_title_display_name">"Name or nickname"</string>
+    <string name="pref_default_display_name">""</string>
 
 
-    <!-- Example settings for Notifications -->
-    <string name="pref_header_notifications">Notifications</string>
+    <string name="pref_header_notifications">"Notifications"</string>
 
-    <string name="pref_title_new_message_notifications">New message notifications</string>
+    <string name="pref_title_new_message_notifications">"New message notifications"</string>
 
-    <string name="pref_title_ringtone">Notificação toque</string>
-    <string name="pref_ringtone_silent">Silent</string>
+    <string name="pref_title_ringtone">"touch notification"</string>
+    <string name="pref_ringtone_silent">"Silent"</string>
 
-    <string name="pref_title_vibrate">Vibrar</string>
-    <string name="empty_favorite">Você ainda não possui nenhum contato como favorito utilize o botão flutuante para adicionar.</string>
-    <string name="empty_history">Você ainda não foi lembrado, tente lembrar de alguém quem sabe você não tera essa lista cheia da proxima vez.</string>
-    <string name="favorite_button_suggestion"><![CDATA[Botão flutuante >>>>]]></string>
-    <string name="welcome_title">Bem vindo</string>
-    <string name="toast_send_start">Lembrando, aguarde...</string>
-    <string name="toast_send_not_found_user">%s não utiliza a app :(</string>
-    <string name="toast_send_success">"Lembrete enviado para: "</string>
-    <string name="toast_send_error">%s não pode ser lembrado, certifique-se que esteja conectado a internet.</string>
-    <string name="hot_show_again_msg_feedback">Não mostrar novamente</string>
-    <string name="popup_close_and_exit">Fechar</string>
-    <string name="dialog_messe_need_invite">"Convide %s para ser lembrado também."</string>
-    <string name="dialog_title_user_notfound">Usuário não utiliza o %s</string>
-    <string name="dialog_error_title">Erro ao lembrar de %s</string>
-    <string name="dialog_error_msg">Certifique-se que esteja em uma conexão de internet ativa.</string>
-    <string name="dialog_error_tryagain">Tentar novamente?</string>
-    <string name="preference_confirm_invite_dialog">Mensagem de usuário não utilizar a app?</string>
-    <string name="preference_confirm_error_dialog">Mensagem de erro durante o envio?</string>
-    <string name="preference_confirm_error_dialog_sumary">Exibir ou não mensagem de erro que possa acontecer ao lembrar alguém.</string>
-    <string name="preference_confirm_invite_dialog_summary">Exibir ou não mensagem de usuário não registrado ao lembrar alguém.</string>
-    <string name="wizard_email_required">Precisamos de um email para identificar você.</string>
-    <string name="wizard_select_account">Selecione uma conta para entrar na app.</string>
-    <string name="input_nickname_or_name">Nickname ou nome</string>
-    <string name="add_with_favorite">Favorito</string>
-    <string name="hirstory_item_click_usernotfound">Você nunca lembrou de %s :(</string>
-    <string name="request_permission">A app utiliza o email como forma de identificar os usuários, logo para evitar fazermos cadastros desnecessários utilizaremos os contatos já previamente cadastrado por você.\nIremos listar seus contatos para você escolher de quem deseja lembrar</string>
-    <string name="request_permission_cacell">Cancelar</string>
-    <string name="request_permission_ok">OK! vamos nessa!</string>
-    <string name="invite_msg_text">Quero lembrar de você, mas não consigo :(..\n Instale a app https://play.google.com/store/apps/details?id=br.com.simpleapp.rememberyou para eu poder mostrar o quanto lembro do você ;)</string>
-    <string name="invite_msg_chooser">Convidar via:</string>
-    <string name="invite_btn">Convidar</string>
+    <string name="pref_title_vibrate">"Vibrate"</string>
+    <string name="empty_favorite">"You still do not have any contact as a favorite, use the floating button to add."</string>
+    <string name="empty_history">"You have not been remembered, try to remember someone who knows you not will have this full list next time."</string>
+    <string name="favorite_button_suggestion">"&lt;! [CDATA [Floating Button &gt;&gt;&gt;&gt;"</string>
+    <string name="welcome_title">"Welcome!"</string>
+    <string name="toast_send_start">"Remembering wait ..."</string>
+    <string name="toast_send_not_found_user">"%s does not use the app :("</string>
+    <string name="toast_send_success">"Reminder sent to: "</string>
+    <string name="toast_send_error">"%s can not be remembered, make sure you are connected to the Internet."</string>
+    <string name="hot_show_again_msg_feedback">"Don't show again."</string>
+    <string name="popup_close_and_exit">"Close"</string>
+    <string name="dialog_messe_need_invite">"Invite %s to be remembered too."</string>
+    <string name="dialog_title_user_notfound">"User does not use the %s"</string>
+    <string name="dialog_error_title">"Error remember %s"</string>
+    <string name="dialog_error_msg">"Make sure you are in an active internet connection."</string>
+    <string name="dialog_error_tryagain">"Try again?"</string>
+    <string name="preference_confirm_invite_dialog">"User message not use the app?"</string>
+    <string name="preference_confirm_error_dialog">"Error message when sending?"</string>
+    <string name="preference_confirm_error_dialog_sumary">"View or no error message that can happen to remember someone."</string>
+    <string name="preference_confirm_invite_dialog_summary">"View user or not message not registered to remember someone."</string>
+    <string name="wizard_email_required">"We need an email to identify you."</string>
+    <string name="wizard_select_account">"Select an account to enter the app."</string>
+    <string name="input_nickname_or_name">"Nickname or name"</string>
+    <string name="add_with_favorite">"{0}favorite{/0}"</string>
+    <string name="hirstory_item_click_usernotfound">"You never thought of %s :("</string>
+    <string name="request_permission">"The app uses email as a way to identify users, just to avoid doing unnecessary entries will use the contacts previously registered for you. \nIremos list your contacts to choose who you want to remember"</string>
+    <string name="request_permission_cacell">"Cancel"</string>
+    <string name="request_permission_ok">"OK! here we go!"</string>
+    <string name="invite_msg_text">"I want to remind you, but I can not: (.. \n Install https://play.google.com/store/apps/details?id=br.com.simpleapp.rememberyou app so I can show how much remember you ;)"</string>
+    <string name="invite_msg_chooser">"Invite from:"</string>
+    <string name="invite_btn">"Invite"</string>
 </resources>
