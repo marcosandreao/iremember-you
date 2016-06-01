@@ -1,17 +1,82 @@
-# Add project specific ProGuard rules here.
-# By default, the flags in this file are appended to flags specified
-# in /home/socram/Documentos/development/tools/android-java/sdk/tools/proguard/proguard-android.txt
-# You can edit the include path and order by changing the proguardFiles
-# directive in build.gradle.
+# Obfuscation parameters:
+#-dontobfuscate
+-useuniqueclassmembernames
+-keepattributes SourceFile,LineNumberTable
+-allowaccessmodification
+
+# Ignore warnings:
+#-dontwarn org.mockito.**
+#-dontwarn org.junit.**
+#-dontwarn com.robotium.**
+#-dontwarn org.joda.convert.**
+
+# Ignore warnings: We are not using DOM model
+-dontwarn com.fasterxml.jackson.databind.ext.DOMSerializer
+# Ignore warnings: https://github.com/square/okhttp/wiki/FAQs
+-dontwarn com.squareup.okhttp.internal.huc.**
+# Ignore warnings: https://github.com/square/okio/issues/60
+-dontwarn okio.**
+# Ignore warnings: https://github.com/square/retrofit/issues/435
+-dontwarn com.google.appengine.api.urlfetch.**
+
+# Keep the pojos used by GSON or Jackson
+-keep class com.futurice.project.models.pojo.** { *; }
+
+# Keep GSON stuff
+-keep class sun.misc.Unsafe { *; }
+-keep class com.google.gson.** { *; }
+
+# Keep Jackson stuff
+-keep class org.codehaus.** { *; }
+-keep class com.fasterxml.jackson.annotation.** { *; }
+
+# Keep these for GSON and Jackson
+-keepattributes Signature
+-keepattributes *Annotation*
+-keepattributes EnclosingMethod
+
+# Keep Retrofit
+-keep class retrofit.** { *; }
+-keepclasseswithmembers class * {
+    @retrofit.** *;
+}
+-keepclassmembers class * {
+    @retrofit.** *;
+}
+-dontwarn retrofit.**
+#-keep class retrofit2.** { *; }
+-keepattributes Exceptions
+
+
+# Keep Picasso
+-keep class com.squareup.picasso.** { *; }
+-keepclasseswithmembers class * {
+    @com.squareup.picasso.** *;
+}
+-keepclassmembers class * {
+    @com.squareup.picasso.** *;
+}
+
+# GreenDao rules
+# Source: http://greendao-orm.com/documentation/technical-faq
 #
-# For more details, see
-#   http://developer.android.com/guide/developing/tools/proguard.html
+-keepclassmembers class * extends de.greenrobot.dao.AbstractDao {
+    public static java.lang.String TABLENAME;
+}
+-keep class **$Properties
 
-# Add any project specific keep options here:
+-keepclassmembers class com.dmitrymalkovich.android.** { *; }
 
-# If your project uses WebView with JS, uncomment the following
-# and specify the fully qualified class name to the JavaScript interface
-# class:
-#-keepclassmembers class fqcn.of.javascript.interface.for.webview {
-#   public *;
-#}
+# Preserve all fundamental application classes.
+-keep public class * extends android.app.Activity
+-keep public class * extends android.app.Application
+-keep public class * extends android.app.Service
+-keep public class * extends android.view.View
+-keep public class * extends android.preference.Preference
+-keep public class * extends android.content.BroadcastReceiver
+-keep public class * extends android.content.ContentProvider
+
+# Preserve Android support libraries` classes and interfaces
+-keep class android.support.** { *; }
+-keep interface android.support.** { *; }
+

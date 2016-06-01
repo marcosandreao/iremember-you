@@ -9,7 +9,6 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.Nullable;
-import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.widget.GridLayoutManager;
@@ -26,15 +25,12 @@ import com.google.android.gms.ads.AdView;
 import com.google.android.gms.analytics.HitBuilders;
 
 import java.util.HashMap;
-import java.util.Map;
 
 import br.com.simpleapp.rememberyou.AnalyticsTrackers;
 import br.com.simpleapp.rememberyou.IConstatns;
 import br.com.simpleapp.rememberyou.R;
 import br.com.simpleapp.rememberyou.contacts.ui.ContactDetailActivity;
-import br.com.simpleapp.rememberyou.contacts.ui.ContactsListActivity;
 import br.com.simpleapp.rememberyou.custom.SampleScrollListener;
-import br.com.simpleapp.rememberyou.entity.StatusSend;
 import br.com.simpleapp.rememberyou.entity.User;
 import br.com.simpleapp.rememberyou.service.SendRemember;
 import br.com.simpleapp.rememberyou.service.UserService;
@@ -82,7 +78,7 @@ public class UserFavoriteFragment extends Fragment implements UserFavoriteAdapte
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        this.getActivity().setTitle(this.getActivity().getString(R.string.app_name));
+        this.getActivity().setTitle(this.getActivity().getString(R.string.screem_list_favorites_title));
     }
 
     @Override
@@ -142,7 +138,7 @@ public class UserFavoriteFragment extends Fragment implements UserFavoriteAdapte
 
         AnalyticsTrackers.getInstance().get().send(new HitBuilders.EventBuilder()
                 .setCategory("Action")
-                .setAction("Select User")
+                .setAction("Selected User From Favorite")
                 .build());
     }
 
@@ -198,7 +194,7 @@ public class UserFavoriteFragment extends Fragment implements UserFavoriteAdapte
                 case STATE_START:
                     return;
                 case STATE_DONE_NEED_INVITE:
-                    DialogUtils.showLocationDialogNeedInvite(this.getActivity(), mItem.getName(), new DialogInterface.OnClickListener() {
+                    DialogUtils.showLocationDialogNeedInvite(this.getActivity(), mItem.getName(), mItem.getEmail(), new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
                         }
@@ -279,19 +275,20 @@ public class UserFavoriteFragment extends Fragment implements UserFavoriteAdapte
 
         switch (state){
             case SendRemember.STATE_DONE_ERROR:
-                Toast.makeText(UserFavoriteFragment.this.getActivity(), R.string.toast_send_error, Toast.LENGTH_LONG).show();
+                Toast.makeText(UserFavoriteFragment.this.getActivity(), getString(R.string.toast_send_error, email), Toast.LENGTH_LONG).show();
                 this.states.put(email, SendState.STATE_DONE_ERROR);
-                postDelay(email);
+                this.postDelay(email);
                 break;
             case SendRemember.STATE_DONE_SUCCESS:
                 this.states.put(email, SendState.STATE_DONE_SUCCESS);
+                this.postDelay(email);
                 break;
             case SendRemember.STATE_DONE_NEED_INVITE:
                 Toast.makeText(UserFavoriteFragment.this.getActivity(),
-                        email + getString(R.string.toast_send_not_found_user), Toast.LENGTH_LONG).show();
+                        getString(R.string.toast_send_not_found_user, email), Toast.LENGTH_LONG).show();
 
                 this.states.put(email, SendState.STATE_DONE_NEED_INVITE);
-                postDelay(email);
+                this.postDelay(email);
                 break;
             case SendRemember.STATE_START:
                 this.states.put(email, SendState.STATE_START);

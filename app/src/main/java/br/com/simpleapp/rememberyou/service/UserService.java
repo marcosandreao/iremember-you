@@ -25,7 +25,7 @@ public class UserService {
         return !users.isEmpty();
     }
 
-    public void setWithFavorie(String contactId, String contactName, String emailAddress) {
+    public void setWithFavorie(String contactId, String contactName, String emailAddress, String emotion) {
         User user = this.findByEmail(emailAddress);
         if ( user == null ) {
             user = new User();
@@ -33,10 +33,12 @@ public class UserService {
             user.setName(contactName);
             user.setFavorite(true);
             user.setContactId(contactId);
+            user.setLastEmotion(emotion);
             session.getUserDao().insert(user);
         } else {
             user.setContactId(contactId);
             user.setFavorite( user.getFavorite() == null? true : !user.getFavorite() );
+            user.setLastEmotion(emotion);
             session.getUserDao().update(user);
         }
     }

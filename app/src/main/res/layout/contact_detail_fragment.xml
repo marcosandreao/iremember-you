@@ -1,23 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!--
-  Copyright (C) 2013 The Android Open Source Project
-
-  Licensed under the Apache License, Version 2.0 (the "License");
-  you may not use this file except in compliance with the License.
-  You may obtain a copy of the License at
-
-       http://www.apache.org/licenses/LICENSE-2.0
-
-  Unless required by applicable law or agreed to in writing, software
-  distributed under the License is distributed on an "AS IS" BASIS,
-  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-  See the License for the specific language governing permissions and
-  limitations under the License.
--->
-
-<!-- This layout is used by ContactDetailFragment to show contact details: contact photo, contact
-     display name and a dynamic number of addresses (if the contact has any) inside a ScrollView.
--->
 <android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:card_view="http://schemas.android.com/apk/res-auto"
@@ -123,7 +104,7 @@
             </android.support.v7.widget.CardView>
 
             <android.support.v7.widget.CardView
-
+                android:id="@+id/card_view_emotion"
                 android:layout_width="match_parent"
                 android:layout_height="160dp"
                 card_view:cardCornerRadius="4dp"
@@ -145,32 +126,28 @@
                             android:layout_weight="2"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:tag="emotion_1f44d"
-                            android:src="@drawable/emotion_1f44d"/>
+                            />
 
                         <ImageView
                             android:layout_weight="2"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:alpha="0.5"
-                            android:tag="emotion_1f60d"
-                            android:src="@drawable/emotion_1f60d"/>
+                            />
 
                         <ImageView
                             android:layout_weight="2"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:alpha="0.5"
-                            android:tag="emotion_1f494"
-                            android:src="@drawable/emotion_1f494"/>
+                           />
 
                         <ImageView
                             android:layout_weight="2"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:alpha="0.5"
-                            android:tag="emotion_1f600"
-                            android:src="@drawable/emotion_1f600"/>
+                            />
 
                     </LinearLayout>
 
@@ -185,32 +162,28 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:alpha="0.5"
-                            android:tag="emotion_2764"
-                            android:src="@drawable/emotion_2764"/>
+                           />
 
                         <ImageView
                             android:layout_weight="1"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:alpha="0.5"
-                            android:tag="emotion_1f609"
-                            android:src="@drawable/emotion_1f609"/>
+                            />
 
                         <ImageView
                             android:layout_weight="1"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:alpha="0.5"
-                            android:tag="emotion_1f614"
-                            android:src="@drawable/emotion_1f614"/>
+                            />
 
                         <ImageView
                             android:layout_weight="1"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:alpha="0.5"
-                            android:tag="emotion_1f621"
-                            android:src="@drawable/emotion_1f621"/>
+                            />
 
                     </LinearLayout>
                 </LinearLayout>
@@ -234,6 +207,7 @@
                             android:id="@+id/ivEmotionTarget"
                             android:layout_width="50dp"
                             android:tag="emotion_1f44d"
+                            android:layout_gravity="center_vertical"
                             android:src="@drawable/emotion_1f44d"
                             android:layout_height="wrap_content"/>
                         <LinearLayout
@@ -278,13 +252,13 @@
     </android.support.v4.widget.NestedScrollView>
 
     <android.support.design.widget.FloatingActionButton
-        android:id="@+id/fab"
+        android:id="@+id/fab_more_emotion"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_margin="@dimen/fab_margin"
-        android:src="@drawable/ic_star_white_18dp"
-        app:layout_anchor="@id/appbar"
-        app:layout_anchorGravity="bottom|end" />
+        android:src="@drawable/ic_insert_emoticon_white_24dp"
+        app:layout_anchor="@id/card_view_emotion"
+        app:layout_anchorGravity="top|end"
+        />
 
     <com.dmitrymalkovich.android.ProgressFloatingActionButton
         android:layout_width="wrap_content"
@@ -308,8 +282,5 @@
             android:layout_height="wrap_content" />
 
     </com.dmitrymalkovich.android.ProgressFloatingActionButton>
-
-
-
 
 </android.support.design.widget.CoordinatorLayout>

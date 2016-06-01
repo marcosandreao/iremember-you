@@ -11,8 +11,11 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.support.v4.app.NotificationCompat;
 
+import java.io.IOException;
+
 import br.com.simpleapp.rememberyou.R;
 import br.com.simpleapp.rememberyou.contacts.ui.ContactDetailActivity;
+import br.com.simpleapp.rememberyou.emotions.EmotionManager;
 import br.com.simpleapp.rememberyou.service.SendMessageReceiver;
 
 /**
@@ -44,8 +47,8 @@ public class NotificationUtil {
 
                 final Uri defaultSoundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
                 final NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(ctx)
-                        .setSmallIcon(R.drawable.ic_emotion_1f44d)
-                        .setLargeIcon(BitmapFactory.decodeResource(ctx.getResources(), Emotions.getByKey(emotion)))
+                        .setSmallIcon(R.drawable.ic_insert_emoticon_white_24dp)
+                        .setLargeIcon(mBitmap)
                         .setContentTitle(ctx.getString(R.string.notification_send_remember_of))
                         .setOngoing(true)
                         .setContentText(name)
@@ -95,7 +98,11 @@ public class NotificationUtil {
 
         @Override
         protected Bitmap doInBackground(String... params) {
-            return BitmapFactory.decodeResource(this.mContext.getResources(), Emotions.getByKey(params[0]));
+            try {
+                return BitmapFactory.decodeStream(mContext.getAssets().open(EmotionManager.getInstance().buildFile(params[0])));
+            } catch (IOException e) {
+                return null;
+            }
         }
 
         @Override

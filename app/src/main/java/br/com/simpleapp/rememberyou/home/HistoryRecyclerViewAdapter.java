@@ -15,9 +15,9 @@ import java.util.List;
 import java.util.Map;
 
 import br.com.simpleapp.rememberyou.R;
+import br.com.simpleapp.rememberyou.emotions.EmotionManager;
 import br.com.simpleapp.rememberyou.entity.History;
 import br.com.simpleapp.rememberyou.home.dto.HistoryDTO;
-import br.com.simpleapp.rememberyou.utils.Emotions;
 
 public class HistoryRecyclerViewAdapter extends RecyclerView.Adapter<HistoryRecyclerViewAdapter.ViewHolder> {
 
@@ -49,14 +49,14 @@ public class HistoryRecyclerViewAdapter extends RecyclerView.Adapter<HistoryRecy
             Object[] keys = emotions.keySet().toArray();
             ImageView iv = null;
             TextView tv = null;
-            for ( int i = 0; i < keys.length; i++){
+            for ( int i = 0; i < keys.length && i < 8; i++){
                 String key = keys[i].toString();
                 int count = emotions.get(key);
                 ViewGroup target = (ViewGroup) holder.vGroupEmotions.getChildAt(i);
                 iv = (ImageView) target.getChildAt(0);
                 tv = (TextView) target.getChildAt(1);
                 tv.setText(String.valueOf(count));
-                Picasso.with(iv.getContext()).load(Emotions.getByKey(key))
+                Picasso.with(iv.getContext()).load(EmotionManager.getInstance().buildUri(key))
                         .tag(iv.getContext()).into(iv);
             }
         } else {
@@ -69,7 +69,7 @@ public class HistoryRecyclerViewAdapter extends RecyclerView.Adapter<HistoryRecy
             holder.mDatetimeView.setText(dt);
 
 
-            Picasso.with(holder.mEmotionView.getContext()).load(Emotions.getByKey(holder.mItem.getEmotion()))
+            Picasso.with(holder.mEmotionView.getContext()).load(EmotionManager.getInstance().buildUri(holder.mItem.getEmotion()))
                     .tag(holder.mEmotionView.getContext()).into(holder.mEmotionView);
         }
 

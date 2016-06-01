@@ -25,13 +25,13 @@ public class NotificationMessageReceiver extends BroadcastReceiver {
             String text ="";
             switch (state){
                 case SendRemember.STATE_DONE_ERROR:
-                    text = user.getName() + context.getString(R.string.toast_send_error);
+                    text = context.getString(R.string.toast_send_error, user.getName());
                     break;
                 case SendRemember.STATE_DONE_SUCCESS:
                     text = context.getString(R.string.toast_send_success) + user.getName();
                     break;
                 case SendRemember.STATE_DONE_NEED_INVITE:
-                    text = user.getName() + context.getString(R.string.toast_send_not_found_user);
+                    text = context.getString(R.string.toast_send_not_found_user, user.getName());
                     break;
                 case SendRemember.STATE_START:
                     text = context.getString(R.string.toast_send_start);

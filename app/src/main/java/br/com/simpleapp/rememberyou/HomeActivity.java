@@ -1,11 +1,16 @@
 package br.com.simpleapp.rememberyou;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -14,14 +19,15 @@ import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
 
-import com.google.android.gms.analytics.HitBuilders;
-
 import br.com.simpleapp.rememberyou.contacts.ui.ContactsListActivity;
 import br.com.simpleapp.rememberyou.gcm.QuickstartPreferences;
 import br.com.simpleapp.rememberyou.home.HistoryFragment;
 import br.com.simpleapp.rememberyou.home.UserFavoriteFragment;
+import br.com.simpleapp.rememberyou.utils.DialogUtils;
 
 public class HomeActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
+
+    private static final int MY_PERMISSIONS_REQUEST_READ_CONTACTS = 5;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,11 +55,56 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                startActivityForResult(new Intent(HomeActivity.this, ContactsListActivity.class), 1);
+                tryOpenList();
             }
         });
     }
 
+    private void tryOpenList(){
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
+            this.openListActivity();
+            return;
+        }
+        final String permission = "android.permission.READ_CONTACTS";
+
+        if (ContextCompat.checkSelfPermission(this, permission)
+                != PackageManager.PERMISSION_GRANTED) {
+            if (ActivityCompat.shouldShowRequestPermissionRationale(this, permission)) {
+                DialogUtils.showRequestPermission(this, new DialogInterface.OnClickListener(){
+
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        ActivityCompat.requestPermissions(HomeActivity.this, new String[]{permission}, MY_PERMISSIONS_REQUEST_READ_CONTACTS);
+                    }
+                });
+            } else {
+                ActivityCompat.requestPermissions(this, new String[]{permission}, MY_PERMISSIONS_REQUEST_READ_CONTACTS);
+            }
+        } else {
+            this.openListActivity();
+        }
+    }
+
+    private void openListActivity(){
+        this.startActivityForResult(new Intent(HomeActivity.this, ContactsListActivity.class), 1);
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode,
+                                           String permissions[], int[] grantResults) {
+        switch (requestCode) {
+            case MY_PERMISSIONS_REQUEST_READ_CONTACTS: {
+                // If request is cancelled, the result arrays are empty.
+                if (grantResults.length > 0
+                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    this.openListActivity();
+                } else {
+
+                }
+                return;
+            }
+        }
+    }
 
     private void registerGCMIfNeed(){
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);

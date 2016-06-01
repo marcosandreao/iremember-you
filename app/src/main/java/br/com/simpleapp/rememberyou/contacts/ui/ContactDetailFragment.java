@@ -42,11 +42,11 @@ import android.support.annotation.Nullable;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 import android.support.v4.content.LocalBroadcastManager;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.Toolbar;
 import android.util.DisplayMetrics;
 import android.util.Log;
@@ -64,6 +64,7 @@ import android.widget.Toast;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
 import com.google.android.gms.analytics.HitBuilders;
+import com.squareup.picasso.Picasso;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -72,26 +73,29 @@ import br.com.simpleapp.rememberyou.AnalyticsTrackers;
 import br.com.simpleapp.rememberyou.BuildConfig;
 import br.com.simpleapp.rememberyou.IConstatns;
 import br.com.simpleapp.rememberyou.R;
+import br.com.simpleapp.rememberyou.contacts.dialog.EmotionsPickerDialog;
+import br.com.simpleapp.rememberyou.contacts.dialog.EmotionsRecyclerViewAdapter;
 import br.com.simpleapp.rememberyou.contacts.util.ImageLoader;
 import br.com.simpleapp.rememberyou.contacts.util.Utils;
+import br.com.simpleapp.rememberyou.emotions.EmotionManager;
 import br.com.simpleapp.rememberyou.entity.User;
 import br.com.simpleapp.rememberyou.gcm.QuickstartPreferences;
 import br.com.simpleapp.rememberyou.service.SendRemember;
 import br.com.simpleapp.rememberyou.service.UserService;
 import br.com.simpleapp.rememberyou.utils.DialogUtils;
-import br.com.simpleapp.rememberyou.utils.Emotions;
 import br.com.simpleapp.rememberyou.utils.NotificationUtil;
 import br.com.simpleapp.rememberyou.utils.SendState;
 
 
 public class ContactDetailFragment extends Fragment implements
-        LoaderManager.LoaderCallbacks<Cursor>, NotificationUtil.IPinnedNotificationListener {
+        LoaderManager.LoaderCallbacks<Cursor>, NotificationUtil.IPinnedNotificationListener, EmotionsRecyclerViewAdapter.OnListFragmentInteractionListener {
 
     public static final String EXTRA_CONTACT_URI =
             "com.example.android.contactslist.ui.EXTRA_CONTACT_URI";
 
     // Defines a tag for identifying log entries
     private static final String TAG = "ContactDetailFragment";
+    private static final String EMOTIONS_FRAGMENT_TAG = "tag_emotions";
 
 
     private Uri mContactUri; // Stores the contact Uri for this fragment instance
@@ -109,7 +113,6 @@ public class ContactDetailFragment extends Fragment implements
     private UserService favoriteService = new UserService();
     private String contactName;
 
-    private FloatingActionButton favoriteActionButton;
     private FloatingActionButton fabsend;
     private ImageView ivEmotionTarget;
     private String contactId;
@@ -209,33 +212,29 @@ public class ContactDetailFragment extends Fragment implements
         this.sendProgress = detailView.findViewById(R.id.send_loading);
         this.sendProgress.setVisibility(View.INVISIBLE);
         this.ivEmotionTarget = (ImageView) detailView.findViewById(R.id.ivEmotionTarget);
-        this.favoriteActionButton = (FloatingActionButton) detailView.findViewById(R.id.fab);
         this.fabsend = (FloatingActionButton) detailView.findViewById(R.id.fabsend);
-        this.favoriteActionButton.setOnClickListener(new OnClickListener(){
-
-            @Override
-            public void onClick(View v) {
-                if( emailAddress != null ) {
-                    favoriteService.setWithFavorie(contactId, contactName, emailAddress);
-                    setImageFavorite();
-
-                    AnalyticsTrackers.getInstance().get().send(new HitBuilders.EventBuilder()
-                            .setCategory("Action")
-                            .setAction("favorite")
-                            .build());
-
-                } else {
-                    Toast.makeText(ContactDetailFragment.this.getContext(), R.string.loading_contacts, Toast.LENGTH_SHORT).show();
-
-                    AnalyticsTrackers.getInstance().get().send(new HitBuilders.EventBuilder()
-                            .setCategory("Action")
-                            .setAction("favorite_without_email")
-                            .build());
-                }
-            }
-        });
         setClicksEmotions( (ViewGroup) detailView.findViewById(R.id.llEmotions));
         return detailView;
+    }
+
+    private void onFavoriteClick(){
+        if( emailAddress != null ) {
+            favoriteService.setWithFavorie(contactId, contactName, emailAddress, ivEmotionTarget.getTag().toString());
+            this.getActivity().invalidateOptionsMenu();
+
+            AnalyticsTrackers.getInstance().get().send(new HitBuilders.EventBuilder()
+                    .setCategory("Action")
+                    .setAction("favorite")
+                    .build());
+
+        } else {
+            Toast.makeText(ContactDetailFragment.this.getContext(), R.string.loading_contacts, Toast.LENGTH_SHORT).show();
+
+            AnalyticsTrackers.getInstance().get().send(new HitBuilders.EventBuilder()
+                    .setCategory("Action")
+                    .setAction("favorite_without_email")
+                    .build());
+        }
     }
 
     @Override
@@ -259,7 +258,17 @@ public class ContactDetailFragment extends Fragment implements
 
         LocalBroadcastManager.getInstance(this.getActivity()).registerReceiver(this.receiverSend, this.filter);
 
+        this.bindFavorites();
 
+        view.findViewById(R.id.fab_more_emotion).setOnClickListener(new View.OnClickListener(){
+
+            @Override
+            public void onClick(View v) {
+                pickerEmotions();
+            }
+        });
+
+        this.markItem();
     }
 
     @Override
@@ -278,7 +287,7 @@ public class ContactDetailFragment extends Fragment implements
             }
             this.mHandler.removeCallbacks(null);
             if ( state == SendState.STATE_DONE_NEED_INVITE ) {
-                DialogUtils.showLocationDialogNeedInvite(this.getActivity(), this.contactName, new DialogInterface.OnClickListener() {
+                DialogUtils.showLocationDialogNeedInvite(this.getActivity(), this.contactName, this.emailAddress, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         getActivity().onBackPressed();
@@ -332,7 +341,6 @@ public class ContactDetailFragment extends Fragment implements
                     public void onClick(View v) {
                         String tag = v.getTag().toString();
                         mark(tag);
-
                     }
                 });
             }
@@ -341,13 +349,14 @@ public class ContactDetailFragment extends Fragment implements
     }
 
     private void mark(String tag) {
-        ivEmotionTarget.setTag(tag);
+        this.ivEmotionTarget.setTag(tag);
         Log.d("tag", tag);
-        ivEmotionTarget.setImageResource(Emotions.getByKey(tag));
+        Picasso.with(this.getContext()).load(EmotionManager.getInstance().buildUri(tag)).into(this.ivEmotionTarget);
         markItem();
     }
 
     private void markItem(){
+        boolean marked = false;
         ViewGroup view = (ViewGroup) getView().findViewById(R.id.llEmotions);
         for ( int i = 0; i < view.getChildCount(); i++ ){
             ViewGroup group = (ViewGroup) view.getChildAt(i);
@@ -355,12 +364,38 @@ public class ContactDetailFragment extends Fragment implements
                 View viewItem = group.getChildAt(j);
                 if ( viewItem.getTag().toString().equals(ivEmotionTarget.getTag().toString()) ){
                     viewItem.setAlpha(1F);
+                    marked = true;
                 } else {
                     viewItem.setAlpha(0.5F);
                 }
             }
 
         }
+        if ( !marked ) {
+            mark(EmotionManager.getInstance().listFavorites().get(0));
+        }
+    }
+
+    private void bindFavorites(){
+        final ViewGroup view = (ViewGroup) getView().findViewById(R.id.llEmotions);
+        int count = 0;
+        final EmotionManager emotionManager = EmotionManager.getInstance();
+
+        for ( int i = 0; i < view.getChildCount(); i++ ){
+            ViewGroup group = (ViewGroup) view.getChildAt(i);
+            for ( int j = 0; j < group.getChildCount(); j++ ){
+                View viewItem = group.getChildAt(j);
+                final String emotion = emotionManager.listFavorites().get(count);
+                final String uri = emotionManager.buildUri(emotion);
+                viewItem.setTag(emotion);
+
+                Picasso.with(this.getContext()).load(uri).into((ImageView) viewItem);
+                count++;
+            }
+
+        }
+
+        this.ivEmotionTarget.setTag(emotionManager.listFavorites().get(0));
     }
 
     @Override
@@ -390,6 +425,9 @@ public class ContactDetailFragment extends Fragment implements
         switch (item.getItemId()) {
             case R.id.menu_unpin:
 
+                if ( this.emailAddress == null ){
+                    return false;
+                }
                 User user = this.favoriteService.findByEmail(this.emailAddress);
                 if (user != null ){
                     NotificationUtil.removeNotification(this.getContext(), user.getId());
@@ -401,24 +439,43 @@ public class ContactDetailFragment extends Fragment implements
                         .build());
                 return true;
             case R.id.menu_pin:
+                if ( this.emailAddress == null ){
+                    return false;
+                }
+                try {
+                    long id = this.favoriteService.prepareToSent(this.contactId, this.contactName, emailAddress, this.ivEmotionTarget.getTag().toString());
 
-                long id = this.favoriteService.prepareToSent(this.contactId, this.contactName, emailAddress, this.ivEmotionTarget.getTag().toString());
+                    NotificationUtil.pinNotification(this.getActivity(), this.contactId, (int) id, emailAddress,
+                            contactName, this.ivEmotionTarget.getTag().toString(), this);
 
-                NotificationUtil.pinNotification(this.getActivity(), this.contactId, (int) id,  emailAddress,
-                        contactName, this.ivEmotionTarget.getTag().toString(), this);
+                    AnalyticsTrackers.getInstance().get().send(new HitBuilders.EventBuilder()
+                            .setCategory("Action")
+                            .setAction("Pin")
+                            .build());
 
-                AnalyticsTrackers.getInstance().get().send(new HitBuilders.EventBuilder()
-                        .setCategory("Action")
-                        .setAction("Pin")
-                        .build());
+                    this.getActivity().invalidateOptionsMenu();
+                } catch (Exception e){
+                    AnalyticsTrackers.getInstance().get().send(new HitBuilders.EventBuilder()
+                            .setCategory("Action")
+                            .setAction("Pin error")
+                            .build());
+                }
+                return true;
 
-                this.getActivity().invalidateOptionsMenu();
+            case R.id.menu_fav:
+                this.onFavoriteClick();
                 return true;
             default:
                 this.getActivity().onBackPressed();
                 return true;
 
         }
+    }
+
+    private void pickerEmotions() {
+        FragmentTransaction ft = getChildFragmentManager().beginTransaction();
+        EmotionsPickerDialog newFragment = new EmotionsPickerDialog();
+        newFragment.show(ft, "dialog");
     }
 
     @Override
@@ -433,6 +490,7 @@ public class ContactDetailFragment extends Fragment implements
 
         MenuItem itemUnpin = menu.findItem(R.id.menu_unpin);
         MenuItem itemPin = menu.findItem(R.id.menu_pin);
+
         if ( this.emailAddress != null && !"".equals(this.emailAddress) ) {
             User user = this.favoriteService.findByEmail(this.emailAddress);
             if (user != null && NotificationUtil.hasNotificationPinned(this.getActivity(), user.getId()) ){
@@ -443,6 +501,8 @@ public class ContactDetailFragment extends Fragment implements
         } else {
             itemUnpin.setVisible(false);
         }
+
+        this.setImageFavorite(menu.findItem(R.id.menu_fav));
 
         itemPin.setVisible(!itemUnpin.isVisible());
     }
@@ -504,7 +564,6 @@ public class ContactDetailFragment extends Fragment implements
                             mark(user.getLastEmotion());
                         }
 
-                        this.setImageFavorite();
                         this.getActivity().invalidateOptionsMenu();
 
                         break;
@@ -514,12 +573,12 @@ public class ContactDetailFragment extends Fragment implements
         }
     }
 
-    private void setImageFavorite(){
+    private void setImageFavorite(MenuItem item){
 
         if( this.emailAddress != null && this.favoriteService.isFavorie(this.emailAddress) ) {
-            this.favoriteActionButton.setImageResource(R.drawable.ic_star_white_18dp);
+            item.setIcon(R.drawable.ic_favorite_white_24dp);
         } else {
-            this.favoriteActionButton.setImageResource(R.drawable.ic_star_border_white_18dp);
+            item.setIcon(R.drawable.ic_favorite_border_white_24dp);
         }
     }
 
@@ -627,7 +686,39 @@ public class ContactDetailFragment extends Fragment implements
         }, 4000);
     }
 
+    @Override
+    public void onEmotionsSelected(String category, String item) {
+        String emotion = item;
+        if ( item.endsWith(".png")) {
+            emotion = item.replaceAll(".png", "");
+        }
+        final String target = category + "_" + emotion;
 
+        final String oldValue = this.ivEmotionTarget.getTag().toString();
+
+        if ( !EmotionManager.getInstance().updateFavorites(oldValue, target) ){
+            return;
+        }
+
+        ViewGroup view = (ViewGroup) getView().findViewById(R.id.llEmotions);
+        ViewGroup group = null;
+        for ( int i = 0; i < view.getChildCount(); i++ ){
+            group = (ViewGroup) view.getChildAt(i);
+            for ( int j = 0; j < group.getChildCount(); j++ ){
+                View viewItem = group.getChildAt(j);
+                if ( viewItem.getTag().toString().equals(oldValue) ){
+                    viewItem.setTag(target);
+                    Picasso.with(this.getContext()).load(EmotionManager.getInstance().buildUri(target)).into((ImageView) viewItem);
+                    break;
+                }
+            }
+
+        }
+        this.ivEmotionTarget.setTag(target);
+        Picasso.with(this.getContext()).load(EmotionManager.getInstance().buildUri(target)).into(this.ivEmotionTarget);
+
+
+    }
 
     public interface ContactDetailQuery {
         int QUERY_ID = 1;
@@ -668,7 +759,7 @@ public class ContactDetailFragment extends Fragment implements
                 case SendRemember.STATE_DONE_ERROR:
                     sendProgress.setVisibility(View.INVISIBLE);
                     postFabSend();
-                    Toast.makeText(ContactDetailFragment.this.getActivity(), R.string.toast_send_error, Toast.LENGTH_LONG).show();
+                    Toast.makeText(ContactDetailFragment.this.getActivity(), context.getString(R.string.toast_send_error, contactName), Toast.LENGTH_LONG).show();
 
                     fabsend.setColorFilter(Color.RED);
                     fabsend.setImageResource(R.drawable.ic_cloud_off_white_24dp);
@@ -683,8 +774,7 @@ public class ContactDetailFragment extends Fragment implements
                     break;
                 case SendRemember.STATE_DONE_NEED_INVITE:
 
-                    Toast.makeText(ContactDetailFragment.this.getActivity(),
-                            contactName + context.getString(R.string.toast_send_not_found_user), Toast.LENGTH_LONG).show();
+                    Toast.makeText(ContactDetailFragment.this.getActivity(), context.getString(R.string.toast_send_not_found_user, contactName), Toast.LENGTH_LONG).show();
 
                     sendProgress.setVisibility(View.INVISIBLE);
                     postFabSend();

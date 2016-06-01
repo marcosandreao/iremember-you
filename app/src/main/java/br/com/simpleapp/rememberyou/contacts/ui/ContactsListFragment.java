@@ -311,21 +311,11 @@ public class ContactsListFragment extends ListFragment implements
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
 
-        // Inflate the menu items
         inflater.inflate(R.menu.contact_list_menu, menu);
-        // Locate the search item
-       // MenuItem searchItem = menu.findItem(R.id.menu_search);
 
         final MenuItem myActionMenuItem = menu.findItem( R.id.menu_search);
         final SearchView searchItem = (SearchView) myActionMenuItem.getActionView();
 
-        // In versions prior to Android 3.0, hides the search item to prevent additional
-        // searches. In Android 3.0 and later, searching is done via a SearchView in the ActionBar.
-        // Since the search doesn't create a new Activity to do the searching, the menu item
-        // doesn't need to be turned off.
-        if (mIsSearchResultView) {
-        //    myActionMenuItem.setVisible(false);
-        }
 
         searchItem.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
